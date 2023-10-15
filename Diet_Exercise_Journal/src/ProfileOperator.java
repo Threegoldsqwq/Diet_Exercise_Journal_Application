@@ -43,14 +43,14 @@ public class ProfileOperator {
             resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
 
             //以下为创建profile
-            preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.UserProfile values (?, ?, ?, ?, ?, ?, ?)");
-            preparedStatement.setInt(1, ++id);
-            preparedStatement.setString(2, UserName);
-            preparedStatement.setString(3, sex);
-            preparedStatement.setDate(4, new java.sql.Date(year, month, day));
-            preparedStatement.setDouble(5, height);
-            preparedStatement.setDouble(6, weight);
-            preparedStatement.setString(7, measurement);
+            preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.UserProfile values (default, ?, ?, ?, ?, ?, ?)");
+            //preparedStatement.setInt(1, ++id);
+            preparedStatement.setString(1, UserName);
+            preparedStatement.setString(2, sex);
+            preparedStatement.setString(3, year + "-" + month + "-" + day);
+            preparedStatement.setDouble(4, height);
+            preparedStatement.setDouble(5, weight);
+            preparedStatement.setString(6, measurement);//metric vs imperial
             preparedStatement.executeUpdate();
 
             preparedStatement = connect.prepareStatement("SELECT UserID, UserName, Sex, Date_of_birth, Height, Weight, Measurement from Diet_Exercise_Journal_UserProfile.UserProfile");
