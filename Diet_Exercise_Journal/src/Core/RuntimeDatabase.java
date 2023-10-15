@@ -1,3 +1,6 @@
+package Core;
+
+
 import java.sql.*;
 
 public class RuntimeDatabase {
@@ -60,4 +63,20 @@ public class RuntimeDatabase {
             e.printStackTrace();
         }
     }
+
+    public static String[][] CaloryBurnedDataReader(){ //读出所有的卡路里消耗数据 [[日期][数据]],[[日期][数据]],[[日期][数据]]
+        String[][] data;
+        data= new String[][]{{"1/1", "1230"}, {"1/2", "1240"},{"1/3", "1230"}, {"1/4", "1240"},{"1/5", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
+        return data;
+    }
+
+    public static String[][] CaloryIntakeDataReader(){ //..
+        String[][] data;
+        data= new String[][]{{"1/1", "1030"}, {"1/2", "1040"},{"1/3", "1230"}, {"1/4", "1240"},{"1/6", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
+        return data;
+    }
+
+
+
+
 }

@@ -1,10 +1,17 @@
-import java.util.Scanner;
+package Core;
+
+import Visualizer.ExerciseDataVisualizer;
+import org.jfree.data.category.CategoryDataset;
+
+import Visualizer.DataVisualizer;
+import org.jfree.data.general.DatasetUtilities;
+
 
 public class MainUI {
     public static void main(String[] args) throws Exception {
-        System.out.println("Here are the profiles you have: ");
+        /* System.out.println("Here are the profiles you have: ");
         Scanner sc = new Scanner(System.in);
-        ProfileOperator profileOperator = new ProfileOperator();
+        Core.ProfileOperator profileOperator = new Core.ProfileOperator();
         profileOperator.displayProfile();
         System.out.println("Choose a profile or you want to create a new one: choose the number, or 0 to create");
         String input = sc.next();
@@ -37,6 +44,12 @@ public class MainUI {
             measurement = sc.next();
             profileOperator.createProfile(UserName, sex, year, month, day, height, weight, measurement);
         }
+    */
+
+
+            ExerciseDataVisualizer.getChart();
+
+
 
     }
 }
