@@ -43,7 +43,7 @@ public class ExerciseDataVisualizer {
     }
 
     public static void getDataSet(){
-        CBurned= RuntimeDatabase.CaloryBurnedDataReader();
+        CBurned=RuntimeDatabase.CaloryBurnedDataReader();
         Cintake=RuntimeDatabase.CaloryIntakeDataReader();
 
         double[][] data = new double[2][CBurned.length];

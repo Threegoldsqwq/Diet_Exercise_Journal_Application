@@ -14,6 +14,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public abstract class DataVisualizer {
 
     public static void getChart() {
-
+        System.out.println("Error: Call detailed subclass");
     }
+    public static void getData() {
+        System.out.println("Error: Call detailed subclass");
+    }
+
 }

@@ -1,5 +1,6 @@
 package Core;
 
+import Visualizer.DietDataVisualizer;
 import Visualizer.ExerciseDataVisualizer;
 import org.jfree.data.category.CategoryDataset;
 
@@ -48,7 +49,7 @@ public class MainUI {
 
 
             ExerciseDataVisualizer.getChart();
-
+            DietDataVisualizer.getChart(5);
 
 
     }

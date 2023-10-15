@@ -64,7 +64,7 @@ public class RuntimeDatabase {
         }
     }
 
-    public static String[][] CaloryBurnedDataReader(){ //读出所有的卡路里消耗数据 [[日期][数据]],[[日期][数据]],[[日期][数据]]
+    public static String[][] CaloryBurnedDataReader(){ //根据输入的日期启止读出所有的卡路里消耗数据 [[日期][数据]],[[日期][数据]],[[日期][数据]]
         String[][] data;
         data= new String[][]{{"1/1", "1230"}, {"1/2", "1240"},{"1/3", "1230"}, {"1/4", "1240"},{"1/5", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
@@ -76,7 +76,16 @@ public class RuntimeDatabase {
         return data;
     }
 
+    public static String[][] NutrientsDataReader(int number){ //根据输入的日期(再加一个attribute)启止读出所有的nutrients
 
+        //在此处计算avg
 
+        //返还整理好的按量排序的前5或10个nutrients 并将剩下的全部加起来作为第6/11项加在末尾 返回值为[类型][量] 第二阶长度为1
+
+        //下方code for test only
+        String[][] data;
+        data= new String[][]{{"碳水", "1230"}, {"脂肪", "1240"},{"盐", "1230"},{"糖", "1250"},{"钙", "800"}, {"其他", "1240"}};  // those code for test only
+        return data;
+    }
 
 }
