@@ -1,2 +1,63 @@
+import java.sql.*;
+
 public class RuntimeDatabase {
+    private Connection connect = null;
+    private Statement statement = null;
+    private PreparedStatement preparedStatement = null;
+    private ResultSet resultSet = null;
+
+    //显示所有profile包括具体数据
+    public void readDatabase() throws Exception{//测试用
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
+            //上面4行只要创新方法就要重新加上
+            displayResultSet(resultSet);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+    private void displayResultSet(ResultSet resultSet) throws SQLException {
+        // ResultSet is initially before the first data set
+        while (resultSet.next()) {
+            // It is possible to get the columns via name
+            // also possible to get the columns via the column number
+            // which starts at 1
+            // e.g. resultSet.getSTring(2);
+            System.out.println("UserID：" + resultSet.getInt(1)); //  获取第一列的数据
+            System.out.println("UserName：" + resultSet.getString("UserName"));  //获取字段为name的数据
+            System.out.println("Sex：" + resultSet.getString(3)); //  获取第3列的数据
+            System.out.println("DOB：" + resultSet.getDate(4)); //  获取第4列的数据
+            System.out.println("Height：" + resultSet.getDouble(5)); //  获取第5列的数据
+            System.out.println("Weight：" + resultSet.getDouble(6)); //  获取第6列的数据
+            System.out.println("Measurement：" + resultSet.getString(7)); //  获取第7列的数据
+            System.out.println("-----------------------------------------------");
+        }
+    }
+
+
+    private void close() {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+
+            if (statement != null) {
+                statement.close();
+            }
+
+            if (connect != null) {
+                connect.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
