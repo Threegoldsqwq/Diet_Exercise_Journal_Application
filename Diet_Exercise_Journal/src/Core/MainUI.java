@@ -1,5 +1,6 @@
 package Core;
 
+import Operator.DietDataOperator;
 import Visualizer.DietDataVisualizer;
 import Visualizer.ExerciseDataVisualizer;
 import org.jfree.data.category.CategoryDataset;
@@ -50,7 +51,7 @@ public class MainUI {
 
             ExerciseDataVisualizer.getChart();
             DietDataVisualizer.getChart(5);
-
+            System.out.println(DietDataOperator.calculateBMR(78,178,21,'M'));
 
     }
 }
