@@ -1,22 +1,12 @@
 package Visualizer;
 
-import Core.RuntimeDatabase;
+import DatabaseOperation.RuntimeDatabase;
 
-import jdk.dynalink.beans.StaticClass;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer3D;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RefineryUtilities;
-
-import java.lang.reflect.Array;
 
 
 public class DietDataVisualizer extends DataVisualizer{

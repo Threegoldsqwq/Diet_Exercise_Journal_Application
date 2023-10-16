@@ -1,19 +1,17 @@
-package Core;
+package GUI;
 
-import Operator.DietDataOperator;
-import Visualizer.DietDataVisualizer;
-import Visualizer.ExerciseDataVisualizer;
-import org.jfree.data.category.CategoryDataset;
+import DatabaseOperation.ProfileOperator;
+import DatabaseOperation.RuntimeDatabase;
 
-import Visualizer.DataVisualizer;
-import org.jfree.data.general.DatasetUtilities;
+import java.util.Scanner;
 
 
 public class MainUI {
     public static void main(String[] args) throws Exception {
-        /* System.out.println("Here are the profiles you have: ");
+        System.out.println("Here are the profiles you have: ");
         Scanner sc = new Scanner(System.in);
-        Core.ProfileOperator profileOperator = new Core.ProfileOperator();
+
+        ProfileOperator profileOperator = new ProfileOperator();
         profileOperator.displayProfile();
         System.out.println("Choose a profile or you want to create a new one: choose the number, or 0 to create");
         String input = sc.next();
@@ -44,14 +42,9 @@ public class MainUI {
             weight = sc.nextDouble();
             System.out.println();
             measurement = sc.next();
-            profileOperator.createProfile(UserName, sex, year, month, day, height, weight, measurement);
+
+            //profileOperator.createProfile(UserName, sex, year, month, day, height, weight, measurement);
         }
-    */
-
-
-            ExerciseDataVisualizer.getChart();
-            DietDataVisualizer.getChart(5);
-            System.out.println(DietDataOperator.calculateBMR(78,178,21,'M'));
 
     }
 }

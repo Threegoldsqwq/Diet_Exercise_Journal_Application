@@ -1,4 +1,4 @@
-package Core;
+package DatabaseOperation;
 
 
 import java.sql.*;
@@ -6,6 +6,7 @@ import java.sql.*;
 public class RuntimeDatabase {
     private Connection connect = null;
     private Statement statement = null;
+
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
@@ -33,7 +34,7 @@ public class RuntimeDatabase {
             // It is possible to get the columns via name
             // also possible to get the columns via the column number
             // which starts at 1
-            // e.g. resultSet.getSTring(2);
+
             System.out.println("UserID：" + resultSet.getInt(1)); //  获取第一列的数据
             System.out.println("UserName：" + resultSet.getString("UserName"));  //获取字段为name的数据
             System.out.println("Sex：" + resultSet.getString(3)); //  获取第3列的数据
@@ -82,9 +83,9 @@ public class RuntimeDatabase {
 
         //返还整理好的按量排序的前5或10个nutrients 并将剩下的全部加起来作为第6/11项加在末尾 返回值为[类型][量] 第二阶长度为1
 
-        //下方code for test only
+        //code for test only
         String[][] data;
-        data= new String[][]{{"碳水", "1230"}, {"脂肪", "1240"},{"盐", "1230"},{"糖", "1250"},{"钙", "800"}, {"其他", "1240"}};  // those code for test only
+        data= new String[][]{{"Carb", "1230"}, {"Fat", "1240"},{"Salt", "1230"},{"Sugar", "1250"},{"Calcium", "800"}, {"Others", "1240"}};  // those code for test only
         return data;
     }
 

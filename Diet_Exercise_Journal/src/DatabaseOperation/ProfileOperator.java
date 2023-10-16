@@ -1,4 +1,4 @@
-package Core;
+package DatabaseOperation;
 
 import java.sql.*;
 
@@ -24,7 +24,7 @@ public class ProfileOperator {
     public ProfileOperator(){
 
     }
-//    public Core.ProfileOperator(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
+//    public DatabaseOperation.ProfileOperator(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
 //        this.UserName = UserName;
 //        this.sex = sex;
 //        this.year = year;
