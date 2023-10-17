@@ -10,6 +10,5 @@ public class JFreeChartVisualizationMainClass {
     public static void main(String[] args) {
         ExerciseDataVisualizer.getChart();
         DietDataVisualizer.getChart(5);
-
     }
 }

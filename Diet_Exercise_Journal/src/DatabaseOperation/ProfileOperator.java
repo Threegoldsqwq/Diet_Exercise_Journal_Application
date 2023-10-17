@@ -21,20 +21,6 @@ public class ProfileOperator {
 //    private double weight;
 //    private String measurement;
 
-    public ProfileOperator(){
-
-    }
-//    public DatabaseOperation.ProfileOperator(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
-//        this.UserName = UserName;
-//        this.sex = sex;
-//        this.year = year;
-//        this.month = month;
-//        this.day = day;
-//        this.height = height;
-//        this.weight = weight;
-//        this.measurement = measurement;
-//    }
-
 
     //创建profile
     public void createProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement) throws Exception{

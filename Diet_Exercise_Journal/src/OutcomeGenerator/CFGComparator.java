@@ -1,4 +1,4 @@
-package Generator;
+package OutcomeGenerator;
 
 public class CFGComparator {
 }
