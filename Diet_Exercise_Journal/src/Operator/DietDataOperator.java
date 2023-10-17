@@ -1,7 +1,8 @@
 package Operator;
 
-public class DietDataOperator {
-    public static double calculateBMR(double weightKg, double heightCm, int age, char gender) {
+public class DietDataOperator implements DataOperator{
+    @Override
+    public double calculateBMR(double weightKg, double heightCm, int age, char gender) {
         double bmr;
 
         if (gender == 'M') {
