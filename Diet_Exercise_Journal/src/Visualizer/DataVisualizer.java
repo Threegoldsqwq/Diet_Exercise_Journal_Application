@@ -11,6 +11,9 @@ import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+/**
+ * Abstract class for visualize data
+ */
 public abstract class DataVisualizer {
 
     public static void getChart() {

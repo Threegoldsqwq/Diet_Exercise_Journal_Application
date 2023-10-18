@@ -10,7 +10,10 @@ public class RuntimeDatabase {
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
-    //显示所有profile包括具体数据
+    /**
+     * This class display all profiles in the table (database)
+     * @throws Exception if sql error
+     */
     public void readDatabase() throws Exception{//测试用
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -28,6 +31,11 @@ public class RuntimeDatabase {
         }
     }
 
+    /**
+     * This method print the table
+     * @param resultSet is the table (database)
+     * @throws SQLException if sql error
+     */
     private void displayResultSet(ResultSet resultSet) throws SQLException {
         // ResultSet is initially before the first data set
         while (resultSet.next()) {
@@ -47,6 +55,9 @@ public class RuntimeDatabase {
     }
 
 
+    /**
+     * This class close the stream
+     */
     private void close() {
         try {
             if (resultSet != null) {
@@ -65,24 +76,39 @@ public class RuntimeDatabase {
         }
     }
 
-    public static String[][] CaloryBurnedDataReader(){ //根据输入的日期启止读出所有的卡路里消耗数据 [[日期][数据]],[[日期][数据]],[[日期][数据]]
+    /**
+     * This method reads the calorie burnt based on the date
+     * @return an array in [date][data], [date][data]...
+     */
+    public static String[][] CaloryBurnedDataReader(){
+        //just for testing, will be modified
         String[][] data;
         data= new String[][]{{"1/1", "1230"}, {"1/2", "1240"},{"1/3", "1230"}, {"1/4", "1240"},{"1/5", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
     }
 
-    public static String[][] CaloryIntakeDataReader(){ //..
+    /**
+     * This method reads the calorie intake based on the date
+     * @return an array in [date][data], [date][data]...
+     */
+    public static String[][] CaloryIntakeDataReader(){
+        //just for testing, will be modified
         String[][] data;
         data= new String[][]{{"1/1", "1030"}, {"1/2", "1040"},{"1/3", "1230"}, {"1/4", "1240"},{"1/6", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
         return data;
     }
 
-    public static String[][] NutrientsDataReader(int number){ //根据输入的日期(再加一个attribute)启止读出所有的nutrients
+    /**
+     * This class reads all nutrients in a time period
+     * @param number is the
+     * @return an array
+     */
+    public static String[][] NutrientsDataReader(int number){
+        //just for testing, will be modified
+        //calculate average here
 
-        //在此处计算avg
 
-        //返还整理好的按量排序的前5或10个nutrients 并将剩下的全部加起来作为第6/11项加在末尾 返回值为[类型][量] 第二阶长度为1
-
+        //return the top 5 or 10 nutrients, add the rest to be the 6th or 11th data
         //code for test only
         String[][] data;
         data= new String[][]{{"Carb", "1230"}, {"Fat", "1240"},{"Salt", "1230"},{"Sugar", "1250"},{"Calcium", "800"}, {"Others", "1240"}};  // those code for test only
@@ -90,3 +116,7 @@ public class RuntimeDatabase {
     }
 
 }
+
+//ignore the comment below
+//返还整理好的按量排序的前5或10个nutrients 并将剩下的全部加起来作为第6/11项加在末尾 返回值为[类型][量] 第二阶长度为1
+//根据输入的日期(再加一个attribute)启止读出所有的nutrients

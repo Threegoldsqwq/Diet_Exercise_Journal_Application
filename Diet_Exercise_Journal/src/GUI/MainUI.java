@@ -5,7 +5,10 @@ import DatabaseOperation.RuntimeDatabase;
 
 import java.util.Scanner;
 
-
+/**
+ * This class for design main GUI
+ * Not implemented GUI yet
+ */
 public class MainUI {
     public static void main(String[] args) throws Exception {
         System.out.println("Here are the profiles you have: ");

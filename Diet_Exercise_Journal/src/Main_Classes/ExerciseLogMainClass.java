@@ -1,5 +1,10 @@
 package Main_Classes;
 
+/**
+ * Testing main classes for you to run
+ * Will be changed to real implementation in the future
+ * Will implement real JUnit test cases in the future
+ */
 public class ExerciseLogMainClass {
     public static void main(String[] args) {
         System.out.println("Enter the date of you exercise ");

@@ -2,6 +2,11 @@ package Main_Classes;
 
 import java.util.Scanner;
 
+/**
+ * Testing main classes for you to run
+ * Will be changed to real implementation in the future
+ * Will implement real JUnit test cases in the future
+ */
 public class ProfileCreationMainClass {
     public static void main(String[] args) {
         //System.out.println("Here are the profiles you have: ");

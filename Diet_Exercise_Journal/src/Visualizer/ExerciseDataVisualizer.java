@@ -11,15 +11,21 @@ import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 
+/**
+ * This class generate JFree chart for exercise
+ */
 public class ExerciseDataVisualizer {
     static String[][] CBurned;
     static String[][] Cintake;
     static CategoryDataset dataset;
 
+    /**
+     * This method generate bar chart
+     */
     public static void getChart() {
         getDataSet();
         JFreeChart chart = ChartFactory.createBarChart(
-                "Exercise Data", // 图标题
+                "Exercise Data", //title
                 "Date",
                 "Calory",
                 dataset,
@@ -30,18 +36,21 @@ public class ExerciseDataVisualizer {
         BarRenderer3D renderer = new BarRenderer3D();
 
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        renderer.setBaseItemLabelsVisible(true);  //显示数字
+        renderer.setBaseItemLabelsVisible(true);  //show numbers
 
 
-        renderer.setItemMargin(0.1); //调整间距
+        renderer.setItemMargin(0.1); //adjust margin
         plot.setRenderer(renderer);
 
-        // 利用awt进行显示
+        //display using awt
         ChartFrame chartFrame = new ChartFrame("Test", chart);
         chartFrame.pack();
         chartFrame.setVisible(true);
     }
 
+    /**
+     * This method get the data set for creating the chart
+     */
     public static void getDataSet(){
         CBurned=RuntimeDatabase.CaloryBurnedDataReader();
         Cintake=RuntimeDatabase.CaloryIntakeDataReader();

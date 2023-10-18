@@ -5,8 +5,11 @@ import java.sql.*;
 /**
  * This class manage the profile
  * create and display
+ * tend to be modified
  */
 public class ProfileOperator {
+
+    //variables for connecting to database
     private Connection connect = null;
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
@@ -22,7 +25,18 @@ public class ProfileOperator {
 //    private String measurement;
 
 
-    //创建profile
+    /**
+     * This class create a profile for user and store it to the database
+     * @param UserName is the username
+     * @param sex is the sex
+     * @param year is the year of birth
+     * @param month is the month of birth
+     * @param day is the day of birth
+     * @param height is the height in meter
+     * @param weight is the weight in kg
+     * @param measurement is the measurement the user want
+     * @throws Exception if sql command has syntax error
+     */
     public void createProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement) throws Exception{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -52,7 +66,10 @@ public class ProfileOperator {
         }
     }
 
-    //only display username and id
+    /**
+     * This class display the profile at the start of the application
+     * @throws Exception if sql command has error
+     */
     public void displayProfile() throws Exception{
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -75,6 +92,9 @@ public class ProfileOperator {
         }
     }
 
+    /**
+     * This class close the stream
+     */
     private void close() {
         try {
             if (resultSet != null) {
@@ -94,8 +114,6 @@ public class ProfileOperator {
     }
 }
 
-//不要管这个
-//以下为创建profile
 //            preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.UserProfile values (?, ?, ?, ?, ?, ?, ?)");
 //            preparedStatement.setInt(1, 100001);
 //            preparedStatement.setString(2, "User-1");

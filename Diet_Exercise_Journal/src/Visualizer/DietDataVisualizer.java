@@ -8,11 +8,17 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.RefineryUtilities;
 
-
+/**
+ * This class generate JFree chart for diet
+ */
 public class DietDataVisualizer extends DataVisualizer{
     static DefaultPieDataset dataset = new DefaultPieDataset();
     static String[][] Data;
 
+    /**
+     * This method create pie chart
+     * @param NumberOfNutrients is the number of nutrients
+     */
     public static void getChart(int NumberOfNutrients) {
         getDataSet(NumberOfNutrients);
                 // create a dataset...
@@ -25,10 +31,10 @@ public class DietDataVisualizer extends DataVisualizer{
 
                 // create a chart...
                 JFreeChart chart = ChartFactory.createPieChart(
-                        "Sample Pie Chart -Yves", // chart title: 图表标题
-                        dataset, // data: 数据集
-                        true, // legend: 图例
-                        true, // tooltips: 图表工具条
+                        "Sample Pie Chart -Yves", // chart title
+                        dataset, // data set
+                        true, // legend (image example)
+                        true, // tooltips
                         false // URLs: URLS
                 );
 
@@ -39,6 +45,10 @@ public class DietDataVisualizer extends DataVisualizer{
                 frame.setVisible(true);
     }
 
+    /**
+     * This class gets the data set for creating the chart
+     * @param NumberOfNutrients NumberOfNutrients is the number of nutrients
+     */
     public static void getDataSet(int NumberOfNutrients){
         Data=RuntimeDatabase.NutrientsDataReader(NumberOfNutrients);
     }
