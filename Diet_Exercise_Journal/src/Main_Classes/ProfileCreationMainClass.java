@@ -27,7 +27,8 @@ public class ProfileCreationMainClass {
         String measurement;
         //create profile
         System.out.println("Please enter the username: ");
-        UserName = sc.next();
+        UserName = sc.nextLine();
+        UserName += sc.nextLine();
         //This could be replaced to selection bar
         System.out.println("Please enter your sex (Male/Female): ");
         sex = sc.next();

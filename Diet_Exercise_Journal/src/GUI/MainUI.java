@@ -29,21 +29,22 @@ public class MainUI {
         String measurement;
         //create profile
         if(input.equals("0")){
-            System.out.println();
-            UserName = sc.next();
-            System.out.println();
+            System.out.println("Please enter the username: ");
+            UserName = sc.nextLine();
+            UserName += sc.nextLine();
+            System.out.println("Please enter your sex (Male/Female): ");
             sex = sc.next();
-            System.out.println();
+            System.out.println("Please enter your date of birth:\nEnter year: ");
             year = sc.nextInt();
-            System.out.println();
+            System.out.println("Enter month: ");
             month = sc.nextInt();
-            System.out.println();
+            System.out.println("Enter day: ");
             day = sc.nextInt();
-            System.out.println();
+            System.out.println("Please enter your height in meter (e.g. 1.83): ");
             height = sc.nextDouble();
-            System.out.println();
+            System.out.println("Please enter your weight in kg (e.g. 70): ");
             weight = sc.nextDouble();
-            System.out.println();
+            System.out.println("Please enter the measurement you want (metric/imperial): ");
             measurement = sc.next();
 
             profileOperator.createProfile(UserName, sex, year, month, day, height, weight, measurement);
