@@ -46,7 +46,7 @@ public class MainUI {
             System.out.println();
             measurement = sc.next();
 
-            //profileOperator.createProfile(UserName, sex, year, month, day, height, weight, measurement);
+            profileOperator.createProfile(UserName, sex, year, month, day, height, weight, measurement);
         }
 
     }
