@@ -1,4 +1,4 @@
-package GUI;
+package Main_Classes;
 
 import DatabaseOperation.ProfileOperator;
 import DatabaseOperation.RuntimeDatabase;
