@@ -2,20 +2,17 @@ package NewUi;
 
 import DatabaseOperation.RuntimeDatabase;
 import Facade.NutritionServiceFacade;
-import GUI.ChooseProfileUI;
-import GUI.CreateProfileUI;
 import GUI.LandingPageUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 
 public class Main {
 
-    private static JFrame mainFrame;
+    public static JFrame mainFrame;
     private static CreateProfilePage createProfilePage;
     private static ChooseProfilePage chooseProfilePage;
 
@@ -64,11 +61,10 @@ public class Main {
 
     private static void showCreateProfilePage() {
         mainFrame.getContentPane().removeAll();
-
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         //not working with local variable
         createProfilePage = new CreateProfilePage(
                 e -> {
-            RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
             // Handle the Save button action in CreateProfileUI
             String name = createProfilePage.getName();
             String dob = createProfilePage.getDOB();
@@ -84,7 +80,8 @@ public class Main {
           //  }
             // Add your logic to save or process the profile information
 
-            // After saving the profile, transition to the next layer
+            // After saving the profile, transition to the next layer\
+                    JOptionPane.showMessageDialog(null, "here is your User ID: /n please write it down");
         },
                 e->{
             createMainFrame();
@@ -120,13 +117,47 @@ public class Main {
     }
 
     private static void showProfileOptionsPage() {
+        mainFrame.getContentPane().removeAll();
+
         //reset size and location of window
         mainFrame.setSize(1500, 1000);
+        mainFrame.setMinimumSize(new Dimension(1000, 666));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int xPos = (screenSize.width - mainFrame.getWidth()) / 2;
         int yPos = (screenSize.height - mainFrame.getHeight()) / 2;
         mainFrame.setLocation(xPos, yPos);
 
+        ActionListener dietDataListener = e -> {
+            // Handle diet data button action
+        };
 
+        ActionListener calorieDataListener = e -> {
+            // Handle calorie data button action
+        };
+
+        ActionListener inputTodayDataListener = e -> {
+            // Handle input today's data button action
+        };
+
+        ActionListener editProfileListener = e -> {
+            // Handle edit profile button action
+        };
+
+        ActionListener DietVisualizerListener = e -> {
+            // Handle edit profile button action
+        };
+
+        ActionListener ExerciseVisualizerListener = e -> {
+            // Handle edit profile button action
+        };
+
+
+        ActionListener[] buttonListeners = {dietDataListener, calorieDataListener, inputTodayDataListener, editProfileListener,DietVisualizerListener,ExerciseVisualizerListener};
+
+        MainPage mainPage = new MainPage(buttonListeners);
+
+        mainFrame.add(mainPage.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
     }
 }
