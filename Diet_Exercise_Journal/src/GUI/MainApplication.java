@@ -52,22 +52,19 @@ public class MainApplication {
         mainFrame.revalidate();
         mainFrame.repaint();
 
-        createProfileUI = new CreateProfileUI(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle the Save button action in CreateProfileUI
-                String name = createProfileUI.getName();
-                String dob = createProfileUI.getDOB();
-                String gender = createProfileUI.getGender();
-                String weight = createProfileUI.getWeight();
-                String height = createProfileUI.getHeight();
-                String measurement = createProfileUI.getMeasurement();
+        createProfileUI = new CreateProfileUI(e -> {
+            // Handle the Save button action in CreateProfileUI
+            String name = createProfileUI.getName();
+            String dob = createProfileUI.getDOB();
+            String gender = createProfileUI.getGender();
+            String weight = createProfileUI.getWeight();
+            String height = createProfileUI.getHeight();
+            String measurement = createProfileUI.getMeasurement();
 
-                // Add your logic to save or process the profile information
+            // Add your logic to save or process the profile information
 
-                // After saving the profile, transition to the next layer
-                showProfileOptionsUI();
-            }
+            // After saving the profile, transition to the next layer
+            showProfileOptionsUI();
         });
 
         mainFrame.add(createProfileUI.getPanel());
@@ -105,37 +102,65 @@ public class MainApplication {
         mainFrame.repaint();
 
         profileOptionsUI = new ProfileOptionsUI(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Handle Diet Data button action
-                        showInputDataPageUI();
-                    }
+                e -> {
+                    // Handle Diet Data button action
+                    showDietDataPage();
                 },
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Handle Calorie Data button action
-                        JOptionPane.showMessageDialog(null, "Calorie Data button clicked");
-                    }
+                e -> {
+                    // Handle Calorie Data button action
+                    JOptionPane.showMessageDialog(null, "Calorie Data button clicked");
                 },
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Handle Input Today's Data button action
-                        showInputDataPageUI();
-                    }
+                e -> {
+                    // Handle Input Today's Data button action
+                    showInputDataPageUI();
                 },
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Handle Edit Profile button action
-                        JOptionPane.showMessageDialog(null, "Edit Profile button clicked");
-                    }
+                e -> {
+                    // Handle Edit Profile button action
+                    showChangeProfilePage();
+                    ;
                 }
         );
 
         mainFrame.add(profileOptionsUI.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
+    private static void showChangeProfilePage(){
+        mainFrame.getContentPane().removeAll();
+        mainFrame.revalidate();
+        mainFrame.repaint();
+
+        CreateProfileUI ChangeProfilePage = new CreateProfileUI(
+                e -> {
+                    // Handle the Save button action
+                    String name = createProfileUI.getName();
+                    String dob = createProfileUI.getDOB();
+                    String gender = createProfileUI.getGender();
+                    String weight = createProfileUI.getWeight();
+                    String height = createProfileUI.getHeight();
+                    String measurement = createProfileUI.getMeasurement();
+
+                    showProfileOptionsUI();
+                });
+
+        mainFrame.add(ChangeProfilePage.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
+    private static void showDietDataPage(){
+        mainFrame.getContentPane().removeAll();
+        mainFrame.revalidate();
+        mainFrame.repaint();
+
+        DietDataPage dietDataPage = new DietDataPage(
+                e -> {
+                    // Handle back button action
+                    showProfileOptionsUI();
+                });
+
+        mainFrame.add(dietDataPage.getPanel());
         mainFrame.revalidate();
         mainFrame.repaint();
     }
