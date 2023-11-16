@@ -1,11 +1,12 @@
 package GUI;
 
 import DatabaseOperation.RuntimeDatabase;
-
+import Facade.NutritionServiceFacade;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class MainApplication {
 
@@ -91,17 +92,18 @@ public class MainApplication {
         chooseProfileUI = new ChooseProfileUI(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+                NutritionServiceFacade nutritionServiceFacade = new NutritionServiceFacade();
                 // Handle the Choose Profile button action in ChooseProfileUI
                 String username = chooseProfileUI.getUsername();
                 String userId = chooseProfileUI.getUserId();
-                runtimeDatabase.setId(Integer.parseInt(userId));
+                //runtimeDatabase.setId(Integer.parseInt(userId));
                 // Add your logic to validate the username and userId
-                try {
-                    runtimeDatabase.displayDietData(runtimeDatabase.getId());
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
+//                try {
+//                    runtimeDatabase.displayDietData(runtimeDatabase.getId());
+//                } catch (Exception ex) {
+//                    throw new RuntimeException(ex);
+//                }
+                nutritionServiceFacade.displayDiet(Integer.parseInt(userId));
                 // After choosing the profile, transition to the next layer
                 showProfileOptionsUI();
             }
@@ -235,7 +237,9 @@ public class MainApplication {
         mainFrame.revalidate();
         mainFrame.repaint();
     }
-
+    static RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+    static ArrayList<String> ingredients = new ArrayList<>();
+    static ArrayList<String> quantities = new ArrayList<>();
 
     private static void showInputIngredientsPageUI(String mealType) {
         mainFrame.getContentPane().removeAll();
@@ -243,20 +247,31 @@ public class MainApplication {
         mainFrame.repaint();
 
         inputIngredientsPageUI = new InputIngredientsPageUI(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
+
+
                 // Handle Add button action in InputIngredientsPageUI
                 String ingredient = inputIngredientsPageUI.getIngredient();
                 String quantity = inputIngredientsPageUI.getQuantity();
+
+                ingredients.add(ingredient);
+                quantities.add(quantity);
+
 
                 // Add your logic to process the ingredient and quantity for the specific meal type
 
                 // After processing, you can navigate back to the previous page or perform other actions
                 showInputIngredientsPageUI(mealType);
             }
+
         }, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                runtimeDatabase.setIngredients(ingredients);
+                runtimeDatabase.setQuantities(quantities);
+                System.out.println("11111111");
                 // Handle Back to Previous Page button action
                 showInputDataPageUI();
             }
@@ -265,6 +280,7 @@ public class MainApplication {
         mainFrame.add(inputIngredientsPageUI.getPanel());
         mainFrame.revalidate();
         mainFrame.repaint();
+
     }
 
 }

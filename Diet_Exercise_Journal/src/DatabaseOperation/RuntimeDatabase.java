@@ -2,7 +2,8 @@ package DatabaseOperation;
 
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.Date;
 
 public class RuntimeDatabase {
     private Connection connect = null;
@@ -23,6 +24,10 @@ public class RuntimeDatabase {
     }
     private int id;
     private String userName;
+
+
+    private ArrayList<String> ingredients;
+    private ArrayList<String> quantities;
 
     /**
      * This class display all profiles in the table (database)
@@ -137,8 +142,26 @@ public class RuntimeDatabase {
         this.id = id;
     }
 
+    public ArrayList<String> getIngredients() {
+        return ingredients;
+    }
 
-//-----------------------------------------------------------------------------------------------------------
+    public void setIngredients(ArrayList<String> ingredients) {
+        this.ingredients = ingredients;
+        for(int i = 0; i < runtimeDatabase.getIngredients().size(); i++){
+            System.out.println(runtimeDatabase.getIngredients().get(i));
+        }
+    }
+
+    public ArrayList<String> getQuantities() {
+        return quantities;
+    }
+
+    public void setQuantities(ArrayList<String> quantities) {
+        this.quantities = quantities;
+    }
+
+    //-----------------------------------------------------------------------------------------------------------
     /**
      * This class create a profile for user and store it to the database
      * @param UserName is the username
