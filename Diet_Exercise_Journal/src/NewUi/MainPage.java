@@ -67,7 +67,7 @@ public class MainPage {
 
         //create buttons we need
         // Attach component listener before creating buttons
-        String[] buttonNames = {"Diet Data", "Calorie Data", "Input Today's Data", "Edit Profile","Diet Visualizer","Exercise Visualizer"};
+        String[] buttonNames = {"Edit Profile","Input Data", "Detailed Diet Data", "Exercise Data", "Diet Visualizer","Calorie Visualizer","Weightloss Forecast","CFG"};
         JButton buttons[] = new JButton[buttonNames.length];
 
         for (int i = 0; i < buttonNames.length; i++) {
@@ -135,8 +135,7 @@ public class MainPage {
     //set font
     private void adjustFont() {
         // Adjust font size based on the height of the panel
-        int fontSize = panel.getHeight() / 25; // Adjust the divisor as needed
-        System.out.println(panel.getWidth());
+        int fontSize = Math.min(panel.getHeight() / 25, panel.getWidth()/40 ); // Adjust the divisor as needed
         // Apply the adjusted font size to all buttons
         Component[] components = RightPanel.getComponents();
         for (Component component : components) {
@@ -161,7 +160,6 @@ public class MainPage {
 
 
     public JPanel getPanel() {
-
         return panel;
     }
 }
