@@ -11,8 +11,18 @@ public class RuntimeDatabase {
     private ResultSet resultSet = null;
 
 
-    private int id;
+    private static RuntimeDatabase runtimeDatabase = new RuntimeDatabase();
+    private RuntimeDatabase(){
 
+    }
+    public static RuntimeDatabase getInstance(){
+        if(runtimeDatabase == null){
+            return new RuntimeDatabase();
+        }
+        return runtimeDatabase;
+    }
+    private int id;
+    private String userName;
 
     /**
      * This class display all profiles in the table (database)

@@ -10,11 +10,11 @@ import DatabaseOperation.RuntimeDatabase;
 public class MainUI {
     public static void main(String[] args) throws Exception {
 
-        RuntimeDatabase runtimeDatabase = new RuntimeDatabase();
-        runtimeDatabase.displayDietData(100001);
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        //runtimeDatabase.displayDietData(100001);
 
         runtimeDatabase.readDatabase();
-        runtimeDatabase.displayProfile();
+        //runtimeDatabase.displayProfile();
 
 
 

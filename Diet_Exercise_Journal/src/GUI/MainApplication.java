@@ -1,5 +1,7 @@
 package GUI;
 
+import DatabaseOperation.RuntimeDatabase;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -52,19 +54,28 @@ public class MainApplication {
         mainFrame.revalidate();
         mainFrame.repaint();
 
-        createProfileUI = new CreateProfileUI(e -> {
-            // Handle the Save button action in CreateProfileUI
-            String name = createProfileUI.getName();
-            String dob = createProfileUI.getDOB();
-            String gender = createProfileUI.getGender();
-            String weight = createProfileUI.getWeight();
-            String height = createProfileUI.getHeight();
-            String measurement = createProfileUI.getMeasurement();
+        createProfileUI = new CreateProfileUI(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+                // Handle the Save button action in CreateProfileUI
+                String name = createProfileUI.getName();
+                String dob = createProfileUI.getDOB();
+                String gender = createProfileUI.getGender();
+                String weight = createProfileUI.getWeight();
+                String height = createProfileUI.getHeight();
+                String measurement = createProfileUI.getMeasurement();
+                String[] ymd = dob.split("-");
+                try {
+                    runtimeDatabase.createProfile(name, gender,Integer.parseInt(ymd[0]),Integer.parseInt(ymd[1]),Integer.parseInt(ymd[2]),Double.parseDouble(height),Double.parseDouble(weight),measurement);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+                // Add your logic to save or process the profile information
 
-            // Add your logic to save or process the profile information
-
-            // After saving the profile, transition to the next layer
-            showProfileOptionsUI();
+                // After saving the profile, transition to the next layer
+                createMainFrame();
+            }
         });
 
         mainFrame.add(createProfileUI.getPanel());
@@ -80,12 +91,17 @@ public class MainApplication {
         chooseProfileUI = new ChooseProfileUI(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
                 // Handle the Choose Profile button action in ChooseProfileUI
                 String username = chooseProfileUI.getUsername();
                 String userId = chooseProfileUI.getUserId();
-
+                runtimeDatabase.setId(Integer.parseInt(userId));
                 // Add your logic to validate the username and userId
-
+                try {
+                    runtimeDatabase.displayDietData(runtimeDatabase.getId());
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
                 // After choosing the profile, transition to the next layer
                 showProfileOptionsUI();
             }
