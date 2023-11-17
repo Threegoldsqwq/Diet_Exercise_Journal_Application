@@ -24,8 +24,13 @@ public class RuntimeDatabase {
     }
     private int id;
     private String userName;
+    private String sex;
+    private String DOB;
+    private double height;
+    private double weight;
+    private String measurement;
 
-
+    //private String date;
     private ArrayList<String> ingredients;
     private ArrayList<String> quantities;
 
@@ -64,20 +69,33 @@ public class RuntimeDatabase {
     }
 
 
-    public void displayDietData(int userID) throws Exception{
+
+    public void displayDietData(String mealType, String date, int userID) throws Exception{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
             statement = connect.createStatement();
-            resultSet = statement.executeQuery("select Date from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + String.valueOf(userID));
-            resultSet.next();
-            Date date = resultSet.getDate(1);
+            if(mealType.equals("breakfast")){
+                resultSet = statement.executeQuery("select Ingredients, Quantity, CalorieIntake from Diet_Exercise_Journal_UserProfile.Breakfast where Date = '" + date + "' and UserID = " + userID);
 
-            resultSet = statement.executeQuery("select Ingredients, Quantity, CalorieIntake from Diet_Exercise_Journal_UserProfile.Breakfast where Date = '" + date + "'");
-            resultSet.next();
-            System.out.println(resultSet.getString(1));
-            System.out.println(resultSet.getString(2));
-            System.out.println(resultSet.getDouble(3));
+            }
+            else if(mealType.equalsIgnoreCase("lunch")){
+                resultSet = statement.executeQuery("select Ingredients, Quantity, CalorieIntake from Diet_Exercise_Journal_UserProfile.Lunch where Date = '" + date + "'" + " and UserID = " + userID);
+
+            }
+            else if(mealType.equalsIgnoreCase("dinner")){
+                resultSet = statement.executeQuery("select Ingredients, Quantity, CalorieIntake from Diet_Exercise_Journal_UserProfile.Dinner where Date = '" + date + "'" + " and UserID = " + userID);
+
+            }
+            else if(mealType.equalsIgnoreCase("snack")){
+                resultSet = statement.executeQuery("select Ingredients, Quantity, CalorieIntake from Diet_Exercise_Journal_UserProfile.Dinner where Date = '" + date + "'" + " and UserID = " + userID);
+
+            }
+            while(resultSet.next()){
+                System.out.println(resultSet.getString(1));
+                System.out.println(resultSet.getString(2));
+                System.out.println(resultSet.getDouble(3));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +105,8 @@ public class RuntimeDatabase {
         }
     }
 
-    public void displayProfile() throws Exception{
+    public ArrayList<String> extractProfile() throws Exception{
+        ArrayList<String> profiles = new ArrayList<>();
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
@@ -97,9 +116,9 @@ public class RuntimeDatabase {
             int i = 1;
             while(resultSet.next()){
                 System.out.println(i + ": " + resultSet.getString("UserName") + " (id: " + resultSet.getInt(1) + ")");
+                profiles.add(i + ": " + resultSet.getString("UserName") + " (id: " + resultSet.getInt(1) + ")");
                 i++;
             }
-
         }
         catch (Exception e){
             e.printStackTrace();
@@ -107,10 +126,9 @@ public class RuntimeDatabase {
         finally {
             close();
         }
+        return profiles;
     }
-    public ArrayList<Double> getNutrientValue(ArrayList<String> food){
-        return null;
-    }
+
     /**
      * This class close the stream
      */
@@ -133,15 +151,154 @@ public class RuntimeDatabase {
     }
 
 //-----------------------------------------------------------------------------------------------------------
-
+    //below are setters and getters for chosen profile
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
+        //System.out.println(this.id);
+        setUserName(id);
+        setSex(id);
+        setDOB(id);
+        setHeight(id);
+        setWeight(id);
+        setMeasurement(id);
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(int userID) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select UserName from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
+            resultSet.next();
+            this.userName = resultSet.getString(1);
+            //System.out.println(userName);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(int userID) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select Sex from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
+            resultSet.next();
+            this.sex = resultSet.getString(1);
+            //System.out.println(sex);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+    public String getDOB() {
+        return DOB;
+    }
+
+    public void setDOB(int userID) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select Date_of_Birth from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
+            resultSet.next();
+            this.DOB = resultSet.getString(1);
+            //System.out.println(DOB);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(int userID) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select Height from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
+            resultSet.next();
+            this.height = resultSet.getDouble(1);
+            //System.out.println(height);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int userID) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select Weight from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
+            resultSet.next();
+            this.weight = resultSet.getDouble(1);
+            //System.out.println(weight);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+    public String getMeasurement() {
+        return measurement;
+    }
+
+    public void setMeasurement(int userID) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select Measurement from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
+            resultSet.next();
+            this.measurement = resultSet.getString(1);
+            //System.out.println(measurement);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+//-----------------------------------------------------------------------------------------------------
     public ArrayList<String> getIngredients() {
         return ingredients;
     }

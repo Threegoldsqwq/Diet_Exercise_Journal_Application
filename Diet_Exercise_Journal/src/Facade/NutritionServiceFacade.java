@@ -12,7 +12,7 @@ public class NutritionServiceFacade {
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         runtimeDatabase.setId(userID);
         try {
-            runtimeDatabase.displayDietData(runtimeDatabase.getId());
+            //runtimeDatabase.displayDietData(runtimeDatabase.getId());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }

@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
 public class Main {
@@ -49,7 +50,11 @@ public class Main {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        showChooseProfilePage();
+                        try {
+                            showChooseProfilePage();
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
         );
@@ -71,16 +76,16 @@ public class Main {
                     String weight = createProfilePage.getWeight();
                     String height = createProfilePage.getHeight();
                     String measurement = createProfilePage.getMeasurement();
-                    // String[] ymd = dob.split("-");
-                    // try {
-                    //     runtimeDatabase.createProfile(name, gender,Integer.parseInt(ymd[0]),Integer.parseInt(ymd[1]),Integer.parseInt(ymd[2]),Double.parseDouble(height),Double.parseDouble(weight),measurement);
-                    // } catch (Exception ex) {
-                    //      throw new RuntimeException(ex);
-                    //  }
+                    String[] ymd = dob.split("-");
+                    try {
+                        runtimeDatabase.createProfile(name, gender,Integer.parseInt(ymd[0]),Integer.parseInt(ymd[1]),Integer.parseInt(ymd[2]),Double.parseDouble(height),Double.parseDouble(weight),measurement);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                     // Add your logic to save or process the profile information
 
                     // After saving the profile, transition to the next layer\
-                    JOptionPane.showMessageDialog(null, "here is your User ID: /n please write it down");
+                    JOptionPane.showMessageDialog(null, "Profile create successfully");
                 },
                 e -> {
                     showLandingPage();
@@ -92,13 +97,21 @@ public class Main {
     }
 
     //direct to choose profile page
-    private static void showChooseProfilePage() {
+    private static void showChooseProfilePage() throws Exception {
         mainFrame.getContentPane().removeAll();
-
-        String[] users = {"User1", "User2", "User3"};//api for runtime data base plug in
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        //display all profiles
+        ArrayList<String> profile = runtimeDatabase.extractProfile();
+        String[] users = new String[profile.size()];//api for runtime data base plug in
+        //add to array
+        for(int i = 0; i < profile.size(); i++){
+            users[i] = profile.get(i);
+        }
 
         chooseProfilePage = new ChooseProfilePage(users, e -> showLandingPage(), e -> {
             String selectedUser = chooseProfilePage.getSelectedUser();
+            String[] temp = selectedUser.split("id: ");//extract user ID
+            runtimeDatabase.setId(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));//set id to do further works
             JOptionPane.showMessageDialog(null, "Selected User: " + selectedUser);//return selected data
             showMainPage();
         });

@@ -2,18 +2,20 @@ package Main_Classes;
 
 import DatabaseOperation.RuntimeDatabase;
 
+import java.sql.Date;
+
 /**
  * This class for design main GUI
  * Not implemented GUI yet
  */
 //测试用
-public class MainUI {
+public class TestingClass {
     public static void main(String[] args) throws Exception {
 
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
-        //runtimeDatabase.displayDietData(100001);
+        runtimeDatabase.displayDietData("breakfast", "2023-11-13", 100001);
 
-        runtimeDatabase.readDatabase();
+        //runtimeDatabase.readDatabase();
         //runtimeDatabase.displayProfile();
 
 
