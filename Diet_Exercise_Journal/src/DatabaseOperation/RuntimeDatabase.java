@@ -31,8 +31,8 @@ public class RuntimeDatabase {
     private String measurement;
 
     //private String date;
-    private ArrayList<String> ingredients;
-    private ArrayList<String> quantities;
+//    private ArrayList<String> ingredients;
+//    private ArrayList<String> quantities;
 
     /**
      * This class display all profiles in the table (database)
@@ -299,24 +299,122 @@ public class RuntimeDatabase {
     }
 
 //-----------------------------------------------------------------------------------------------------
-    public ArrayList<String> getIngredients() {
-        return ingredients;
-    }
 
-    public void setIngredients(ArrayList<String> ingredients) {
-        this.ingredients = ingredients;
-        for(int i = 0; i < runtimeDatabase.getIngredients().size(); i++){
-            System.out.println(runtimeDatabase.getIngredients().get(i));
+    /**
+     * This method read all diet data (breakfast, lunch, dinner, snacks) of the user
+     * in terms of date and meal
+     * store all the data in a 2D array
+     * @param userID is the user with the data
+     */
+    public void readAllMealInfo(int userID){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+
+            resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
+            resultSet.next();
+            String[][] mealInfo = new String[resultSet.getInt(1)][5];
+            resultSet = statement.executeQuery("select Date from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
+
+            ArrayList<Date> dates = new ArrayList<>();
+            while(resultSet.next()){
+                dates.add(resultSet.getDate(1));
+            }
+            Date currentDate;
+            String[] meals = {"Breakfast", "Lunch", "Dinner"};
+            int i = 0;
+            while(i < mealInfo.length){
+
+                currentDate = dates.get(i);
+                int j = 1, type = 0;
+                mealInfo[i][0] = currentDate.toString();
+                while(j < 4){
+
+                    resultSet = statement.executeQuery("select Ingredients, Quantity from Diet_Exercise_Journal_UserProfile." + meals[type] + " where UserID = " + userID + " and Date = '" + currentDate + "'");
+                    resultSet.next();
+                    String[] ingredientTemp = resultSet.getString(1).split(", ");
+                    String[] quantityTemp = resultSet.getString(2).split(", ");
+                    for(int a = 0; a < ingredientTemp.length; a++){
+                        if(mealInfo[i][j] == null && ingredientTemp.length != 1){
+                            mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a] + " +";
+                        }
+                        else if(mealInfo[i][j] == null){
+                            mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a];
+                        }
+                        else{
+                            if(a != ingredientTemp.length - 1){
+                                mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a] + " +";
+                            }
+                            else{
+                                mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a];
+                            }
+                        }
+                    }
+                    j++; type++;
+                }
+                i++;
+            }
+
+            for(int x = 0; x < mealInfo.length; x++){
+                Date snackDate = dates.get(x);
+                String snackTemp = "";
+                resultSet = statement.executeQuery("select Ingredients, Quantity from Diet_Exercise_Journal_UserProfile.Snack where UserID = " + userID + " and Date = '" + snackDate + "'");
+
+                while(resultSet.next()){
+                    String[] ingredientTemp2 = resultSet.getString(1).split(", ");
+                    String[] quantityTemp2 = resultSet.getString(2).split(", ");
+                    if(!snackTemp.equals("")){
+                        snackTemp = snackTemp + " +";
+                    }
+                    for(int b = 0; b < ingredientTemp2.length; b++){
+                        if(snackTemp.equals("") && ingredientTemp2.length != 1){
+                            snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b] + " +";
+                        }
+                        else if(snackTemp.equals("")){
+                            snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b];
+                        }
+                        else{
+                            if(b != ingredientTemp2.length - 1){
+                                snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b] + " +";
+                            }
+                            else{
+                                snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b];
+                            }
+                        }
+                    }
+                }
+                mealInfo[x][4] = snackTemp;
+            }
+
+            for(int k = 0; k < mealInfo.length; k++){
+                for(int l = 0; l < mealInfo[k].length;l++){
+                    System.out.println(mealInfo[k][l]);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
         }
     }
-
-    public ArrayList<String> getQuantities() {
-        return quantities;
-    }
-
-    public void setQuantities(ArrayList<String> quantities) {
-        this.quantities = quantities;
-    }
+//    public ArrayList<String> getIngredients() {
+//        return ingredients;
+//    }
+//
+//    public void setIngredients(ArrayList<String> ingredients) {
+//        this.ingredients = ingredients;
+//        for(int i = 0; i < runtimeDatabase.getIngredients().size(); i++){
+//            System.out.println(runtimeDatabase.getIngredients().get(i));
+//        }
+//    }
+//
+//
+//    public void setQuantities(ArrayList<String> quantities) {
+//        this.quantities = quantities;
+//    }
 
     //-----------------------------------------------------------------------------------------------------------
     /**
@@ -359,6 +457,7 @@ public class RuntimeDatabase {
             close();
         }
     }
+
     /**
      * This method reads the calorie burnt based on the date
      * @return an array in [date][data], [date][data]...

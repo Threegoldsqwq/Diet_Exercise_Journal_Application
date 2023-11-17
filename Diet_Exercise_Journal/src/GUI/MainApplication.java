@@ -269,8 +269,8 @@ public class MainApplication {
         }, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                runtimeDatabase.setIngredients(ingredients);
-                runtimeDatabase.setQuantities(quantities);
+//                runtimeDatabase.setIngredients(ingredients);
+//                runtimeDatabase.setQuantities(quantities);
                 System.out.println("11111111");
                 // Handle Back to Previous Page button action
                 showInputDataPageUI();

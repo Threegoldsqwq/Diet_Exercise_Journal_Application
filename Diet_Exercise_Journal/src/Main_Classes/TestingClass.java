@@ -13,8 +13,8 @@ public class TestingClass {
     public static void main(String[] args) throws Exception {
 
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
-        runtimeDatabase.displayDietData("breakfast", "2023-11-13", 100001);
-
+        //runtimeDatabase.displayDietData("breakfast", "2023-11-13", 100001);
+        runtimeDatabase.readAllMealInfo(100001);
         //runtimeDatabase.readDatabase();
         //runtimeDatabase.displayProfile();
 
