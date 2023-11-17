@@ -1,7 +1,6 @@
 package NewUi;
 
 import DatabaseOperation.RuntimeDatabase;
-import GUI.LandingPageUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,20 +40,12 @@ public class Main {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         LandingPage landingPage = new LandingPage(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        showCreateProfilePage();
-                    }
-                },
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            showChooseProfilePage();
-                        } catch (Exception ex) {
-                            throw new RuntimeException(ex);
-                        }
+                e -> showCreateProfilePage(),
+                e -> {
+                    try {
+                        showChooseProfilePage();
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
                     }
                 }
         );
@@ -133,6 +124,7 @@ public class Main {
 
         ActionListener dietDataListener = e -> {
             // Handle diet data button action
+            showDietLogPage();
         };
 
         ActionListener calorieDataListener = e -> {
@@ -167,6 +159,15 @@ public class Main {
         MainPage mainPage = new MainPage(buttonListeners);
 
         mainFrame.add(mainPage.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
+    private static void showDietLogPage(){
+        mainFrame.getContentPane().removeAll();
+        DietLog dietLog = new DietLog();
+
+        mainFrame.add(dietLog.getPanel());
         mainFrame.revalidate();
         mainFrame.repaint();
     }
