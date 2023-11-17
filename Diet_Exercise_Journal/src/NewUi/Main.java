@@ -149,7 +149,7 @@ public class Main {
         };
 
 
-        ActionListener[] buttonListeners = { inputDataListener,editProfileListener, dietDataListener, calorieDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForcastListener, CFGListener};
+        ActionListener[] buttonListeners = { editProfileListener,inputDataListener, dietDataListener, calorieDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForcastListener, CFGListener};
 
         MainPage mainPage = new MainPage(buttonListeners);
 
