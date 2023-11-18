@@ -10,6 +10,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  * This class generate JFree chart for exercise
@@ -45,6 +46,7 @@ public class ExerciseDataVisualizer {
         //display using awt
         ChartFrame chartFrame = new ChartFrame("Test", chart);
         chartFrame.pack();
+        RefineryUtilities.centerFrameOnScreen(chartFrame);
         chartFrame.setVisible(true);
     }
 

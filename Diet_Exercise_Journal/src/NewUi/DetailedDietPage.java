@@ -4,24 +4,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ChooseProfilePage {
+public class DetailedDietPage {
     private JPanel panel;
-    private JList<String> userList;
+    private JList<String> dateList;
     private JButton backButton;
-    public ChooseProfilePage(String[] users, ActionListener backListener, ActionListener selectListener) {
+    public DetailedDietPage(String[] date, ActionListener selectListener, ActionListener backListener) {
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        //create Jlist
-        userList = new JList<>(users);
-        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        dateList = new JList<>(date);
+        dateList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Add a mouse listener to handle item selection
-        userList.addMouseListener(new MouseAdapter() {
+        dateList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // Double-click to select
-                    int selectedIndex = userList.getSelectedIndex();
+                    int selectedIndex = dateList.getSelectedIndex();
                     if (selectedIndex != -1) {
                         // Trigger the selectListener with the selected item
                         selectListener.actionPerformed(null);
@@ -30,7 +29,7 @@ public class ChooseProfilePage {
             }
         });
 
-        panel.add(new JScrollPane(userList), BorderLayout.CENTER);
+        panel.add(new JScrollPane(dateList), BorderLayout.CENTER);
 
         //add button
         backButton = new JButton("Back");
@@ -40,7 +39,7 @@ public class ChooseProfilePage {
         addComponentListener();
     }
 
-    //make panel looks nicer
+
     private void addComponentListener() {
         ComponentAdapter componentAdapter = new ComponentAdapter() {
             @Override
@@ -48,13 +47,16 @@ public class ChooseProfilePage {
                 adjustFont();
             }
         };
+
         // Attach the ComponentListener to the panel
         panel.addComponentListener(componentAdapter);
     }
     private void adjustFont() {
         // Adjust font size based on the height of the panel
         int fontSize = Math.min(panel.getHeight() / 25, panel.getWidth() / 25);// Adjust the divisor as needed
-        System.out.println(panel.getWidth());
+        //adjust color
+        dateList.setBackground(new Color(187, 201, 211, 255));
+        dateList.setBorder(BorderFactory.createLineBorder(Color.white));
         // Apply the adjusted font size to all buttons
         Component[] components = panel.getComponents();
         for (Component component : components) {
@@ -64,8 +66,8 @@ public class ChooseProfilePage {
                 button.setForeground(new Color(255, 255, 255));
                 button.setBackground(new Color(0x1A77BD));
                 button.setFont(updatedFont);
-                userList.setForeground(new Color(24, 115, 189));
-                userList.setFont(updatedFont);
+                dateList.setForeground(new Color(24, 115, 189));
+                dateList.setFont(updatedFont);
             }
         }
     }
@@ -76,6 +78,6 @@ public class ChooseProfilePage {
 
     // Getter method to retrieve the selected user
     public String getSelectedUser() {
-        return userList.getSelectedValue();
+        return dateList.getSelectedValue();
     }
 }

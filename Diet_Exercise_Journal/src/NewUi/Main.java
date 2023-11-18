@@ -2,6 +2,7 @@ package NewUi;
 
 import DatabaseOperation.RuntimeDatabase;
 import Facade.NutritionServiceFacade;
+import Visualizer.ExerciseDataVisualizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -131,12 +132,9 @@ public class Main {
         int yPos = (screenSize.height - mainFrame.getHeight()) / 2;
         mainFrame.setLocation(xPos, yPos);
 
-        ActionListener dietDataListener = e -> {
+        ActionListener detailedDataListener = e -> {
             // Handle diet data button action
-        };
-
-        ActionListener calorieDataListener = e -> {
-            // Handle calorie data button action
+            showDetailedDietPage();
         };
 
         ActionListener inputDataListener = e -> {
@@ -173,6 +171,7 @@ public class Main {
         };
 
         ActionListener ExerciseVisualizerListener = e -> {
+            ExerciseDataVisualizer.getChart();
             // Handle edit profile button action
         };
         ActionListener WeightLossForcastListener = e -> {
@@ -183,7 +182,7 @@ public class Main {
         };
 
 
-        ActionListener[] buttonListeners = {editProfileListener, inputDataListener, dietDataListener, calorieDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForcastListener, CFGListener};
+        ActionListener[] buttonListeners = {editProfileListener, inputDataListener, detailedDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForcastListener, CFGListener};
 
         MainPage mainPage = new MainPage(buttonListeners);
 
@@ -226,7 +225,48 @@ public class Main {
             showMainPage();
         });
 
+        //print page
         mainFrame.add(dietLogPage.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
+    private static void showDetailedDietPage() {
+        mainFrame.getContentPane().removeAll();
+        //change here
+        String[] date = {"11/16", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17"};
+        DetailedDietPage detailedDietPage = new DetailedDietPage(date,
+                e -> {
+                    String[] mealOptions = {"Breakfast", "Lunch", "Dinner", "Snack"};
+
+                    // Show the second JOptionPane with four options for meals
+                    int mealResult = JOptionPane.showOptionDialog(
+                            null,
+                            "Please choose which meal you want to see",
+                            "Choose meal",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            mealOptions,
+                            mealOptions[0] // Default selection
+                    );
+                    // use the user's choice for meals
+                    showDetailedMealPage(mealResult);
+                },
+                e -> {
+                    showMainPage();
+                });
+        mainFrame.add(detailedDietPage.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
+    private static void showDetailedMealPage(int type/*0=breakfast,1=lunch,2=dinner,3=snack*/){
+        mainFrame.getContentPane().removeAll();
+
+        DetailedMealPage detailedMealPage=new DetailedMealPage(new String[]{"1"}, new String[]{"2"},e -> showDetailedDietPage());
+
+        mainFrame.add(detailedMealPage.getPanel());
         mainFrame.revalidate();
         mainFrame.repaint();
     }

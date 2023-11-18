@@ -67,7 +67,7 @@ public class MainPage {
 
         //create buttons we need
         // Attach component listener before creating buttons
-        String[] buttonNames = {"Edit Profile","Input Data", "Detailed Diet Data", "Exercise Data", "Diet Visualizer","Calorie Visualizer","Weightloss Forecast","CFG"};
+        String[] buttonNames = {"Edit Profile","Input Data", "Detailed Diet Data", "Diet Visualizer","Calorie Visualizer","Weightloss Forecast","CFG"};
         JButton buttons[] = new JButton[buttonNames.length];
 
         for (int i = 0; i < buttonNames.length; i++) {
