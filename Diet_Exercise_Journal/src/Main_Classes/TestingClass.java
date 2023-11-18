@@ -35,6 +35,10 @@ public class TestingClass {
             System.out.println();
         }
 
+        String[][] testMeal = {{"2023-11-13", "tomato, 11", "tomato, 11", "tomato, 11", "tomato, 11"},
+                {"2023-11-14", "potato, 11 - tomato, 20", "tomato, 11 - beef, 23", "pork, 20 - chicken, 30 - fruit salad, 40", "tomato, 13 - potato, 13"}};
+        String[][] testCal = {{"2023-11-13", "1.87", "1.87", "1.87", "1.87"},
+                {"2023-11-14", "11.870000000000001", "74.78", "164.5", "12.219999999999999" }};
 //        double c = runtimeDatabase.readCalorieInfo("MILK");
 //        System.out.println(c);
 
