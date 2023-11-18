@@ -30,6 +30,8 @@ public class RuntimeDatabase {
     private double weight;
     private String measurement;
 
+
+    String[][] mealInfo = readAllMealInfo(getId());
     //private String date;
 //    private ArrayList<String> ingredients;
 //    private ArrayList<String> quantities;
@@ -300,13 +302,22 @@ public class RuntimeDatabase {
 
 //-----------------------------------------------------------------------------------------------------
 
+
+    public void setMealInfo(String[][] mealInfo) {
+        this.mealInfo = mealInfo;
+    }
+
+    public String[][] getMealInfo() {
+        return mealInfo;
+    }
+    //-----------------------------------------------------------------------------------------------------
     /**
      * This method read all diet data (breakfast, lunch, dinner, snacks) of the user
      * in terms of date and meal
      * store all the data in a 2D array
      * @param userID is the user with the data
      */
-    public void readAllMealInfo(int userID){
+    public String[][] readAllMealInfo(int userID){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
@@ -387,11 +398,12 @@ public class RuntimeDatabase {
                 mealInfo[x][4] = snackTemp;
             }
 
-            for(int k = 0; k < mealInfo.length; k++){
-                for(int l = 0; l < mealInfo[k].length;l++){
-                    System.out.println(mealInfo[k][l]);
-                }
-            }
+//            for(int k = 0; k < mealInfo.length; k++){
+//                for(int l = 0; l < mealInfo[k].length;l++){
+//                    System.out.println(mealInfo[k][l]);
+//                }
+//            }
+            return mealInfo;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -399,6 +411,7 @@ public class RuntimeDatabase {
         finally {
             close();
         }
+        return  null;
     }
 //    public ArrayList<String> getIngredients() {
 //        return ingredients;
@@ -457,6 +470,84 @@ public class RuntimeDatabase {
             close();
         }
     }
+
+    public void logMeal(String date, int userID, String mealType, ArrayList<String> ingredients, ArrayList<String> quantity){
+        String[][] mealInfo = new String[getMealInfo().length][getMealInfo()[0].length];
+        for(int i = 0; i < mealInfo.length; i++){
+            for(int j = 0; j < mealInfo[i].length; j++){
+                mealInfo[i][j] = getMealInfo()[i][j];
+            }
+        }
+        boolean isChange = false;//see if the log is a change to exist data
+        int type = 0;
+        if(mealType.equalsIgnoreCase("breakfast")){
+            type = 1;
+        }
+        else if(mealType.equalsIgnoreCase("lunch")){
+            type = 2;
+        }
+        else if(mealType.equalsIgnoreCase("dinner")){
+            type = 3;
+        }
+        else if (mealType.equalsIgnoreCase("snack")){
+            type = 4;
+        }
+        //traverse to see if the data exist
+        for(int i = 0; i < mealInfo.length; i++){
+            if(mealInfo[i][0].equals(date)){
+                isChange = true;
+                mealInfo[i][type] = null;
+                for(int j = 0; j < ingredients.size(); j++){
+                    if(mealInfo[i][type] == null && ingredients.size() != 1){
+                        mealInfo[i][type] = ingredients.get(j) + ", " + quantity.get(j) + " +";
+                    }
+                    else if(mealInfo[i][type] == null){
+                        mealInfo[i][type] = ingredients.get(j) + ", " + quantity.get(j);
+                    }
+                    else{
+                        if(j == ingredients.size() - 1){
+                            mealInfo[i][type] = mealInfo[i][type] + " " + ingredients.get(j) + ", " + quantity.get(j);
+                        }
+                        else{
+                            mealInfo[i][type] = mealInfo[i][type] + " " + ingredients.get(j) + ", " + quantity.get(j) + " +";
+                        }
+                    }
+                }
+            }
+        }
+        setMealInfo(mealInfo);
+        //if it is a new data, extend the array
+        if(!isChange){
+            String[][] newMealInfo = new String[mealInfo.length+1][mealInfo[0].length];
+            for(int i = 0; i < mealInfo.length; i++){
+                for(int j = 0; j < mealInfo[i].length; j++){
+                    newMealInfo[i][j] = mealInfo[i][j];
+                }
+            }
+
+            newMealInfo[newMealInfo.length-1][0] = date;
+            for(int j = 0; j < ingredients.size(); j++){
+                if(newMealInfo[newMealInfo.length-1][type] == null && ingredients.size() != 1){
+                    newMealInfo[newMealInfo.length-1][type] = ingredients.get(j) + ", " + quantity.get(j) + " +";
+                }
+                else if(newMealInfo[newMealInfo.length-1][type] == null){
+                    newMealInfo[newMealInfo.length-1][type] = ingredients.get(j) + ", " + quantity.get(j);
+                }
+                else{
+                    if(j != ingredients.size() - 1){
+                        newMealInfo[newMealInfo.length-1][type] =  newMealInfo[newMealInfo.length-1][type] + " " + ingredients.get(j) + ", " + quantity.get(j) + " +";
+                    }
+                    else{
+                        newMealInfo[newMealInfo.length-1][type] =  newMealInfo[newMealInfo.length-1][type] + " " + ingredients.get(j) + ", " + quantity.get(j);
+                    }
+                }
+            }
+            setMealInfo(newMealInfo);
+        }
+    }
+
+
+//--------------------------------------------------------------------------------------------------------------
 
     /**
      * This method reads the calorie burnt based on the date

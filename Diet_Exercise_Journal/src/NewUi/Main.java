@@ -103,6 +103,8 @@ public class Main {
             String selectedUser = chooseProfilePage.getSelectedUser();
             String[] temp = selectedUser.split("id: ");//extract user ID
             runtimeDatabase.setId(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));//set id to do further works
+            runtimeDatabase.setMealInfo(runtimeDatabase.readAllMealInfo(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1))));//read all meal info of the user
+
             JOptionPane.showMessageDialog(null, "Selected User: " + selectedUser);//return selected data
             showMainPage();
         });

@@ -3,6 +3,7 @@ package Main_Classes;
 import DatabaseOperation.RuntimeDatabase;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  * This class for design main GUI
@@ -14,7 +15,24 @@ public class TestingClass {
 
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         //runtimeDatabase.displayDietData("breakfast", "2023-11-13", 100001);
-        runtimeDatabase.readAllMealInfo(100001);
+        String[][] s = runtimeDatabase.readAllMealInfo(100001);
+        runtimeDatabase.setMealInfo(s);
+        ArrayList<String> ingredients = new ArrayList<>();
+        ingredients.add("cookie");
+        ingredients.add("rice");
+        ingredients.add("pork");
+        ArrayList<String> quantity = new ArrayList<>();
+        quantity.add("10");
+        quantity.add("11");
+        quantity.add("12");
+        runtimeDatabase.logMeal("2023-11-17", 100001, "breakfast", ingredients, quantity);
+        s = runtimeDatabase.getMealInfo();
+        for (String[] strings : s) {
+            for (String string : strings) {
+                System.out.print(string + " ");
+            }
+            System.out.println();
+        }
         //runtimeDatabase.readDatabase();
         //runtimeDatabase.displayProfile();
 
