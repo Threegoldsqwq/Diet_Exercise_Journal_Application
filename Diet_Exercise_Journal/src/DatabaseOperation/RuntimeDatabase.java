@@ -1,6 +1,11 @@
 package DatabaseOperation;
 
 
+import Operator.DataOperator;
+import Operator.DietDataOperator;
+import OutcomeGenerator.Calculator;
+import OutcomeGenerator.DataCalculator;
+
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -32,6 +37,7 @@ public class RuntimeDatabase {
 
 
     String[][] mealInfo = readAllMealInfo(getId());
+    String[][] calorieInfo;
     //private String date;
 //    private ArrayList<String> ingredients;
 //    private ArrayList<String> quantities;
@@ -40,7 +46,7 @@ public class RuntimeDatabase {
      * This class display all profiles in the table (database)
      * @throws Exception if sql error
      */
-    public void readDatabase() throws Exception{//测试用
+    public void readDatabase() throws Exception{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
@@ -302,20 +308,32 @@ public class RuntimeDatabase {
 
 //-----------------------------------------------------------------------------------------------------
 
-
+    //setter and getters for meal, exercise, nutrient info
     public void setMealInfo(String[][] mealInfo) {
         this.mealInfo = mealInfo;
+        DataCalculator calculator = new Calculator();
+        //calorie array update along with the meal
+        this.calorieInfo = new String[mealInfo.length][mealInfo[0].length];
+        this.calorieInfo = calculator.calculateCalorieInfo(mealInfo);
     }
 
     public String[][] getMealInfo() {
         return mealInfo;
     }
+
+    public String[][] getCalorieInfo() {
+        return calorieInfo;
+    }
+
+
     //-----------------------------------------------------------------------------------------------------
     /**
      * This method read all diet data (breakfast, lunch, dinner, snacks) of the user
      * in terms of date and meal
      * store all the data in a 2D array
      * @param userID is the user with the data
+     * @return a string with format [date][breakfast][lunch][dinner][snack]
+     * the inner string format is [ingredient, quantity - 2nd ingredient, quantity...]
      */
     public String[][] readAllMealInfo(int userID){
         try {
@@ -323,6 +341,7 @@ public class RuntimeDatabase {
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
             statement = connect.createStatement();
 
+            //first get the number of dates in the user profile to form the array
             resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
             resultSet.next();
             String[][] mealInfo = new String[resultSet.getInt(1)][5];
@@ -348,14 +367,14 @@ public class RuntimeDatabase {
                     String[] quantityTemp = resultSet.getString(2).split(", ");
                     for(int a = 0; a < ingredientTemp.length; a++){
                         if(mealInfo[i][j] == null && ingredientTemp.length != 1){
-                            mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a] + " +";
+                            mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a] + " -";
                         }
                         else if(mealInfo[i][j] == null){
                             mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a];
                         }
                         else{
                             if(a != ingredientTemp.length - 1){
-                                mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a] + " +";
+                                mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a] + " -";
                             }
                             else{
                                 mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a];
@@ -376,18 +395,18 @@ public class RuntimeDatabase {
                     String[] ingredientTemp2 = resultSet.getString(1).split(", ");
                     String[] quantityTemp2 = resultSet.getString(2).split(", ");
                     if(!snackTemp.equals("")){
-                        snackTemp = snackTemp + " +";
+                        snackTemp = snackTemp + " -";
                     }
                     for(int b = 0; b < ingredientTemp2.length; b++){
                         if(snackTemp.equals("") && ingredientTemp2.length != 1){
-                            snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b] + " +";
+                            snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b] + " -";
                         }
                         else if(snackTemp.equals("")){
                             snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b];
                         }
                         else{
                             if(b != ingredientTemp2.length - 1){
-                                snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b] + " +";
+                                snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b] + " -";
                             }
                             else{
                                 snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b];
@@ -413,6 +432,8 @@ public class RuntimeDatabase {
         }
         return  null;
     }
+
+
 //    public ArrayList<String> getIngredients() {
 //        return ingredients;
 //    }
@@ -429,7 +450,7 @@ public class RuntimeDatabase {
 //        this.quantities = quantities;
 //    }
 
-    //-----------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
     /**
      * This class create a profile for user and store it to the database
      * @param UserName is the username
@@ -440,9 +461,8 @@ public class RuntimeDatabase {
      * @param height is the height in meter
      * @param weight is the weight in kg
      * @param measurement is the measurement the user want
-     * @throws Exception if sql command has syntax error
      */
-    public void createProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement) throws Exception{
+    public void createProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
@@ -471,7 +491,16 @@ public class RuntimeDatabase {
         }
     }
 
+    /**
+     *
+     * @param date
+     * @param userID
+     * @param mealType
+     * @param ingredients
+     * @param quantity
+     */
     public void logMeal(String date, int userID, String mealType, ArrayList<String> ingredients, ArrayList<String> quantity){
+
         String[][] mealInfo = new String[getMealInfo().length][getMealInfo()[0].length];
         for(int i = 0; i < mealInfo.length; i++){
             for(int j = 0; j < mealInfo[i].length; j++){
@@ -499,7 +528,7 @@ public class RuntimeDatabase {
                 mealInfo[i][type] = null;
                 for(int j = 0; j < ingredients.size(); j++){
                     if(mealInfo[i][type] == null && ingredients.size() != 1){
-                        mealInfo[i][type] = ingredients.get(j) + ", " + quantity.get(j) + " +";
+                        mealInfo[i][type] = ingredients.get(j) + ", " + quantity.get(j) + " -";
                     }
                     else if(mealInfo[i][type] == null){
                         mealInfo[i][type] = ingredients.get(j) + ", " + quantity.get(j);
@@ -509,12 +538,13 @@ public class RuntimeDatabase {
                             mealInfo[i][type] = mealInfo[i][type] + " " + ingredients.get(j) + ", " + quantity.get(j);
                         }
                         else{
-                            mealInfo[i][type] = mealInfo[i][type] + " " + ingredients.get(j) + ", " + quantity.get(j) + " +";
+                            mealInfo[i][type] = mealInfo[i][type] + " " + ingredients.get(j) + ", " + quantity.get(j) + " -";
                         }
                     }
                 }
             }
         }
+        //update the array
         setMealInfo(mealInfo);
         //if it is a new data, extend the array
         if(!isChange){
@@ -528,14 +558,14 @@ public class RuntimeDatabase {
             newMealInfo[newMealInfo.length-1][0] = date;
             for(int j = 0; j < ingredients.size(); j++){
                 if(newMealInfo[newMealInfo.length-1][type] == null && ingredients.size() != 1){
-                    newMealInfo[newMealInfo.length-1][type] = ingredients.get(j) + ", " + quantity.get(j) + " +";
+                    newMealInfo[newMealInfo.length-1][type] = ingredients.get(j) + ", " + quantity.get(j) + " -";
                 }
                 else if(newMealInfo[newMealInfo.length-1][type] == null){
                     newMealInfo[newMealInfo.length-1][type] = ingredients.get(j) + ", " + quantity.get(j);
                 }
                 else{
                     if(j != ingredients.size() - 1){
-                        newMealInfo[newMealInfo.length-1][type] =  newMealInfo[newMealInfo.length-1][type] + " " + ingredients.get(j) + ", " + quantity.get(j) + " +";
+                        newMealInfo[newMealInfo.length-1][type] =  newMealInfo[newMealInfo.length-1][type] + " " + ingredients.get(j) + ", " + quantity.get(j) + " -";
                     }
                     else{
                         newMealInfo[newMealInfo.length-1][type] =  newMealInfo[newMealInfo.length-1][type] + " " + ingredients.get(j) + ", " + quantity.get(j);
@@ -548,6 +578,47 @@ public class RuntimeDatabase {
 
 
 //--------------------------------------------------------------------------------------------------------------
+
+    /**
+     * This class read the calorie information of an ingredient in cal/g
+     * @param food is the food search for calorie
+     * @return the calorie of the food
+     */
+    public double extractCalorieInfo(String food){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + food.toLowerCase() + "'");
+            //resultSet.next();
+            double foodCalorie = 0.0;
+            while(resultSet.next()){
+                int foodID = resultSet.getInt(1);
+                resultSet = statement.executeQuery("select NutrientValue from Diet_Exercise_Journal_UserProfile.NUTRIENT_AMOUNT where FoodID = " + foodID + " and NutrientID = 208");
+                resultSet.next();
+
+                if(foodID == 83){
+                    foodCalorie = resultSet.getDouble(1) / 4;
+                }
+                else if(foodID == 2062){
+                    foodCalorie = resultSet.getDouble(1) * 2 / 100;
+                }
+                else{
+                    foodCalorie = resultSet.getDouble(1) / 100;
+                }
+            }
+            return foodCalorie;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+        return 0.00;
+    }
+
+//---------------------------------------------------------------------------------------------------------------
 
     /**
      * This method reads the calorie burnt based on the date
