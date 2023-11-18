@@ -3,40 +3,38 @@ package NewUi;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
 /**
- * Represents a graphical user interface for choosing a user profile from a list.
- * The user can select a profile by clicking on the list item or by double-clicking
- * to trigger a selection event. The selected user can be retrieved using the
- * {@link #getSelectedUser()} method.
+ * Represents a graphical user interface for displaying detailed diet information
+ * for specific dates. Users can select a date from the list to view detailed diet
+ * information for that date. The selected date can be retrieved using the provided
+ * getter method.
  */
-public class ChooseProfilePage {
+public class DetailedDietPage {
     private JPanel panel;
-    private JList<String> userList;
+    private JList<String> dateList;
     private JButton backButton;
 
     /**
-     * Constructs a ChooseProfilePage with the given user names, back button listener,
-     * and select button listener.
+     * Constructs a DetailedDietPage with a list of dates, an ActionListener for
+     * date selection, and an ActionListener for the "Back" button.
      *
-     * @param users          An array of user names to be displayed in the list.
-     * @param backListener   ActionListener for the "Back" button.
-     * @param selectListener ActionListener for the user selection event.
+     * @param date           An array of dates to be displayed in the list.
+     * @param selectListener  ActionListener for the date selection event.
+     * @param backListener    ActionListener for the "Back" button.
      */
-    public ChooseProfilePage(String[] users, ActionListener backListener, ActionListener selectListener) {
+    public DetailedDietPage(String[] date, ActionListener selectListener, ActionListener backListener) {
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        //create Jlist
-        userList = new JList<>(users);
-        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        dateList = new JList<>(date);
+        dateList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Add a mouse listener to handle item selection
-        userList.addMouseListener(new MouseAdapter() {
+        dateList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // Double-click to select
-                    int selectedIndex = userList.getSelectedIndex();
+                    int selectedIndex = dateList.getSelectedIndex();
                     if (selectedIndex != -1) {
                         // Trigger the selectListener with the selected item
                         selectListener.actionPerformed(null);
@@ -45,7 +43,7 @@ public class ChooseProfilePage {
             }
         });
 
-        panel.add(new JScrollPane(userList), BorderLayout.CENTER);
+        panel.add(new JScrollPane(dateList), BorderLayout.CENTER);
 
         //add button
         backButton = new JButton("Back");
@@ -55,7 +53,9 @@ public class ChooseProfilePage {
         addComponentListener();
     }
 
-    //make panel looks nicer
+    /**
+     * Adds a ComponentListener to adjust the font size based on the panel's height.
+     */
     private void addComponentListener() {
         ComponentAdapter componentAdapter = new ComponentAdapter() {
             @Override
@@ -63,17 +63,20 @@ public class ChooseProfilePage {
                 adjustFont();
             }
         };
+
         // Attach the ComponentListener to the panel
         panel.addComponentListener(componentAdapter);
     }
 
     /**
-     * Adjusts the font size of buttons and the user list based on the height of the panel.
+     * Adjusts the font size and color of buttons and the date list based on the height of the panel.
      */
     private void adjustFont() {
         // Adjust font size based on the height of the panel
         int fontSize = Math.min(panel.getHeight() / 25, panel.getWidth() / 25);// Adjust the divisor as needed
-        System.out.println(panel.getWidth());
+        //adjust color
+        dateList.setBackground(new Color(187, 201, 211, 255));
+        dateList.setBorder(BorderFactory.createLineBorder(Color.white));
         // Apply the adjusted font size to all buttons
         Component[] components = panel.getComponents();
         for (Component component : components) {
@@ -83,27 +86,27 @@ public class ChooseProfilePage {
                 button.setForeground(new Color(255, 255, 255));
                 button.setBackground(new Color(0x1A77BD));
                 button.setFont(updatedFont);
-                userList.setForeground(new Color(24, 115, 189));
-                userList.setFont(updatedFont);
+                dateList.setForeground(new Color(24, 115, 189));
+                dateList.setFont(updatedFont);
             }
         }
     }
 
     /**
-     * Gets the panel containing the user list and back button.
+     * Gets the JPanel representing the DetailedDietPage.
      *
-     * @return The JPanel representing the ChooseProfilePage.
+     * @return The JPanel representing the DetailedDietPage.
      */
     public JPanel getPanel() {
         return panel;
     }
 
     /**
-     * Gets the selected user from the user list.
+     * Gets the selected date from the date list.
      *
-     * @return The selected user name.
+     * @return The selected date.
      */
-    public String getSelectedUser() {
-        return userList.getSelectedValue();
+    public String getSelectedDate() {
+        return dateList.getSelectedValue();
     }
 }

@@ -3,6 +3,10 @@ package OutcomeGenerator;
 
 import DatabaseOperation.RuntimeDatabase;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 /**
  * This class is for calculating data
  */
@@ -71,5 +75,35 @@ public class Calculator implements DataCalculator{
             }
         }
         return calories;
+    }
+
+    public static double weightForecast(String userInputDate){
+        double CalorieDeficit;
+        int lengthDays;
+
+        double avgCalorieIntake=getAvgCIntake();
+        double avgCalorieBurned=getAvgCBurned();
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+        // Parse the user input date
+        LocalDate selectedDate = LocalDate.parse(userInputDate, dateFormatter);
+
+        // Get today's date
+        LocalDate currentDate = LocalDate.now();
+        lengthDays= (int) ChronoUnit.DAYS.between(currentDate, selectedDate);
+
+        CalorieDeficit=avgCalorieIntake-avgCalorieBurned;
+        return CalorieDeficit*lengthDays/7700;
+    }
+
+    private static double getAvgCBurned() {
+        //change here link to database
+        return 17600;
+    }
+
+    private static double getAvgCIntake() {
+        //change here link to database
+        return 16000;
     }
 }

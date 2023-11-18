@@ -10,7 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
+/**
+ * Represents the main page of the application with various buttons and information.
+ */
 public class MainPage {
     private JPanel panel =new JPanel();
     private JPanel RightPanel;
@@ -19,6 +21,11 @@ public class MainPage {
     private JLabel timeLabel;
     private int D=10; //date we want to show
 
+    /**
+     * Constructs a MainPage with ActionListeners for various buttons.
+     *
+     * @param buttonListeners ActionListeners for the buttons on the main page.
+     */
     public MainPage(
             ActionListener[] buttonListeners
     ) {
@@ -67,7 +74,7 @@ public class MainPage {
 
         //create buttons we need
         // Attach component listener before creating buttons
-        String[] buttonNames = {"Edit Profile","Input Data", "Detailed Diet Data", "Exercise Data", "Diet Visualizer","Calorie Visualizer","Weightloss Forecast","CFG"};
+        String[] buttonNames = {"Edit Profile","Input Data", "Detailed Diet Data", "Diet Visualizer","Calorie Visualizer","Weightloss Forecast","CFG"};
         JButton buttons[] = new JButton[buttonNames.length];
 
         for (int i = 0; i < buttonNames.length; i++) {
@@ -79,7 +86,12 @@ public class MainPage {
         addComponentListener();
     }
 
-
+    /**
+     * Gets an array of formatted strings representing the past N days.
+     *
+     * @param n The number of past days to retrieve.
+     * @return An array of formatted strings representing the past N days.
+     */
     public static String[] getPastNDays(int n) {
             // Get today's date
             LocalDate currentDate = LocalDate.now();
@@ -99,7 +111,9 @@ public class MainPage {
             }
             return result;
     }
-
+    /**
+     * Updates the timeLabel with the current date and time.
+     */
     private void updateTime() {
         // Get the current time
         Date now = new Date();
@@ -112,7 +126,9 @@ public class MainPage {
         timeLabel.setText("Current Time: " + formattedTime);
     }
 
-
+    /**
+     * Adds a ComponentListener to adjust the panel size and font based on resizing.
+     */
     private void addComponentListener() {
         ComponentAdapter componentAdapter = new ComponentAdapter() {
             @Override
@@ -125,13 +141,17 @@ public class MainPage {
         // Attach the ComponentListener to the panel
         panel.addComponentListener(componentAdapter);
     }
-
+    /**
+     * Adjusts the size of LeftPanel and RightPanel based on the topPanel's width.
+     */
     //set panel
     private void adjustPanel(){
         LeftPanel.setPreferredSize(new Dimension(topPanel.getWidth()*2/3, 1)); // Adjust the width as needed
         RightPanel.setPreferredSize(new Dimension(topPanel.getWidth()/3, 1));
     }
-
+    /**
+     * Adjusts the font size and color of buttons and labels based on the panel's size.
+     */
     //set font
     private void adjustFont() {
         // Adjust font size based on the height of the panel
@@ -158,7 +178,11 @@ public class MainPage {
         }
     }
 
-
+    /**
+     * Gets the JPanel representing the MainPage.
+     *
+     * @return The JPanel representing the MainPage.
+     */
     public JPanel getPanel() {
         return panel;
     }
