@@ -2,7 +2,6 @@ package NewUi;
 
 import DatabaseOperation.RuntimeDatabase;
 import Facade.NutritionServiceFacade;
-import Visualizer.ExerciseDataVisualizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -169,14 +168,20 @@ public class Main {
         ActionListener ExerciseVisualizerListener = e -> {
             // Handle edit profile button action
             showDateRangeSelectionDialog(mainFrame);
-             ExerciseDataVisualizer.getChart();
+            NutritionServiceFacade.displayCalorieChart();
 
         };
         ActionListener WeightLossForecastListener = e -> {
             // Handle edit profile button action
+            //change here
+            JOptionPane.showMessageDialog(null, "<html><font size='5'>Estimate Weight Change is: <br>" +
+                    "<font size='7'>" + NutritionServiceFacade.getWeightForecast("12/20/2023") + " KG</font></font></html>");
         };
         ActionListener CFGListener = e -> {
             // Handle edit profile button action
+            //change here
+            NutritionServiceFacade.getCFGchart(new double[]{30.0, 25.0, 20.0, 15.0, 10.0},
+        new double[]{30.0, 30.0, 20.0, 15.0, 5.0});
         };
 
 
