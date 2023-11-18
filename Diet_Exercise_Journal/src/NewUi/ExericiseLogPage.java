@@ -1,86 +1,69 @@
 package NewUi;
 
-// CreateProfileUI.java
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class CreateProfilePage {
+public class ExericiseLogPage {
+    private JTextField exerciseTypeField, lenthField, date;
+    private JComboBox<String> intensity;
     private JPanel panel;
-    private JTextField nameField;
-    private JTextField dobField;
-    private JTextField genderField;
-    private JTextField weightField;
-    private JTextField heightField;
-    private JComboBox<String> measurementComboBox;
 
-    public CreateProfilePage(ActionListener saveButtonListener, ActionListener backButtonListener) {
+    public ExericiseLogPage(ActionListener saveButtonListener, ActionListener backButtonListener) {
+        //set panel
         panel = new JPanel();
-        panel.setLayout(new GridLayout(7, 2, 10, 10));
+        panel.setLayout(new GridLayout(5, 2, 10, 10));
         panel.setBackground(new Color(187, 201, 211, 255));
 
-        //UI components
-        nameField = new JTextField();
-        dobField = new JTextField();
-        genderField = new JTextField();
-        weightField = new JTextField();
-        heightField = new JTextField();
-        String[] measurementOptions = {"Metric", "Imperial"};
-        measurementComboBox = new JComboBox<>(measurementOptions);
+        // UI components
+        exerciseTypeField = new JTextField(10);
+        intensity = new JComboBox<>(new String[]{"High", "Normal", "Low"});
+        lenthField = new JTextField(15);
+        date = new JTextField(10);
 
-        //layout
-        panel.add(new JLabel("Name:"));
-        panel.add(nameField);
-        panel.add(new JLabel("Date of Birth(xxxx/xx/xx):"));
-        panel.add(dobField);
-        panel.add(new JLabel("Gender(M/F):"));
-        panel.add(genderField);
-        panel.add(new JLabel("Weight(cm/feet):"));
-        panel.add(weightField);
-        panel.add(new JLabel("Height(kg/lb):"));
-        panel.add(heightField);
-        panel.add(new JLabel("Measurement:"));
-        panel.add(measurementComboBox);
-
-        JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(saveButtonListener);
-        panel.add(saveButton);
-
+        // Buttons
+        JButton logButton = new JButton("Log Exercise");
+        logButton.addActionListener(saveButtonListener);
         JButton backButton = new JButton("Back");
         backButton.addActionListener(backButtonListener);
+
+        // Layout
+        panel.add(new JLabel("Date:"));
+        panel.add(date);
+        panel.add(new JLabel("Exercise Type:"));
+        panel.add(exerciseTypeField);
+        panel.add(new JLabel("intensity"));
+        panel.add(intensity);
+        panel.add(new JLabel("Length:"));
+        panel.add(lenthField);
+        panel.add(logButton);
         panel.add(backButton);
+
+        //active componetListener
         addComponentListener();
+
     }
 
     public JPanel getPanel() {
         return panel;
     }
 
-    public String getName() {
-        return nameField.getText();
+    public String getDate() {
+        return date.getText();
     }
 
-    public String getDOB() {
-        return dobField.getText();
+    public String getIntensity() {
+        return (String) intensity.getSelectedItem();
     }
 
-    public String getGender() {
-        return genderField.getText();
+    public String getLength() {
+        return lenthField.getText();
     }
 
-    public String getWeight() {
-        return weightField.getText();
-    }
-
-    public String getHeight() {
-        return heightField.getText();
-    }
-
-    public String getMeasurement() {
-        return (String) measurementComboBox.getSelectedItem();
+    public String getExerciseType() {
+        return exerciseTypeField.getText();
     }
 
     private void addComponentListener() {
@@ -90,7 +73,6 @@ public class CreateProfilePage {
                 adjustFont();
             }
         };
-
         // Attach the ComponentListener to the panel
         panel.addComponentListener(componentAdapter);
     }

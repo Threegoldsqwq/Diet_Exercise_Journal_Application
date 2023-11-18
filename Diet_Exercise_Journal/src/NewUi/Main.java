@@ -1,10 +1,10 @@
 package NewUi;
 
 import DatabaseOperation.RuntimeDatabase;
+import Facade.NutritionServiceFacade;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -14,6 +14,8 @@ public class Main {
     public static JFrame mainFrame;
     private static CreateProfilePage createProfilePage;
     private static ChooseProfilePage chooseProfilePage;
+    private static DietLogPage dietLogPage;
+    private static ExericiseLogPage exercisePage;
 
     public static void main(String[] args) {
 
@@ -30,7 +32,8 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                showLandingPage();
+                //showLandingPage();
+                showMainPage();
             }
         });
     }
@@ -40,7 +43,9 @@ public class Main {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         LandingPage landingPage = new LandingPage(
+                //create profile button
                 e -> showCreateProfilePage(),
+                //choose profile button
                 e -> {
                     try {
                         showChooseProfilePage();
@@ -48,6 +53,7 @@ public class Main {
                         throw new RuntimeException(ex);
                     }
                 }
+
         );
 
         mainFrame.add(landingPage.getPanel());
@@ -69,7 +75,8 @@ public class Main {
                     String measurement = createProfilePage.getMeasurement();
                     String[] ymd = dob.split("-");
                     try {
-                        runtimeDatabase.createProfile(name, gender,Integer.parseInt(ymd[0]),Integer.parseInt(ymd[1]),Integer.parseInt(ymd[2]),Double.parseDouble(height),Double.parseDouble(weight),measurement);
+                        //挪到facade
+                        runtimeDatabase.createProfile(name, gender, Integer.parseInt(ymd[0]), Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]), Double.parseDouble(height), Double.parseDouble(weight), measurement);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -95,17 +102,17 @@ public class Main {
         ArrayList<String> profile = runtimeDatabase.extractProfile();
         String[] users = new String[profile.size()];//api for runtime data base plug in
         //add to array
-        for(int i = 0; i < profile.size(); i++){
+        for (int i = 0; i < profile.size(); i++) {
             users[i] = profile.get(i);
         }
 
         chooseProfilePage = new ChooseProfilePage(users, e -> showLandingPage(), e -> {
             String selectedUser = chooseProfilePage.getSelectedUser();
             String[] temp = selectedUser.split("id: ");//extract user ID
+            //挪到facade
             runtimeDatabase.setId(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));//set id to do further works
             runtimeDatabase.setMealInfo(runtimeDatabase.readAllMealInfo(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1))));//read all meal info of the user
 
-            JOptionPane.showMessageDialog(null, "Selected User: " + selectedUser);//return selected data
             showMainPage();
         });
         mainFrame.add(chooseProfilePage.getPanel());
@@ -126,7 +133,6 @@ public class Main {
 
         ActionListener dietDataListener = e -> {
             // Handle diet data button action
-            showDietLogPage();
         };
 
         ActionListener calorieDataListener = e -> {
@@ -134,7 +140,27 @@ public class Main {
         };
 
         ActionListener inputDataListener = e -> {
-            // Handle input today's data button action
+            //show a choose promote for diet or exercise
+            String[] options = {"Diet", "Exercise"};
+            //create promote
+            int result = JOptionPane.showOptionDialog(
+                    null,
+                    "Please choose Diet or Exercise data you want to input",
+                    "Choose input type",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0] // Default selection
+            );
+            // Check the user's choice
+            if (result == JOptionPane.YES_OPTION) {
+                // User clicked "Select Diet"
+                showDietLogPage();
+            } else if (result == JOptionPane.NO_OPTION) {
+                // User clicked "Select Exercise"
+                showExerciseLogPage();
+            }
         };
 
         ActionListener editProfileListener = e -> {
@@ -142,6 +168,7 @@ public class Main {
         };
 
         ActionListener DietVisualizerListener = e -> {
+            NutritionServiceFacade.displayDietChart();
             // Handle edit profile button action
         };
 
@@ -156,7 +183,7 @@ public class Main {
         };
 
 
-        ActionListener[] buttonListeners = { editProfileListener,inputDataListener, dietDataListener, calorieDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForcastListener, CFGListener};
+        ActionListener[] buttonListeners = {editProfileListener, inputDataListener, dietDataListener, calorieDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForcastListener, CFGListener};
 
         MainPage mainPage = new MainPage(buttonListeners);
 
@@ -165,12 +192,43 @@ public class Main {
         mainFrame.repaint();
     }
 
-    private static void showDietLogPage(){
+    private static void showExerciseLogPage() {
         mainFrame.getContentPane().removeAll();
-        DietLog dietLog = new DietLog();
+        exercisePage = new ExericiseLogPage(e -> {
+            String intensity = exercisePage.getIntensity();
+            String length = exercisePage.getLength();
+            String date = exercisePage.getDate();
+            String exerciseType = exercisePage.getExerciseType();
 
-        mainFrame.add(dietLog.getPanel());
+            //link function here
+
+        }, e -> {
+            showMainPage();
+        });
+
+        mainFrame.add(exercisePage.getPanel());
         mainFrame.revalidate();
         mainFrame.repaint();
     }
+
+
+    private static void showDietLogPage() {
+        mainFrame.getContentPane().removeAll();
+        dietLogPage = new DietLogPage(e -> {
+            String Ingredient = dietLogPage.getIngredient();
+            String mealType = dietLogPage.getMealType();
+            String date = dietLogPage.getDate();
+            String quantity = dietLogPage.getQuantity();
+
+            //link function here
+
+        }, e -> {
+            showMainPage();
+        });
+
+        mainFrame.add(dietLogPage.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
+    }
+
 }
