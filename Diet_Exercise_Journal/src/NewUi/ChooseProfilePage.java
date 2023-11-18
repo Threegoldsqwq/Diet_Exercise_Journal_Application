@@ -4,10 +4,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Represents a graphical user interface for choosing a user profile from a list.
+ * The user can select a profile by clicking on the list item or by double-clicking
+ * to trigger a selection event. The selected user can be retrieved using the
+ * {@link #getSelectedUser()} method.
+ */
 public class ChooseProfilePage {
     private JPanel panel;
     private JList<String> userList;
     private JButton backButton;
+
+    /**
+     * Constructs a ChooseProfilePage with the given user names, back button listener,
+     * and select button listener.
+     *
+     * @param users          An array of user names to be displayed in the list.
+     * @param backListener   ActionListener for the "Back" button.
+     * @param selectListener ActionListener for the user selection event.
+     */
     public ChooseProfilePage(String[] users, ActionListener backListener, ActionListener selectListener) {
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -51,6 +66,10 @@ public class ChooseProfilePage {
         // Attach the ComponentListener to the panel
         panel.addComponentListener(componentAdapter);
     }
+
+    /**
+     * Adjusts the font size of buttons and the user list based on the height of the panel.
+     */
     private void adjustFont() {
         // Adjust font size based on the height of the panel
         int fontSize = Math.min(panel.getHeight() / 25, panel.getWidth() / 25);// Adjust the divisor as needed
@@ -70,11 +89,20 @@ public class ChooseProfilePage {
         }
     }
 
+    /**
+     * Gets the panel containing the user list and back button.
+     *
+     * @return The JPanel representing the ChooseProfilePage.
+     */
     public JPanel getPanel() {
         return panel;
     }
 
-    // Getter method to retrieve the selected user
+    /**
+     * Gets the selected user from the user list.
+     *
+     * @return The selected user name.
+     */
     public String getSelectedUser() {
         return userList.getSelectedValue();
     }

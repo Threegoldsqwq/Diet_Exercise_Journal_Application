@@ -30,13 +30,8 @@ public class Main {
         mainFrame.setLocation(xPos, yPos);
         mainFrame.setVisible(true);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                //showLandingPage();
-                showMainPage();
-            }
-        });
+        //showLandingPage();
+        SwingUtilities.invokeLater(Main::showMainPage);
     }
 
     private static void showLandingPage() {
@@ -76,7 +71,7 @@ public class Main {
                     String measurement = createProfilePage.getMeasurement();
                     String[] ymd = dob.split("-");
                     try {
-                        //挪到facade
+                        //挪到facade change here
                         runtimeDatabase.createProfile(name, gender, Integer.parseInt(ymd[0]), Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]), Double.parseDouble(height), Double.parseDouble(weight), measurement);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
@@ -86,9 +81,7 @@ public class Main {
                     // After saving the profile, transition to the next layer\
                     JOptionPane.showMessageDialog(null, "Profile create successfully");
                 },
-                e -> {
-                    showLandingPage();
-                });
+                e -> showLandingPage());
 
         mainFrame.add(createProfilePage.getPanel());
         mainFrame.revalidate();
@@ -138,7 +131,7 @@ public class Main {
         };
 
         ActionListener inputDataListener = e -> {
-            //show a choose promote for diet or exercise
+            //show choose to promote for diet or exercise
             String[] options = {"Diet", "Exercise"};
             //create promote
             int result = JOptionPane.showOptionDialog(
@@ -162,19 +155,24 @@ public class Main {
         };
 
         ActionListener editProfileListener = e -> {
+            // Handle create profile button action
             showCreateProfilePage();
         };
 
         ActionListener DietVisualizerListener = e -> {
-            NutritionServiceFacade.displayDietChart();
             // Handle edit profile button action
+            showDateRangeSelectionDialog(mainFrame);
+            NutritionServiceFacade.displayDietChart();
+
         };
 
         ActionListener ExerciseVisualizerListener = e -> {
-            ExerciseDataVisualizer.getChart();
             // Handle edit profile button action
+            showDateRangeSelectionDialog(mainFrame);
+             ExerciseDataVisualizer.getChart();
+
         };
-        ActionListener WeightLossForcastListener = e -> {
+        ActionListener WeightLossForecastListener = e -> {
             // Handle edit profile button action
         };
         ActionListener CFGListener = e -> {
@@ -182,7 +180,7 @@ public class Main {
         };
 
 
-        ActionListener[] buttonListeners = {editProfileListener, inputDataListener, detailedDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForcastListener, CFGListener};
+        ActionListener[] buttonListeners = {editProfileListener, inputDataListener, detailedDataListener, DietVisualizerListener, ExerciseVisualizerListener, WeightLossForecastListener, CFGListener};
 
         MainPage mainPage = new MainPage(buttonListeners);
 
@@ -201,9 +199,7 @@ public class Main {
 
             //link function here
 
-        }, e -> {
-            showMainPage();
-        });
+        }, e -> showMainPage());
 
         mainFrame.add(exercisePage.getPanel());
         mainFrame.revalidate();
@@ -221,9 +217,7 @@ public class Main {
 
             //link function here
 
-        }, e -> {
-            showMainPage();
-        });
+        }, e -> showMainPage());
 
         //print page
         mainFrame.add(dietLogPage.getPanel());
@@ -253,9 +247,7 @@ public class Main {
                     // use the user's choice for meals
                     showDetailedMealPage(mealResult);
                 },
-                e -> {
-                    showMainPage();
-                });
+                e -> showMainPage());
         mainFrame.add(detailedDietPage.getPanel());
         mainFrame.revalidate();
         mainFrame.repaint();
@@ -269,6 +261,35 @@ public class Main {
         mainFrame.add(detailedMealPage.getPanel());
         mainFrame.revalidate();
         mainFrame.repaint();
+    }
+
+    private static void showDateRangeSelectionDialog(JFrame parentFrame) {
+        JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
+
+        JTextField startDateField = new JTextField();
+        JTextField endDateField = new JTextField();
+
+        panel.add(new JLabel("Start Date (MM/DD):"));
+        panel.add(startDateField);
+        panel.add(new JLabel("End Date (MM/DD):"));
+        panel.add(endDateField);
+
+        int result = JOptionPane.showOptionDialog(
+                parentFrame,
+                panel,
+                "Select Date Range",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                null
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            String startDate = startDateField.getText();
+            String endDate = endDateField.getText();
+            JOptionPane.showMessageDialog(parentFrame, "You selected: " + startDate + " - " + endDate);
+        }
     }
 
 }

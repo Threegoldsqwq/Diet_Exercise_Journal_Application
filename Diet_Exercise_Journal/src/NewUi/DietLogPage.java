@@ -5,12 +5,22 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-
+/**
+ * Represents a graphical user interface for logging diet information.
+ * Users can input the date, meal type, ingredient, and quantity for a specific meal.
+ * The logged information can be retrieved using the provided getter methods.
+ */
 public class DietLogPage {
     private JTextField dateField, ingredientField, quantityField;
     private JComboBox<String> mealTypeComboBox;
     private JPanel panel;
-
+    /**
+     * Constructs a DietLogPage with ActionListener for the "Log Meal" button
+     * and the "Back" button.
+     *
+     * @param saveButtonListener ActionListener for the "Log Meal" button.
+     * @param backButtonListener ActionListener for the "Back" button.
+     */
     public DietLogPage(ActionListener saveButtonListener, ActionListener backButtonListener) {
         //set panel
         panel = new JPanel();
@@ -44,27 +54,50 @@ public class DietLogPage {
         //active componentListener
         addComponentListener();
     }
-
+    /**
+     * Gets the JPanel representing the DietLogPage.
+     *
+     * @return The JPanel representing the DietLogPage.
+     */
     public JPanel getPanel() {
         return panel;
     }
-
+    /**
+     * Gets the entered date from the date field.
+     *
+     * @return The entered date.
+     */
     public String getDate() {
         return dateField.getText();
     }
-
+    /**
+     * Gets the selected meal type from the meal type combo box.
+     *
+     * @return The selected meal type.
+     */
     public String getMealType() {
         return (String) mealTypeComboBox.getSelectedItem();
     }
-
+    /**
+     * Gets the entered ingredient from the ingredient field.
+     *
+     * @return The entered ingredient.
+     */
     public String getIngredient() {
         return ingredientField.getText();
     }
-
+    /**
+     * Gets the entered quantity from the quantity field.
+     *
+     * @return The entered quantity.
+     */
     public String getQuantity() {
         return quantityField.getText();
     }
 
+    /**
+     * Adds a ComponentListener to adjust the font size based on the panel's height.
+     */
     private void addComponentListener() {
         ComponentAdapter componentAdapter = new ComponentAdapter() {
             @Override
@@ -75,7 +108,9 @@ public class DietLogPage {
         // Attach the ComponentListener to the panel
         panel.addComponentListener(componentAdapter);
     }
-
+    /**
+     * Adjusts the font size and color of buttons, text fields, and labels based on the panel's size.
+     */
     private void adjustFont() {
         // Adjust font size based on the height of the panel
         int fontSize = Math.min(panel.getHeight() / 25, panel.getWidth() / 25);// Adjust the divisor as needed
