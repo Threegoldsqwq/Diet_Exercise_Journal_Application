@@ -323,6 +323,13 @@ public class RuntimeDatabase {
                 this.otherNutrientInfo[i][j] = getOtherNutrientValues(mealInfo[i][j]);
             }
         }
+
+        for (String[] strings : this.mealInfo) {
+            for (String string : strings) {
+                System.out.print(string + " ");
+            }
+            System.out.println();
+        }
     }
 
     public String[][] getMealInfo() {
@@ -507,12 +514,11 @@ public class RuntimeDatabase {
     /**
      *
      * @param date
-     * @param userID
      * @param mealType
      * @param ingredients
      * @param quantity
      */
-    public void logMeal(String date, int userID, String mealType, ArrayList<String> ingredients, ArrayList<String> quantity){
+    public void logMeal(String date, String mealType, ArrayList<String> ingredients, ArrayList<String> quantity){
 
         String[][] mealInfo = new String[getMealInfo().length][getMealInfo()[0].length];
         for(int i = 0; i < mealInfo.length; i++){
@@ -536,6 +542,9 @@ public class RuntimeDatabase {
         }
         //traverse to see if the data exist
         for(int i = 0; i < mealInfo.length; i++){
+            if(mealInfo[i][0] == null){
+                break;
+            }
             if(mealInfo[i][0].equals(date)){
                 isChange = true;
                 mealInfo[i][type] = null;
@@ -561,7 +570,11 @@ public class RuntimeDatabase {
         setMealInfo(mealInfo);
         //if it is a new data, extend the array
         if(!isChange){
+
             String[][] newMealInfo = new String[mealInfo.length+1][mealInfo[0].length];
+            if(mealInfo.length == 1){
+                newMealInfo = new String[mealInfo.length][mealInfo[0].length];
+            }
             for(int i = 0; i < mealInfo.length; i++){
                 for(int j = 0; j < mealInfo[i].length; j++){
                     newMealInfo[i][j] = mealInfo[i][j];
@@ -651,15 +664,25 @@ public class RuntimeDatabase {
             for(int i = 0; i < ingredients.length; i++){
                 resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + ingredients[i].toLowerCase() + "'");
                 while(resultSet.next()){
-                    if(resultSet.getInt(1) == 83){
-                        query = query + "select NutrientID, NutrientValue / 4 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208";
-                    }
-                    else if(resultSet.getInt(1) == 2062){
-                        query = query + "select NutrientID, NutrientValue * 2 / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208";
+
+                    if(i == ingredients.length - 1){
+                        if(resultSet.getInt(1) == 83){
+                            query = query + "select NutrientID, NutrientValue / 4 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 ";
+                        }
+                        else if(resultSet.getInt(1) == 2062){
+                            query = query + "select NutrientID, NutrientValue * 2 / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 ";
+                        }
+                        else{
+                            query = query + "select NutrientID, NutrientValue / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 ";
+                        }
+
                     }
                     else{
-                        if(i == ingredients.length - 1){
-                            query = query + "select NutrientID, NutrientValue / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208";
+                        if(resultSet.getInt(1) == 83){
+                            query = query + "select NutrientID, NutrientValue / 4 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 union all ";
+                        }
+                        else if(resultSet.getInt(1) == 2062){
+                            query = query + "select NutrientID, NutrientValue * 2 / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 union all";
                         }
                         else{
                             query = query + "select NutrientID, NutrientValue / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 union all ";
