@@ -21,8 +21,10 @@ public class TestingClass {
         //runtimeDatabase.displayDietData("breakfast", "2023-11-13", 100001);
         runtimeDatabase.setId(100001);
         String[][] s = runtimeDatabase.readAllMealInfo(100001);
+        String[][] e = runtimeDatabase.readAllExerciseInfo(100001);
+        runtimeDatabase.setExerciseInfo(e);
         runtimeDatabase.setMealInfo(s);
-        String[][] s1 = runtimeDatabase.getCalorieInfo();
+        String[][] s1 = runtimeDatabase.getExerciseInfo();
 //        ArrayList<String> ingredients = new ArrayList<>();
 //        ingredients.add("cookie");
 //        ingredients.add("rice");
@@ -33,12 +35,12 @@ public class TestingClass {
 //        quantity.add("12");
 
 //        s = runtimeDatabase.getMealInfo();
-//        for (String[] strings : s1) {
-//            for (String string : strings) {
-//                System.out.print(string + " ");
-//            }
-//            System.out.println();
-//        }
+        for (String[] strings : s1) {
+            for (String string : strings) {
+                System.out.print(string + " ");
+            }
+            System.out.println();
+        }
 
         //System.out.println(runtimeDatabase.getOtherNutrientValues("tomato, 11 - beef, 23"));
 
