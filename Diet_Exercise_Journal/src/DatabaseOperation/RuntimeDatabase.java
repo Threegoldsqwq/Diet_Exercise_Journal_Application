@@ -8,6 +8,7 @@ import OutcomeGenerator.Calculator;
 import OutcomeGenerator.DataCalculator;
 
 import java.sql.*;
+import java.text.ParseException;
 import java.util.*;
 import java.util.Date;
 
@@ -474,7 +475,7 @@ public class RuntimeDatabase {
             DataOperator operator = new ExerciseDataOperator();
 
             //first get the number of dates in the user profile to form the array
-            resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
+            resultSet = statement.executeQuery("select count(distinct Date) from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
             resultSet.next();
             if(resultSet.getInt(1) == 0){
                 return new String[1][5];
@@ -513,21 +514,6 @@ public class RuntimeDatabase {
         return null;
     }
 
-//    public ArrayList<String> getIngredients() {
-//        return ingredients;
-//    }
-//
-//    public void setIngredients(ArrayList<String> ingredients) {
-//        this.ingredients = ingredients;
-//        for(int i = 0; i < runtimeDatabase.getIngredients().size(); i++){
-//            System.out.println(runtimeDatabase.getIngredients().get(i));
-//        }
-//    }
-//
-//
-//    public void setQuantities(ArrayList<String> quantities) {
-//        this.quantities = quantities;
-//    }
 
 //-----------------------------------------------------------------------------------------------------------
     /**
@@ -668,10 +654,83 @@ public class RuntimeDatabase {
         }
     }
 
-    public void logExercise(String date, String exerciseType, String duration, String intensity){
+    public void logExercise(String date, String exerciseType, String duration, String intensity) throws ParseException {
 
+        DataOperator operator = new ExerciseDataOperator();
+        String[][] exerciseInfo = new String[getExerciseInfo().length][getExerciseInfo()[0].length];
+        for(int i = 0; i < exerciseInfo.length; i++){
+            for(int j = 0; j < exerciseInfo[i].length; j++){
+                exerciseInfo[i][j] = getExerciseInfo()[i][j];
+            }
+        }
+        boolean isModify = false;
+        for(int i = 0; i < exerciseInfo.length; i++){
+            if(exerciseInfo[i][0] == null){
+                break;
+            }
+            if(exerciseInfo[i][0].equals(date)){
+                isModify = true;
+                exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(intensity);
+            }
+        }
+        setExerciseInfo(exerciseInfo);
 
+        if(!isModify){
+            String[][] newExerciseInfo = new String[exerciseInfo.length + 1][exerciseInfo[0].length];
+            if(exerciseInfo.length == 1){
+                newExerciseInfo = new String[exerciseInfo.length][exerciseInfo[0].length];
+            }
+            for(int i = 0; i < exerciseInfo.length; i++){
+                for(int j = 0; j < exerciseInfo[i].length; j++){
+                    newExerciseInfo[i][j] = exerciseInfo[i][j];
+                }
+            }
 
+            newExerciseInfo[newExerciseInfo.length-1][0] = date;
+            newExerciseInfo[newExerciseInfo.length-1][1] = exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(intensity);
+
+            setExerciseInfo(newExerciseInfo);
+        }
+
+    }
+
+    public void modifyProfile(int userID, String UserName, String sex, String dob, double height, double weight, String measurement){
+        try{
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            this.userName = UserName;
+            this.sex = sex;
+            this.DOB = dob;
+            if(this.measurement.equalsIgnoreCase("Imperial") && measurement.equalsIgnoreCase("Metric")){
+                this.weight = this.weight / 2.204;
+                this.height = this.height / 0.032;
+            }
+            else if(this.measurement.equalsIgnoreCase("Metric") && measurement.equalsIgnoreCase("Imperial")){
+                this.weight = this.weight * 2.204;
+                this.height = this.height * 0.032;
+            }
+            else{
+                this.height = height;
+                this.weight = weight;
+                this.measurement = measurement;
+            }
+            this.measurement = measurement;
+            resultSet = statement.executeQuery(String.format("insert into UserProfile(userid, username, sex, date_of_birth, height, weight, measurement)\n" +
+                    "    values (%d, %s, %s, '%s', %f, %f, %s) on duplicate key update \n" +
+                    "    username = values(username), sex = values(sex), date_of_birth = values(date_of_birth),\n" +
+                    "    height = values(height), weight = values(weight), measurement = values(measurement);", userID, UserName, sex, dob, height, weight, measurement));
+            resultSet.next();
+
+            //System.out.println(weight);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
     }
 
 //--------------------------------------------------------------------------------------------------------------

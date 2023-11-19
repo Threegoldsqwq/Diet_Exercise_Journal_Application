@@ -3,10 +3,14 @@ package OutcomeGenerator;
 
 import DatabaseOperation.RuntimeDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class is for calculating data
@@ -14,20 +18,24 @@ import java.time.temporal.ChronoUnit;
 public class Calculator extends DataCalculator {
 
 
-    public static double calculateBMR() {
+    public static double calculateBMR() throws ParseException {
         // change here
         double bmr;
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         String gender1 = RuntimeDatabase.getInstance().getSex();
         char gender = gender1.charAt(0);
         double weight = RuntimeDatabase.getInstance().getWeight();
         double height = RuntimeDatabase.getInstance().getHeight();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDate birthDate = LocalDate.parse(RuntimeDatabase.getInstance().getDOB(), dateFormatter);
-        // Get the current date
-        LocalDate currentDate = LocalDate.now();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
         // Calculate the age
-        Period age1 = Period.between(birthDate, currentDate);
-        int age = age1.getYears();
+        LocalDate currentdate = LocalDate.now();
+        Date today = format.parse(currentdate.getYear() + "-" + currentdate.getMonth().getValue() + "-" + currentdate.getDayOfMonth());
+        //String[] ymd = runtimeDatabase.getDOB().split("-");
+        Date dob = format.parse(runtimeDatabase.getDOB());
+        long diffInMillies = Math.abs(today.getTime() - dob.getTime());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) /365;
+        int age = (int) diff;
 
         //calculate BMR based on gender
         if (gender == 'M' || gender == 'm') {
@@ -42,7 +50,10 @@ public class Calculator extends DataCalculator {
             if (RuntimeDatabase.getInstance().getMeasurement() == "Imperial") {
                 bmr = 655 + 4.35 * weight + 4.7 * height - 4.7 * age;
             }
-            bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            else{
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+
         } else {
             throw new IllegalArgumentException("Invalid gender. Use 'M' for male or 'F' for female.");
         }
