@@ -3,6 +3,7 @@ package DatabaseOperation;
 
 import Operator.DataOperator;
 import Operator.DietDataOperator;
+import Operator.ExerciseDataOperator;
 import OutcomeGenerator.Calculator;
 import OutcomeGenerator.DataCalculator;
 
@@ -345,7 +346,16 @@ public class RuntimeDatabase {
     public String[][] getOtherNutrientInfo() {
         return otherNutrientInfo;
     }
-//-----------------------------------------------------------------------------------------------------
+
+    public String[][] getExerciseInfo() {
+        return exerciseInfo;
+    }
+
+    public void setExerciseInfo(String[][] exerciseInfo) {
+        this.exerciseInfo = exerciseInfo;
+    }
+
+    //-----------------------------------------------------------------------------------------------------
     /**
      * This method read all diet data (breakfast, lunch, dinner, snacks) of the user
      * in terms of date and meal
@@ -461,6 +471,8 @@ public class RuntimeDatabase {
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
             statement = connect.createStatement();
 
+            DataOperator operator = new ExerciseDataOperator();
+
             //first get the number of dates in the user profile to form the array
             resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
             resultSet.next();
@@ -477,15 +489,20 @@ public class RuntimeDatabase {
             }
 
             for(int i = 0; i < exerciseInfo.length; i++){
-                exerciseInfo[i][0] = dates.get(i).toString();
-                for(int j = 1; j < exerciseInfo[i].length; j++){
-//form string
-                }
                 currentDate = dates.get(i);
+                exerciseInfo[i][0] = dates.get(i).toString();
+
                 resultSet = statement.executeQuery("select Type, Duration, Intensity from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID + " and Date = " + currentDate);
-
+                while(resultSet.next()){
+                    if(exerciseInfo[i][1] == null){
+                        exerciseInfo[i][1] = resultSet.getString("1") + ", " + resultSet.getString("2") + ", " + resultSet.getString("3") + ", " + operator.calculateCalorieBurnt(resultSet.getString("3"));
+                    }
+                    else{
+                        exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + resultSet.getString("1") + ", " + resultSet.getString("2") + ", " + resultSet.getString("3") + ", " + operator.calculateCalorieBurnt(resultSet.getString("3"));
+                    }
+                }
             }
-
+            return exerciseInfo;
         }
         catch (Exception e){
             e.printStackTrace();

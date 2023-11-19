@@ -34,7 +34,6 @@ public class Calculator extends DataCalculator {
         } else {
             throw new IllegalArgumentException("Invalid gender. Use 'M' for male or 'F' for female.");
         }
-
         return bmr;
     }
 
