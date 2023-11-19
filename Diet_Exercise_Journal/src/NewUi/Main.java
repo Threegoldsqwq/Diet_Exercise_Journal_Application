@@ -161,14 +161,15 @@ public class Main {
         ActionListener DietVisualizerListener = e -> {
             // Handle edit profile button action
             showDateRangeSelectionDialog(mainFrame);
-            NutritionServiceFacade.displayDietChart();
+            NutritionServiceFacade.displayDietChart("1","1");
 
         };
 
         ActionListener ExerciseVisualizerListener = e -> {
             // Handle edit profile button action
-            showDateRangeSelectionDialog(mainFrame);
-            NutritionServiceFacade.displayCalorieChart();
+            String[] helper= new String[2];
+            helper=showDateRangeSelectionDialog(mainFrame);
+            NutritionServiceFacade.displayCalorieChart(helper[0],helper[1]);
 
         };
         ActionListener WeightLossForecastListener = e -> {
@@ -268,7 +269,7 @@ public class Main {
         mainFrame.repaint();
     }
 
-    private static void showDateRangeSelectionDialog(JFrame parentFrame) {
+    private static String[] showDateRangeSelectionDialog(JFrame parentFrame) {
         JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
 
         JTextField startDateField = new JTextField();
@@ -290,11 +291,19 @@ public class Main {
                 null
         );
 
+        String[] result1 = new String[2];
+
+        String startDate = null;
+        String endDate = null;
         if (result == JOptionPane.OK_OPTION) {
-            String startDate = startDateField.getText();
-            String endDate = endDateField.getText();
+            startDate = startDateField.getText();
+            endDate = endDateField.getText();
             JOptionPane.showMessageDialog(parentFrame, "You selected: " + startDate + " - " + endDate);
         }
+
+        result1[0] = startDate;
+        result1[1] = endDate;
+        return result1;
     }
 
 }

@@ -1,9 +1,6 @@
 package Facade;
 
 import DatabaseOperation.RuntimeDatabase;
-import Generator.*;
-import NewUi.ExericiseLogPage;
-import Operator.*;
 import OutcomeGenerator.*;
 import Visualizer.*;
 
@@ -25,14 +22,14 @@ public class NutritionServiceFacade {
         }
     }
 
-    public static void displayDietChart(){
+    public static void displayDietChart(String startDate, String endDate){
         //call diet chart module. modify number of nutrition here
-        DietDataVisualizer.getChart(5);//change here
+        DietDataVisualizer.getChart(5,startDate,endDate);//change here
     }
 
-    public static void displayCalorieChart(){
+    public static void displayCalorieChart(String startDate, String endDate){
         //call calorie intake and burned chart module
-        ExerciseDataVisualizer.getChart();//change here
+        CalorieDataVisualizer.getChart(startDate,endDate);//change here
     }
 
     public static String getWeightForecast(String date) {

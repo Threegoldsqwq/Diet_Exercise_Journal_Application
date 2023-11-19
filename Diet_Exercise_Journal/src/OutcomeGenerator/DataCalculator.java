@@ -3,8 +3,14 @@ package OutcomeGenerator;
 /**
  * TBD
  */
-public interface DataCalculator {
-    public double calculateBMR(double weightKg, double heightCm, int age, char gender);
+public abstract class DataCalculator {
 
-    public String[][] calculateCalorieInfo(String[][] meal);
+    public static double calculateBMR() {
+        return 0;
+    }
+
+
+    public String[][] calculateCalorieInfo(String[][] meal) {
+        return new String[0][];
+    }
 }

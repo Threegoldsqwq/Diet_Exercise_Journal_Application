@@ -19,8 +19,8 @@ public class DietDataVisualizer extends DataVisualizer{
      * This method create pie chart
      * @param NumberOfNutrients is the number of nutrients
      */
-    public static void getChart(int NumberOfNutrients) {
-        getDataSet(NumberOfNutrients);
+    public static void getChart(int NumberOfNutrients,String startDate,String endDate) {
+        geData(NumberOfNutrients,startDate,endDate);
                 // create a dataset...
                 DefaultPieDataset dataset = new DefaultPieDataset();
 
@@ -49,8 +49,8 @@ public class DietDataVisualizer extends DataVisualizer{
      * This class gets the data set for creating the chart
      * @param NumberOfNutrients NumberOfNutrients is the number of nutrients
      */
-    public static void getDataSet(int NumberOfNutrients){
-        Data=RuntimeDatabase.NutrientsDataReader(NumberOfNutrients);
+    public static void geData(int NumberOfNutrients,String startDate,String endDate){
+        Data=RuntimeDatabase.NutrientsDataReader(NumberOfNutrients,startDate,endDate); //change here
     }
 }
 

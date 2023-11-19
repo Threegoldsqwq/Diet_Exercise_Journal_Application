@@ -626,8 +626,10 @@ public class RuntimeDatabase {
      */
     public static String[][] CaloryBurnedDataReader(){
         //just for testing, will be modified
+        //就维持这样让他输出每天的总量 不要改
+        //日期改成mm/dd/yyyy或者mm/dd
         String[][] data;
-        data= new String[][]{{"1/1", "1230"}, {"1/2", "1240"},{"1/3", "1230"}, {"1/4", "1240"},{"1/5", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
+        data= new String[][]{{"01/01", "1230"}, {"01/02", "1240"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
     }
 
@@ -638,7 +640,7 @@ public class RuntimeDatabase {
     public static String[][] CaloryIntakeDataReader(){
         //just for testing, will be modified
         String[][] data;
-        data= new String[][]{{"1/1", "1030"}, {"1/2", "1040"},{"1/3", "1230"}, {"1/4", "1240"},{"1/6", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
+        data= new String[][]{{"01/01", "1030"}, {"01/02", "1040"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
         return data;
     }
 
@@ -647,10 +649,10 @@ public class RuntimeDatabase {
      * @param number is the
      * @return an array
      */
-    public static String[][] NutrientsDataReader(int number){
+    public static String[][] NutrientsDataReader(int number, String startDate, String endDate){
         //just for testing, will be modified
         //calculate average here
-
+        //这里根据起止日期来操作
 
         //return the top 5 or 10 nutrients, add the rest to be the 6th or 11th data
         //code for test only

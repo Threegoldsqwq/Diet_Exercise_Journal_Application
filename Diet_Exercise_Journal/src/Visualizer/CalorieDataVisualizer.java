@@ -12,19 +12,22 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 import org.jfree.ui.RefineryUtilities;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+
 /**
  * This class generate JFree chart for exercise
  */
-public class ExerciseDataVisualizer {
-    static String[][] CBurned;
-    static String[][] Cintake;
+public class CalorieDataVisualizer {
     static CategoryDataset dataset;
 
     /**
      * This method generate bar chart
      */
-    public static void getChart() {
-        getDataSet();
+    public static void getChart(String startDate, String endDate) {
+        getData(startDate,endDate);
         JFreeChart chart = ChartFactory.createBarChart(
                 "Exercise Data", //title
                 "Date",
@@ -53,21 +56,43 @@ public class ExerciseDataVisualizer {
     /**
      * This method get the data set for creating the chart
      */
-    public static void getDataSet(){
+    public static void getData(String startDate, String endDate){
+        String[][] CBurned;
+        String[][] Cintake;
         CBurned=RuntimeDatabase.CaloryBurnedDataReader();
         Cintake=RuntimeDatabase.CaloryIntakeDataReader();
 
-        double[][] data = new double[2][CBurned.length];
-        String[] columnKeys = new String[CBurned.length];
+        //deal with date range
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-        int i,j;
+        // Parse the start and end dates
+        LocalDate startDateObj = LocalDate.parse(startDate+"/2023", dateFormatter);
+        LocalDate endDateObj = LocalDate.parse(endDate+"/2023", dateFormatter);
+
+        // Calculate the difference in days
+        int Length= (int) ChronoUnit.DAYS.between(startDateObj, endDateObj);
+
+
+        //read data into the data sheet for chart
+        //could be optimized
+        double[][] data = new double[2][Length];
+        String[] columnKeys = new String[Length];
+        int k=0;
+        int i;
         for (i=0;i<CBurned.length;i++){
-            data[0][i]= Double.parseDouble(Cintake[i][1]);
-            data[1][i]= Double.parseDouble(CBurned[i][1]);
-            columnKeys[i]= String.valueOf(Cintake[i][0]);
+            if (Objects.equals(String.valueOf(Cintake[i][0]), startDate)){
+                while (!Objects.equals(String.valueOf(Cintake[i][0]), endDate)) {
+                    data[0][k]= Double.parseDouble(Cintake[i][1]);
+                    data[1][k]= Double.parseDouble(CBurned[i][1]);
+                    columnKeys[k]= String.valueOf(Cintake[i][0]);
+                    System.out.println(Double.parseDouble(Cintake[i][1]));
+                    k++;
+                    i++;
+                }
+            }
         }
 
-
+        //set chart
         String[] rowKeys = {"Intake", "Burned"};
         dataset = DatasetUtilities.createCategoryDataset(rowKeys, columnKeys, data);
     }
