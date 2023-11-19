@@ -57,7 +57,8 @@ public class Main {
 
     private static void showCreateProfilePage() {
         mainFrame.getContentPane().removeAll();
-        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        //RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        NutritionServiceFacade facade = new NutritionServiceFacade();
         //not working with local variable
         createProfilePage = new CreateProfilePage(
                 e -> {
@@ -69,12 +70,11 @@ public class Main {
                     String height = createProfilePage.getHeight();
                     String measurement = createProfilePage.getMeasurement();
                     String[] ymd = dob.split("-");
-                    try {
-                        //挪到facade change here
-                        runtimeDatabase.createProfile(name, gender, Integer.parseInt(ymd[0]), Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]), Double.parseDouble(height), Double.parseDouble(weight), measurement);
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
+
+                    //挪到facade change here
+                    facade.createProfile(name, gender, Integer.parseInt(ymd[0]), Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]), Double.parseDouble(height), Double.parseDouble(weight), measurement);
+
+
                     // Add your logic to save or process the profile information
 
                     // After saving the profile, transition to the next layer\
@@ -90,21 +90,20 @@ public class Main {
     //direct to choose profile page
     private static void showChooseProfilePage() throws Exception {
         mainFrame.getContentPane().removeAll();
-        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+
+        NutritionServiceFacade facade = new NutritionServiceFacade();
         //display all profiles
-        ArrayList<String> profile = runtimeDatabase.extractProfile();
-        String[] users = new String[profile.size()];//api for runtime data base plug in
+        String[] users = facade.displayProfile();//api for runtime data base plug in
         //add to array
-        for (int i = 0; i < profile.size(); i++) {
-            users[i] = profile.get(i);
-        }
+
 
         chooseProfilePage = new ChooseProfilePage(users, e -> showLandingPage(), e -> {
             String selectedUser = chooseProfilePage.getSelectedUser();
             String[] temp = selectedUser.split("id: ");//extract user ID
             //挪到facade
-            runtimeDatabase.setId(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));//set id to do further works
-            runtimeDatabase.setMealInfo(runtimeDatabase.readAllMealInfo(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1))));//read all meal info of the user
+            facade.selectProfile(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));
+//            runtimeDatabase.setId(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));//set id to do further works
+//            runtimeDatabase.setMealInfo(runtimeDatabase.readAllMealInfo(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1))));//read all meal info of the user
 
             showMainPage();
         });
@@ -215,6 +214,7 @@ public class Main {
 
     private static void showDietLogPage() {
         mainFrame.getContentPane().removeAll();
+        NutritionServiceFacade facade = new NutritionServiceFacade();
         dietLogPage = new DietLogPage(e -> {
             String Ingredient = dietLogPage.getIngredient();
             String mealType = dietLogPage.getMealType();
@@ -222,6 +222,7 @@ public class Main {
             String quantity = dietLogPage.getQuantity();
 
             //link function here
+            facade.logDiet(date, mealType, Ingredient, quantity);
 
         }, e -> showMainPage());
 
@@ -234,7 +235,8 @@ public class Main {
     private static void showDetailedDietPage() {
         mainFrame.getContentPane().removeAll();
         //change here
-        String[] date = {"11/16", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17", "11/17"};
+        NutritionServiceFacade facade = new NutritionServiceFacade();
+        String[] date = facade.showDates();
         DetailedDietPage detailedDietPage = new DetailedDietPage(date,
                 e -> {
                     String[] mealOptions = {"Breakfast", "Lunch", "Dinner", "Snack"};

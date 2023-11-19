@@ -5,6 +5,7 @@ import OutcomeGenerator.*;
 import Visualizer.*;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * This class is the facade for user to use
@@ -12,15 +13,53 @@ import java.text.DecimalFormat;
 public class NutritionServiceFacade {
 
     public NutritionServiceFacade(){}
-    public void displayDiet(int userID){
+
+    public String[] displayProfile() throws Exception {
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
-        runtimeDatabase.setId(userID);
-        try {
-            //runtimeDatabase.displayDietData(runtimeDatabase.getId());
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
+        ArrayList<String> profile = runtimeDatabase.extractProfile();
+        String[] result = new String[profile.size()];
+        for(int i = 0; i < profile.size(); i++){
+            result[i] = profile.get(i);
         }
+        return result;
     }
+
+    public void createProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        runtimeDatabase.createProfile(UserName, sex, year, month, day, height, weight, measurement);
+    }
+
+    public void selectProfile(int id){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        runtimeDatabase.setId(id);
+        runtimeDatabase.setMealInfo(runtimeDatabase.readAllMealInfo(id));
+    }
+
+    public void logDiet(String date, String mealType, String ingredients, String quantity){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        ArrayList<String> ingredientsList = new ArrayList<>();
+        ArrayList<String> quantityList = new ArrayList<>();
+        String[] temp = ingredients.split(", ");
+        String[] temp2 = quantity.split(", ");
+        for(int i = 0; i < temp.length; i++){
+            ingredientsList.add(temp[i]);
+            quantityList.add(temp2[i]);
+        }
+        runtimeDatabase.logMeal(date, mealType, ingredientsList, quantityList);
+    }
+
+
+    public String[] showDates(){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        String[][] meals = runtimeDatabase.getMealInfo();
+        String[] result = new String[meals.length];
+        for(int i = 0; i < meals.length; i++){
+            result[i] = meals[i][0];
+        }
+        return result;
+    }
+
+
 
     public static void displayDietChart(String startDate, String endDate){
         //call diet chart module. modify number of nutrition here

@@ -10,7 +10,7 @@ public abstract class DataCalculator {
     }
 
 
-    public String[][] calculateCalorieInfo(String[][] meal) {
-        return new String[0][];
-    }
+    public abstract double calculateBMR(double weightKg, double heightCm, int age, String gender);
+
+    public abstract double getActivityLevel(String intensity);
 }
