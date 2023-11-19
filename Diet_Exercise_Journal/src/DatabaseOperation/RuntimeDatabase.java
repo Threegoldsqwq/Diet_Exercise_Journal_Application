@@ -38,6 +38,7 @@ public class RuntimeDatabase {
 
     String[][] mealInfo = readAllMealInfo(getId());
     String[][] calorieInfo;
+    String[][] otherNutrientInfo;
     //private String date;
 //    private ArrayList<String> ingredients;
 //    private ArrayList<String> quantities;
@@ -311,10 +312,17 @@ public class RuntimeDatabase {
     //setter and getters for meal, exercise, nutrient info
     public void setMealInfo(String[][] mealInfo) {
         this.mealInfo = mealInfo;
-        DataCalculator calculator = new Calculator();
+        DataOperator operator = new DietDataOperator();
         //calorie array update along with the meal
-        this.calorieInfo = new String[mealInfo.length][mealInfo[0].length];
-        this.calorieInfo = calculator.calculateCalorieInfo(mealInfo);
+        this.calorieInfo = new String[this.mealInfo.length][this.mealInfo[0].length];
+        this.otherNutrientInfo = new String[mealInfo.length][mealInfo[0].length];
+        this.calorieInfo = operator.calculateCalorieInfo(mealInfo);
+        for(int i = 0; i < mealInfo.length; i++){
+            this.otherNutrientInfo[i][0] = mealInfo[i][0];
+            for(int j = 1; j < mealInfo[i].length; j++){
+                this.otherNutrientInfo[i][j] = getOtherNutrientValues(mealInfo[i][j]);
+            }
+        }
     }
 
     public String[][] getMealInfo() {
@@ -325,8 +333,10 @@ public class RuntimeDatabase {
         return calorieInfo;
     }
 
-
-    //-----------------------------------------------------------------------------------------------------
+    public String[][] getOtherNutrientInfo() {
+        return otherNutrientInfo;
+    }
+//-----------------------------------------------------------------------------------------------------
     /**
      * This method read all diet data (breakfast, lunch, dinner, snacks) of the user
      * in terms of date and meal
@@ -344,6 +354,9 @@ public class RuntimeDatabase {
             //first get the number of dates in the user profile to form the array
             resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
             resultSet.next();
+            if(resultSet.getInt(1) == 0){
+                return new String[1][5];
+            }
             String[][] mealInfo = new String[resultSet.getInt(1)][5];
             resultSet = statement.executeQuery("select Date from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
 
@@ -618,6 +631,125 @@ public class RuntimeDatabase {
         return 0.00;
     }
 
+    public String getOtherNutrientValues(String meal){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+            if(meal == null){
+                return "";
+            }
+            String[] temp = meal.split(" - ");
+            String[] ingredients = new String[temp.length];
+            String[] quantity = new String[temp.length];
+            for(int i = 0; i < temp.length; i++){
+                ingredients[i] = temp[i].split(", ")[0];
+                quantity[i] = temp[i].split(", ")[1];
+            }
+            String query = "SELECT nutrientID, SUM(nutrientValue) from (";
+
+            for(int i = 0; i < ingredients.length; i++){
+                resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + ingredients[i].toLowerCase() + "'");
+                while(resultSet.next()){
+                    if(resultSet.getInt(1) == 83){
+                        query = query + "select NutrientID, NutrientValue / 4 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208";
+                    }
+                    else if(resultSet.getInt(1) == 2062){
+                        query = query + "select NutrientID, NutrientValue * 2 / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208";
+                    }
+                    else{
+                        if(i == ingredients.length - 1){
+                            query = query + "select NutrientID, NutrientValue / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208";
+                        }
+                        else{
+                            query = query + "select NutrientID, NutrientValue / 100 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 union all ";
+                        }
+                    }
+                }
+            }
+
+            query = query + ") as combined_tables GROUP BY nutrientID order by SUM(nutrientValue) desc;";
+
+            ArrayList<Double> nutrientAmount = new ArrayList<>();
+            ArrayList<Integer> nutrientID = new ArrayList<>();
+            preparedStatement = connect.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                nutrientAmount.add(resultSet.getDouble(2));
+                nutrientID.add(resultSet.getInt(1));
+            }
+            for(int i = 0; i < nutrientID.size(); i++){
+                resultSet = statement.executeQuery("select NutrientName, NutrientUnit from Diet_Exercise_Journal_UserProfile.NUTRIENT_NAME where NutrientID = " + nutrientID.get(i));
+                resultSet.next();
+                if(resultSet.getString(2).equals("mg")){
+                    nutrientAmount.set(i, nutrientAmount.get(i) / 1000);
+                }
+                else if(resultSet.getString(2).equals("µg")){
+                    nutrientAmount.set(i, nutrientAmount.get(i) / 1000000);
+                }
+            }
+
+//            for(int i = 0; i < nutrientID.size() ; i++){
+//                System.out.println(nutrientAmount.get(i));
+//                System.out.println(nutrientID.get(i));
+//            }
+
+            double temp1 = 0;
+            int temp2 = 0;
+            for(int i = 0; i < nutrientID.size() ; i++){
+                for(int j = 1; j < nutrientID.size() - i; j++){
+                    if(nutrientAmount.get(j - 1) < nutrientAmount.get(j)){
+                        temp1 = nutrientAmount.get(j - 1);
+                        nutrientAmount.set(j - 1, nutrientAmount.get(j));
+                        nutrientAmount.set(j, temp1);
+
+                        temp2 = nutrientID.get(j - 1);
+                        nutrientID.set(j - 1, nutrientID.get(j));
+                        nutrientID.set(j, temp2);
+                    }
+                }
+            }
+            double other = 0;
+            for(int i = 10; i < nutrientAmount.size() ; i++){
+                other = other + nutrientAmount.get(i);
+            }
+            nutrientAmount.set(10, other);
+
+            ArrayList<Double> newNutrientAmount = new ArrayList<>();
+            ArrayList<String> newNutrientID = new ArrayList<>();
+            for(int i = 0; i < 11; i++){
+                newNutrientAmount.add(nutrientAmount.get(i));
+                if(i < 10){
+                    resultSet = statement.executeQuery("select NutrientName from Diet_Exercise_Journal_UserProfile.NUTRIENT_NAME where NutrientID = " + nutrientID.get(i));
+                    resultSet.next();
+                    newNutrientID.add(resultSet.getString(1));
+                }
+            }
+            newNutrientID.add("Other");
+//            for(int i = 0; i < newNutrientAmount.size() ; i++){
+//                System.out.println(newNutrientID.get(i));
+//                System.out.println(newNutrientAmount.get(i));
+//            }
+
+            String result = "";
+            for(int i = 0; i < newNutrientAmount.size() ; i++){
+                if(i == newNutrientAmount.size() - 1){
+                    result = result + newNutrientID.get(i) + " - " + newNutrientAmount.get(i);
+                }
+                else{
+                    result = result + newNutrientID.get(i) + " - " + newNutrientAmount.get(i) + "; ";
+                }
+            }
+            return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+        return "";
+    }
 //---------------------------------------------------------------------------------------------------------------
 
     /**

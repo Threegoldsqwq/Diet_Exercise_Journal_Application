@@ -27,13 +27,16 @@ public class TestingClass {
 //        quantity.add("11");
 //        quantity.add("12");
 
-        s = runtimeDatabase.getMealInfo();
-        for (String[] strings : s1) {
-            for (String string : strings) {
-                System.out.print(string + " ");
-            }
-            System.out.println();
-        }
+//        s = runtimeDatabase.getMealInfo();
+//        for (String[] strings : s1) {
+//            for (String string : strings) {
+//                System.out.print(string + " ");
+//            }
+//            System.out.println();
+//        }
+
+        System.out.println(runtimeDatabase.getOtherNutrientValues("tomato, 11 - beef, 23"));
+
 
         String[][] testMeal = {{"2023-11-13", "tomato, 11", "tomato, 11", "tomato, 11", "tomato, 11"},
                 {"2023-11-14", "potato, 11 - tomato, 20", "tomato, 11 - beef, 23", "pork, 20 - chicken, 30 - fruit salad, 40", "tomato, 13 - potato, 13"}};
