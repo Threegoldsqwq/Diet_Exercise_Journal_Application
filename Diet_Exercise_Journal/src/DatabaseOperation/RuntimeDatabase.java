@@ -39,6 +39,8 @@ public class RuntimeDatabase {
     String[][] mealInfo = readAllMealInfo(getId());
     String[][] calorieInfo;
     String[][] otherNutrientInfo;
+
+    String[][] exerciseInfo;
     //private String date;
 //    private ArrayList<String> ingredients;
 //    private ArrayList<String> quantities;
@@ -453,6 +455,46 @@ public class RuntimeDatabase {
         return  null;
     }
 
+    public String[][] readAllExerciseInfo(int userID){
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+
+            //first get the number of dates in the user profile to form the array
+            resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
+            resultSet.next();
+            if(resultSet.getInt(1) == 0){
+                return new String[1][5];
+            }
+            String[][] exerciseInfo = new String[resultSet.getInt(1)][2];
+            resultSet = statement.executeQuery("select Date from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
+
+            ArrayList<Date> dates = new ArrayList<>();
+            Date currentDate;
+            while(resultSet.next()){
+                dates.add(resultSet.getDate(1));
+            }
+
+            for(int i = 0; i < exerciseInfo.length; i++){
+                exerciseInfo[i][0] = dates.get(i).toString();
+                for(int j = 1; j < exerciseInfo[i].length; j++){
+//form string
+                }
+                currentDate = dates.get(i);
+                resultSet = statement.executeQuery("select Type, Duration, Intensity from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID + " and Date = " + currentDate);
+
+            }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+        return null;
+    }
 
 //    public ArrayList<String> getIngredients() {
 //        return ingredients;
@@ -547,7 +589,14 @@ public class RuntimeDatabase {
             }
             if(mealInfo[i][0].equals(date)){
                 isChange = true;
-                mealInfo[i][type] = null;
+                if(type == 4){
+                    //if it is a snack, add the ingredients behind
+                    mealInfo[i][type] = mealInfo[i][type] + " -";
+                }
+                else{
+                    //if the meal is not a snack, means it is a rewrite
+                    mealInfo[i][type] = null;
+                }
                 for(int j = 0; j < ingredients.size(); j++){
                     if(mealInfo[i][type] == null && ingredients.size() != 1){
                         mealInfo[i][type] = ingredients.get(j) + ", " + quantity.get(j) + " -";
@@ -602,6 +651,11 @@ public class RuntimeDatabase {
         }
     }
 
+    public void logExercise(String date, String exerciseType, String duration, String intensity){
+
+
+
+    }
 
 //--------------------------------------------------------------------------------------------------------------
 

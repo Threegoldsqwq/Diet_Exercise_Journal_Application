@@ -1,6 +1,9 @@
 package Operator;
-
+import OutcomeGenerator.Calculator;
+import OutcomeGenerator.DataCalculator;
 import DatabaseOperation.RuntimeDatabase;
+
+import java.util.Date;
 
 /**
  * This class is for input
@@ -44,6 +47,11 @@ public class DietDataOperator implements DataOperator{
             }
         }
         return calories;
+    }
+
+    @Override
+    public double calculateCalorieBurnt(String intensity) {
+        return 0;
     }
 
 }
