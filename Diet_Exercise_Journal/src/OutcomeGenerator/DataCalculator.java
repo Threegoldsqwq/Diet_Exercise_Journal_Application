@@ -9,8 +9,5 @@ public abstract class DataCalculator {
         return 0;
     }
 
-
-    public abstract double calculateBMR(double weightKg, double heightCm, int age, String gender);
-
     public abstract double getActivityLevel(String intensity);
 }

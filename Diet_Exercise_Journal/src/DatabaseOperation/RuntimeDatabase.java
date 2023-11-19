@@ -492,13 +492,13 @@ public class RuntimeDatabase {
                 currentDate = dates.get(i);
                 exerciseInfo[i][0] = dates.get(i).toString();
 
-                resultSet = statement.executeQuery("select Type, Duration, Intensity from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID + " and Date = " + currentDate);
+                resultSet = statement.executeQuery("select Type, Duration, Intensity from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID + " and Date = '" + currentDate + "'");
                 while(resultSet.next()){
                     if(exerciseInfo[i][1] == null){
-                        exerciseInfo[i][1] = resultSet.getString("1") + ", " + resultSet.getString("2") + ", " + resultSet.getString("3") + ", " + operator.calculateCalorieBurnt(resultSet.getString("3"));
+                        exerciseInfo[i][1] = resultSet.getString(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3) + ", " + operator.calculateCalorieBurnt(resultSet.getString(3));
                     }
                     else{
-                        exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + resultSet.getString("1") + ", " + resultSet.getString("2") + ", " + resultSet.getString("3") + ", " + operator.calculateCalorieBurnt(resultSet.getString("3"));
+                        exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + resultSet.getString(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3) + ", " + operator.calculateCalorieBurnt(resultSet.getString(3));
                     }
                 }
             }

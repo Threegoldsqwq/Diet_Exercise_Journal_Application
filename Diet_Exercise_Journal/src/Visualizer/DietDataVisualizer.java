@@ -21,28 +21,28 @@ public class DietDataVisualizer extends DataVisualizer{
      */
     public static void getChart(int NumberOfNutrients,String startDate,String endDate) {
         geData(NumberOfNutrients,startDate,endDate);
-                // create a dataset...
-                DefaultPieDataset dataset = new DefaultPieDataset();
+        // create a dataset...
+        DefaultPieDataset dataset = new DefaultPieDataset();
 
-                for (int i=0;i<NumberOfNutrients+1;i++){
-                    dataset.setValue(Data[i][0], Double.parseDouble(Data[i][1]));
-                }
+        for (int i=0;i<NumberOfNutrients+1;i++){
+            dataset.setValue(Data[i][0], Double.parseDouble(Data[i][1]));
+        }
 
 
-                // create a chart...
-                JFreeChart chart = ChartFactory.createPieChart(
-                        "Sample Pie Chart -Yves", // chart title
-                        dataset, // data set
-                        true, // legend (image example)
-                        true, // tooltips
-                        false // URLs: URLS
-                );
+        // create a chart...
+        JFreeChart chart = ChartFactory.createPieChart(
+                "Sample Pie Chart -Yves", // chart title
+                dataset, // data set
+                true, // legend (image example)
+                true, // tooltips
+                false // URLs: URLS
+        );
 
-                // create and display a frame...
-                ChartFrame frame = new ChartFrame("First", chart);
-                frame.pack();
-                RefineryUtilities.centerFrameOnScreen(frame);
-                frame.setVisible(true);
+        // create and display a frame...
+        ChartFrame frame = new ChartFrame("First", chart);
+        frame.pack();
+        RefineryUtilities.centerFrameOnScreen(frame);
+        frame.setVisible(true);
     }
 
     /**

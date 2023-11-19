@@ -1,5 +1,7 @@
 package Facade;
-
+import Generator.*;
+import NewUi.ExericiseLogPage;
+import Operator.*;
 import DatabaseOperation.RuntimeDatabase;
 import OutcomeGenerator.*;
 import Visualizer.*;
