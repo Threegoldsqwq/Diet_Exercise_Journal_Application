@@ -93,7 +93,7 @@ public class NutritionServiceFacade {
         String[] ingredientsQuantity = new String[1];
         for(int i = 0; i < temp.length; i++){
             if(temp[i][0].equalsIgnoreCase(selectedDate)){
-                ingredientsQuantity = temp[i][type].split(" - ");
+                ingredientsQuantity = temp[i][type + 1].split(" - ");
             }
         }
         for(int i = 0; i < ingredientsQuantity.length; i++){
@@ -127,7 +127,7 @@ public class NutritionServiceFacade {
         String[] otherNutrients = new String[1];
         for(int i = 0; i < temp.length; i++){
             if(temp[i][0].equalsIgnoreCase(selectedDate)){
-                otherNutrients = temp[i][type].split("; ");
+                otherNutrients = temp[i][type + 1].split("; ");
             }
         }
         for(int i = 0; i < otherNutrients.length; i++){
@@ -138,6 +138,10 @@ public class NutritionServiceFacade {
         return otherNutrients;
     }
 
+    public double[] getTotalFoodGroupIntake(){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        return runtimeDatabase.getFoodGroup();
+    }
     public static void displayDietChart(String startDate, String endDate){
         //call diet chart module. modify number of nutrition here
         DietDataVisualizer.getChart(5,startDate,endDate);//change here

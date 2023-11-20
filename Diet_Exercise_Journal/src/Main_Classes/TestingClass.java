@@ -28,6 +28,13 @@ public class TestingClass {
         String[][] s2 = runtimeDatabase.getCalorieInfo();
         String[][] s3 = RuntimeDatabase.CaloryIntakeDataReader();
         String[][] s4 = runtimeDatabase.getOtherNutrientInfo();
+        String[][] s5 = RuntimeDatabase.CaloryBurnedDataReader();
+
+        double[] s6 = runtimeDatabase.getFoodGroup();
+
+        for (double value : s6) {
+            System.out.println(value);
+        }
 //        ArrayList<String> ingredients = new ArrayList<>();
 //        ingredients.add("cookie");
 //        ingredients.add("rice");
@@ -39,12 +46,18 @@ public class TestingClass {
 
 //        s = runtimeDatabase.getMealInfo();
 
-        for (String[] strings : s4) {
-            for (String string : strings) {
-                System.out.print(string + " ");
-            }
-            System.out.println();
-        }
+//        for (String[] strings : s1) {
+//            for (String string : strings) {
+//                System.out.print(string + " ");
+//            }
+//            System.out.println();
+//        }
+//        for (String[] strings : s5) {
+//            for (String string : strings) {
+//                System.out.print(string + " ");
+//            }
+//            System.out.println();
+//        }
         //runtimeDatabase.writeExerciseBack();
         //System.out.println(runtimeDatabase.getOtherNutrientValues("tomato, 11 - beef, 23"));
 

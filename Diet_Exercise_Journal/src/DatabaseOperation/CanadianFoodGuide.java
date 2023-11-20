@@ -22,8 +22,8 @@ public class CanadianFoodGuide {
     // Function to calculate recommended quantities based on gender and weight
     private static double[] getRecommendedQuantities(String userGender, double userWeightInKg, double userWeightInLb) {
         // Daily intake factors based on dietary guidelines
-        double[] femaleIntakeFactors = {5.0, 1.5, 3.0, 2.0}; // Arbitrary values for the example
-        double[] maleIntakeFactors = {6.0, 1.8, 3.5, 2.5}; // Arbitrary values for the example
+        double[] femaleIntakeFactors = {5.0, 1.5, 3.0, 2.0, 1.0}; // Arbitrary values for the example
+        double[] maleIntakeFactors = {6.0, 1.8, 3.5, 2.5, 1.0}; // Arbitrary values for the example
 
         // Determine the appropriate intake factors based on user's gender
         double[] intakeFactors;
@@ -57,10 +57,7 @@ public class CanadianFoodGuide {
     private static void printCFGInformation(double[] recommendedQuantities) {
         // Create an array to store CFG information in g/ml
         String[] foodGroups = {
-                "Vegetables and Fruits",
-                "Protein Foods",
-                "Grain Products",
-                "Milk and Alternatives"
+                "Dairy and Egg Products", "Spices and Herbs", "Fats and Oils", "Vegetables and Vegetable Products", "Baked Products"
         };
 
         // Print CFG information

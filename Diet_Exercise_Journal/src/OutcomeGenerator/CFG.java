@@ -1,5 +1,6 @@
 package OutcomeGenerator;
 
+import Facade.NutritionServiceFacade;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,8 +13,8 @@ import javax.swing.*;
 public class CFG extends JFrame {
     public CFG(String title, double[] userIntake, double[] cfgRecommendations) {
         super(title);
-
-        CategoryDataset dataset = createDataset(userIntake, cfgRecommendations);
+        NutritionServiceFacade facade = new NutritionServiceFacade();
+        CategoryDataset dataset = createDataset(facade.getTotalFoodGroupIntake(), cfgRecommendations);
         JFreeChart chart = ChartFactory.createBarChart(
                 "Diet Comparison",
                 "Food Groups",

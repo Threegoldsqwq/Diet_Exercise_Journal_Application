@@ -26,6 +26,7 @@ public class DetailedMealPage {
      * @param backListener   ActionListener for the "Back" button.
      */
     public DetailedMealPage(
+            String date,
             String[] meal,
             String[] nutrision,//modify here
             ActionListener backListener

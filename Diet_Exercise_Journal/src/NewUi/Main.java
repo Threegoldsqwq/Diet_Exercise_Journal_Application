@@ -20,6 +20,7 @@ public class Main {
     private static DietLogPage dietLogPage;
     private static ExericiseLogPage exercisePage;
     private static NutritionServiceFacade facade = new NutritionServiceFacade();
+    private static DetailedDietPage detailedDietPage;
 
     public static void main(String[] args) {
 
@@ -255,10 +256,10 @@ public class Main {
         //change here
         NutritionServiceFacade facade = new NutritionServiceFacade();
         String[] date = facade.showDates();
-        DetailedDietPage detailedDietPage = new DetailedDietPage(date,
+        detailedDietPage = new DetailedDietPage(date,
                 e -> {
                     String[] mealOptions = {"Breakfast", "Lunch", "Dinner", "Snack"};
-
+                    String selectedDate= detailedDietPage.getSelectedDate();
                     // Show the second JOptionPane with four options for meals
                     int mealResult = JOptionPane.showOptionDialog(
                             null,
@@ -271,7 +272,7 @@ public class Main {
                             mealOptions[0] // Default selection
                     );
                     // use the user's choice for meals
-                    showDetailedMealPage(mealResult);
+                    showDetailedMealPage(mealResult,selectedDate);
                 },
                 e -> showMainPage());
         mainFrame.add(detailedDietPage.getPanel());
@@ -279,13 +280,13 @@ public class Main {
         mainFrame.repaint();
     }
 
-    private static void showDetailedMealPage(int type/*0=breakfast,1=lunch,2=dinner,3=snack*/){
+    private static void showDetailedMealPage(int type, String date/*0=breakfast,1=lunch,2=dinner,3=snack*/){
         mainFrame.getContentPane().removeAll();
         //change here
         //把string 接到这俩参数上， 具体啥样自己打开看
 
 
-        DetailedMealPage detailedMealPage=new DetailedMealPage(new String[]{"1"}, new String[]{"2"},e -> showDetailedDietPage());
+        DetailedMealPage detailedMealPage=new DetailedMealPage(date, facade.getIngredientsAndQuantity(type, date), facade.getOtherNutrients(type, date),e -> showDetailedDietPage());
 
         mainFrame.add(detailedMealPage.getPanel());
         mainFrame.revalidate();

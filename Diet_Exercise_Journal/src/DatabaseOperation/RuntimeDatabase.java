@@ -7,6 +7,7 @@ import Operator.ExerciseDataOperator;
 import OutcomeGenerator.Calculator;
 import OutcomeGenerator.DataCalculator;
 
+import java.security.AlgorithmConstraints;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.*;
@@ -929,6 +930,88 @@ public class RuntimeDatabase {
         }
         return "";
     }
+
+    public double[] getFoodGroup(){
+        try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+        statement = connect.createStatement();
+        //resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
+            //resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + food.toLowerCase() + "'");
+        String[][] temp = new String[this.mealInfo.length][this.mealInfo[0].length];
+        for(int i = 0; i < temp.length; i++) {
+            for(int j = 0; j < temp[i].length; j++){
+                temp[i][j] = this.mealInfo[i][j];
+            }
+        }
+        String[] foodGroups = {"Dairy and Egg Products", "Spices and Herbs", "Fats and Oils", "Vegetables and Vegetable Products", "Baked Products"};
+
+        double[] totalQuantity = new double[5];
+
+        ArrayList<String> allIngredients = new ArrayList<>();
+        ArrayList<Double> allQuantity = new ArrayList<>();
+
+        for(int i = 0; i < temp.length; i++){
+            for(int j = 1; j < temp[0].length; j++){
+                String[] ingredientsQuantity = temp[i][j].split(" - ");
+                String[] ingredients = new String[ingredientsQuantity.length];
+                String[] quantity = new String[ingredientsQuantity.length];
+                for(int k = 0; k < ingredientsQuantity.length; k++){
+                    ingredients[k] = ingredientsQuantity[k].split(", ")[0];
+                    quantity[k] = ingredientsQuantity[k].split(", ")[1];
+                    allIngredients.add(ingredients[k]);
+                    allQuantity.add(Double.parseDouble(quantity[k]));
+                }
+            }
+            //resultSet = statement.executeQuery("select  from Diet_Exercise_Journal_UserProfile.UserProfile");
+        }
+
+
+            for(int i = 0; i < allIngredients.size(); i++){
+
+                resultSet = statement.executeQuery("select FoodGroupID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + allIngredients.get(i).toLowerCase() + "'");
+                resultSet.next();
+                int foodGroupId = resultSet.getInt(1);
+                if(foodGroupId == 1){
+                    totalQuantity[0] = totalQuantity[0] + allQuantity.get(i);
+                }
+                else if(foodGroupId == 2){
+                    totalQuantity[1] = totalQuantity[1] + allQuantity.get(i);
+                }
+                else if(foodGroupId == 4){
+                    totalQuantity[2] = totalQuantity[2] + allQuantity.get(i);
+                }
+                else if(foodGroupId == 11){
+                    totalQuantity[3] = totalQuantity[3] + allQuantity.get(i);
+                }
+                else if(foodGroupId == 18){
+                    totalQuantity[4] = totalQuantity[4] + allQuantity.get(i);
+                }
+            }
+
+//            String[] result = new String[totalQuantity.length];
+            for(int i = 0; i < totalQuantity.length; i++){
+                totalQuantity[i] = totalQuantity[i] / this.mealInfo.length;
+            }
+
+//            for(int l = 0; l < ingredients.length; l++){
+//                resultSet = statement.executeQuery("select FoodGroupID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + ingredients[l].toLowerCase() + "'");
+//                resultSet.next();
+//                int foodGroupId = resultSet.getInt(1);
+//                resultSet = statement.executeQuery("select FoodGroupName from Diet_Exercise_Journal_UserProfile.FOOD_GROUP where FooGroupID = " + foodGroupId);
+//                resultSet.next();
+//
+//            }
+            return totalQuantity;
+        }
+        catch (Exception e){
+        e.printStackTrace();
+        }
+        finally {
+        close();
+        }
+        return null;
+    }
 //---------------------------------------------------------------------------------------------------------------
 
     /**
@@ -959,6 +1042,7 @@ public class RuntimeDatabase {
                 }
             }
         }
+
 
         //data= new String[][]{{"2023/01/01", "1230"}, {"01/02", "1240"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
