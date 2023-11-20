@@ -57,6 +57,12 @@ public class NutritionServiceFacade {
         runtimeDatabase.logExercise(date, exerciseType, duration, intensity);
     }
 
+    public void writeBack(){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        runtimeDatabase.writeAllMealBack();
+        runtimeDatabase.writeExerciseBack();
+    }
+
     public String[] showDates(){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         String[][] meals = runtimeDatabase.getMealInfo();
@@ -106,6 +112,8 @@ public class NutritionServiceFacade {
 
     public void editProfile(String name, String gender, int parseInt, int parseInt1, int parseInt2, double parseDouble, double parseDouble1, String measurement) {
         //change here
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        runtimeDatabase.modifyProfile(name, gender, parseInt, parseInt1, parseInt2, parseDouble, parseDouble1, measurement);
         System.out.println("editProfile called");
     }
 }

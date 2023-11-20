@@ -29,6 +29,7 @@ public class Main {
         mainFrame.setSize(500, 350);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
         int xPos = (screenSize.width - mainFrame.getWidth()) / 2;
         int yPos = (screenSize.height - mainFrame.getHeight()) / 2;
         mainFrame.setLocation(xPos, yPos);
@@ -40,6 +41,7 @@ public class Main {
             @Override
             public void windowClosing(WindowEvent e) {
                 // Call your function or perform actions when the window is closing
+                facade.writeBack();
                 System.out.println("Window is closing. Activate your function here!");
             }
         });

@@ -707,7 +707,7 @@ public class RuntimeDatabase {
 
     }
 
-    public void modifyProfile(int userID, String UserName, String sex, String dob, double height, double weight, String measurement){
+    public void modifyProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
         try{
 
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -715,7 +715,7 @@ public class RuntimeDatabase {
             statement = connect.createStatement();
             this.userName = UserName;
             this.sex = sex;
-            this.DOB = dob;
+            this.DOB = year + "-" + month + "-" + day;
             if(this.measurement.equalsIgnoreCase("Imperial") && measurement.equalsIgnoreCase("Metric")){
                 this.weight = this.weight / 2.204;
                 this.height = this.height / 0.032;
@@ -730,11 +730,18 @@ public class RuntimeDatabase {
                 this.measurement = measurement;
             }
             this.measurement = measurement;
-            resultSet = statement.executeQuery(String.format("insert into UserProfile(userid, username, sex, date_of_birth, height, weight, measurement)\n" +
-                    "    values (%d, %s, %s, '%s', %f, %f, %s) on duplicate key update \n" +
+            preparedStatement = connect.prepareStatement("insert into UserProfile(userid, username, sex, date_of_birth, height, weight, measurement)\n" +
+                    "    values (?, ?, ?, ?, ?, ?, ?) on duplicate key update \n" +
                     "    username = values(username), sex = values(sex), date_of_birth = values(date_of_birth),\n" +
-                    "    height = values(height), weight = values(weight), measurement = values(measurement);", userID, UserName, sex, dob, height, weight, measurement));
-            resultSet.next();
+                    "    height = values(height), weight = values(weight), measurement = values(measurement);");
+            preparedStatement.setInt(1, getId());
+            preparedStatement.setString(2, UserName);
+            preparedStatement.setString(3, sex);
+            preparedStatement.setString(4, this.getDOB());
+            preparedStatement.setDouble(5, height);
+            preparedStatement.setDouble(6, weight);
+            preparedStatement.setString(7, measurement);
+            preparedStatement.executeUpdate();
 
             //System.out.println(weight);
         }
@@ -926,11 +933,48 @@ public class RuntimeDatabase {
         //just for testing, will be modified
         //就维持这样让他输出每天的总量 不要改
         //日期改成mm/dd/yyyy或者mm/dd
-        String[][] data;
-        data= new String[][]{{"01/01", "1230"}, {"01/02", "1240"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
+        String[][] data = new String[getInstance().getExerciseInfo().length][2];
+        String date;
+
+        for(int i = 0; i < getInstance().getExerciseInfo().length; i++){
+            data[i][0] = formatDate(getInstance().getExerciseInfo()[i][0]);
+            for(int j = 1; j < getInstance().getExerciseInfo()[i].length; j++){
+                if(getInstance().getExerciseInfo()[i][j] == null || getInstance().getExerciseInfo()[i][j].equalsIgnoreCase("")){
+                    data[i][j] = "0.0";
+                }
+                else{
+                    String[] temp = getInstance().getExerciseInfo()[i][j].split(" - ");
+                    double calorieBurnt = 0.0;
+                    for(int k = 0; k < temp.length; k++){
+                        String[] temp2 = temp[k].split(", ");
+                        calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
+                    }
+                    data[i][j] = String.valueOf(calorieBurnt);
+                }
+            }
+        }
+
+        //data= new String[][]{{"2023/01/01", "1230"}, {"01/02", "1240"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
     }
 
+    public static String formatDate(String date){
+        String[] ymd = date.split("-");
+        String formatedDate = "";
+        if(Double.parseDouble(ymd[1]) < 10 && Double.parseDouble(ymd[2]) < 10){
+            formatedDate = ymd[0] + "/0" + ymd[1] + "/0" + ymd[2];
+        }
+        else if(Double.parseDouble(ymd[1]) < 10){
+            formatedDate = ymd[0] + "/0" + ymd[1] + "/" + ymd[2];
+        }
+        else if(Double.parseDouble(ymd[2]) < 10){
+            formatedDate = ymd[0] + "/" + ymd[1] + "/0" + ymd[2];
+        }
+        else{
+            formatedDate = ymd[0] + "/" + ymd[1] + "/" + ymd[2];
+        }
+        return formatedDate;
+    }
     /**
      * This method reads the calorie intake based on the date
      * @return an array in [date][data], [date][data]...
