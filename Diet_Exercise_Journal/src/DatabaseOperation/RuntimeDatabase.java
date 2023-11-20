@@ -933,28 +933,28 @@ public class RuntimeDatabase {
         //just for testing, will be modified
         //就维持这样让他输出每天的总量 不要改
         //日期改成mm/dd/yyyy或者mm/dd
-        String[][] data = new String[getInstance().getExerciseInfo().length][2];
-        String date;
+        //String[][] data = new String[getInstance().getExerciseInfo().length][2];
+        String[][] data;
 
-        for(int i = 0; i < getInstance().getExerciseInfo().length; i++){
-            data[i][0] = formatDate(getInstance().getExerciseInfo()[i][0]);
-            for(int j = 1; j < getInstance().getExerciseInfo()[i].length; j++){
-                if(getInstance().getExerciseInfo()[i][j] == null || getInstance().getExerciseInfo()[i][j].equalsIgnoreCase("")){
-                    data[i][j] = "0.0";
-                }
-                else{
-                    String[] temp = getInstance().getExerciseInfo()[i][j].split(" - ");
-                    double calorieBurnt = 0.0;
-                    for(int k = 0; k < temp.length; k++){
-                        String[] temp2 = temp[k].split(", ");
-                        calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
-                    }
-                    data[i][j] = String.valueOf(calorieBurnt);
-                }
-            }
-        }
+        //for(int i = 0; i < getInstance().getExerciseInfo().length; i++){
+          //  data[i][0] = formatDate(getInstance().getExerciseInfo()[i][0]);
+        //    for(int j = 1; j < getInstance().getExerciseInfo()[i].length; j++){
+        //        if(getInstance().getExerciseInfo()[i][j] == null || getInstance().getExerciseInfo()[i][j].equalsIgnoreCase("")){
+        //            data[i][j] = "0.0";
+      //          }
+      //          else{
+       //             String[] temp = getInstance().getExerciseInfo()[i][j].split(" - ");
+      //              double calorieBurnt = 0.0;
+       //             for(int k = 0; k < temp.length; k++){
+       //                 String[] temp2 = temp[k].split(", ");
+       //                 calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
+       //             }
+       //             data[i][j] = String.valueOf(calorieBurnt);
+       //         }
+       //     }
+      //  }
 
-        //data= new String[][]{{"2023/01/01", "1230"}, {"01/02", "1240"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
+        data= new String[][]{{"2023-01-01", "1230"}, {"2023-01-02", "1240"},{"2023-01-03", "1230"}, {"2023-01-04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
     }
 
@@ -982,7 +982,7 @@ public class RuntimeDatabase {
     public static String[][] CaloryIntakeDataReader(){
         //just for testing, will be modified
         String[][] data;
-        data= new String[][]{{"01/01", "1030"}, {"01/02", "1040"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
+        data= new String[][]{{"2023-01-01", "1230"}, {"2023-01-02", "1240"},{"2023-01-03", "1230"}, {"2023-01-04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
         return data;
     }
 

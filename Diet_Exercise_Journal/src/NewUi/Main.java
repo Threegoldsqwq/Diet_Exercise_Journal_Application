@@ -19,7 +19,6 @@ public class Main {
     private static ChooseProfilePage chooseProfilePage;
     private static DietLogPage dietLogPage;
     private static ExericiseLogPage exercisePage;
-    //RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
     private static NutritionServiceFacade facade = new NutritionServiceFacade();
 
     public static void main(String[] args) {
@@ -116,9 +115,6 @@ public class Main {
             String[] temp = selectedUser.split("id: ");//extract user ID
             //挪到facade
             facade.selectProfile(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));
-//            runtimeDatabase.setId(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1)));//set id to do further works
-//            runtimeDatabase.setMealInfo(runtimeDatabase.readAllMealInfo(Integer.parseInt(temp[1].substring(0, temp[1].length() - 1))));//read all meal info of the user
-
             showMainPage();
         });
         mainFrame.add(chooseProfilePage.getPanel());
@@ -189,6 +185,7 @@ public class Main {
         ActionListener WeightLossForecastListener = e -> {
             // Handle edit profile button action
             //change here
+
             JOptionPane.showMessageDialog(null, "<html><font size='5'>Estimate Weight Change is: <br>" +
                     "<font size='7'>" + NutritionServiceFacade.getWeightForecast("12/20/2023") + " KG</font></font></html>");
         };
@@ -284,7 +281,8 @@ public class Main {
 
     private static void showDetailedMealPage(int type/*0=breakfast,1=lunch,2=dinner,3=snack*/){
         mainFrame.getContentPane().removeAll();
-
+        //change here
+        //把string 接到这俩参数上， 具体啥样自己打开看
         DetailedMealPage detailedMealPage=new DetailedMealPage(new String[]{"1"}, new String[]{"2"},e -> showDetailedDietPage());
 
         mainFrame.add(detailedMealPage.getPanel());
@@ -343,14 +341,11 @@ public class Main {
                     String measurement = createProfilePage.getMeasurement();
                     String[] ymd = dob.split("-");
 
-                    //挪到facade change here
+                    // Add your logic to save or process the profile information
                     facade.editProfile(name, gender, Integer.parseInt(ymd[0]), Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]), Double.parseDouble(height), Double.parseDouble(weight), measurement);
 
-
-                    // Add your logic to save or process the profile information
-
                     // After saving the profile, transition to the next layer\
-                    JOptionPane.showMessageDialog(null, "Profile create successfully");
+                    JOptionPane.showMessageDialog(null, "Profile changed successfully");
                 },
                 e -> showLandingPage());
 
