@@ -64,7 +64,7 @@ public class CalorieDataVisualizer {
 
         //deal with date range
         //changed
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-DD");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // Parse the start and end dates
         LocalDate startDateObj = LocalDate.parse(startDate, dateFormatter);
