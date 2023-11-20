@@ -792,7 +792,7 @@ public class RuntimeDatabase {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
             statement = connect.createStatement();
-            if(meal == null){
+            if(meal == null || meal.equalsIgnoreCase("")){
                 return "";
             }
             String[] temp = meal.split(" - ");
@@ -959,8 +959,175 @@ public class RuntimeDatabase {
         return data;
     }
 
+//-------------------------------------------------------------------------------------------------------------------------
+
+    public void writeAllMealBack(){
+        try{
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+
+            String type = "";
+            for(int i = 0; i < this.mealInfo.length; i++){
+
+                preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.Meal(Date, userID, breakfast, lunch, dinner, snack) values (?, ?, ?, ?, ?, ?) on duplicate key update breakfast = values(breakfast), lunch = values(lunch), dinner = values(dinner), snack = values(snack);");
+                preparedStatement.setString(1, mealInfo[i][0]);
+                preparedStatement.setInt(2, getId());
+                preparedStatement.setString(3, mealInfo[i][0]);
+                preparedStatement.setString(4, mealInfo[i][0]);
+                preparedStatement.setString(5, mealInfo[i][0]);
+                preparedStatement.setString(6, mealInfo[i][0]);
+                preparedStatement.executeUpdate();
+                for(int j = 1; j < this.mealInfo[i].length; j++){
+                    if(j == 1){
+                        type = "Breakfast";
+                    }
+                    else if(j == 2){
+                        type = "Lunch";
+                    }
+                    else if(j == 3){
+                        type = "Dinner";
+                    }
+                    else if(j == 4){
+                        type = "Snack";
+                    }
+                    String ingredients = "";
+                    String quantity = "";
+                    if(mealInfo[i][j] == null || mealInfo[i][j].equalsIgnoreCase("")){
+                        ingredients = "";
+                        quantity = "";
+                    }
+                    else{
+                        String[] temp = mealInfo[i][j].split(" - ");
+
+                        for(int k = 0; k < temp.length; k++){
+                            String[] ingredientsQuantity = temp[k].split(", ");
+                            if(k == temp.length - 1){
+                                ingredients = ingredients + ingredientsQuantity[0];
+                                quantity = quantity + ingredientsQuantity[1];
+                            }
+                            else{
+                                ingredients = ingredients + ingredientsQuantity[0] + ", ";
+                                quantity = quantity + ingredientsQuantity[1] + ", ";
+                            }
+                        }
+                    }
+                    //System.out.println(ingredients + "->: " + quantity);
+
+                    if(type.equalsIgnoreCase("Snack")){
+                        preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.Snack (Date, userID, ingredients, quantity)" +
+                                " values (?, ?, ?, ?) on duplicate key update ingredients = values(ingredients), quantity = values(quantity);");
+                        //preparedStatement.setString(1, type);
+                        preparedStatement.setString(1, mealInfo[i][0]);
+                        preparedStatement.setInt(2, getId());
+                        preparedStatement.setString(3, ingredients);
+                        preparedStatement.setString(4, quantity);
+                    }
+                    else{
+                        preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile." + type + "(Date, userID, ingredients, quantity)" +
+                                " values (?, ?, ?, ?) on duplicate key update ingredients = values(ingredients), quantity = values(quantity);");
+
+                        preparedStatement.setString(1, mealInfo[i][0]);
+                        preparedStatement.setInt(2, getId());
+                        preparedStatement.setString(3, ingredients);
+                        preparedStatement.setString(4, quantity);
+                    }
+                    preparedStatement.executeUpdate();
+                }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
+    public void writeExerciseBack(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+
+            String type = "";
+            String duration = "";
+            String intensity = "";
+            double calorieBurnt = 0.0;
+            for(int i = 0; i < exerciseInfo.length; i++){
+
+                for(int j = 1; j < exerciseInfo[i].length; j++){
+                    preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.Exercise values (default, ?, ?, ?, ?, ?, ?)");
+
+                    if(exerciseInfo[i][j] == null || exerciseInfo[i][j].equalsIgnoreCase("")){
+                        type = "";
+                        duration = "";
+                        intensity = "";
+                        calorieBurnt = 0.0;
+                        preparedStatement.setString(1, exerciseInfo[i][0]);
+                        preparedStatement.setInt(2, getId());
+                        preparedStatement.setString(3, type);
+                        preparedStatement.setString(4, duration);
+                        preparedStatement.setString(5, intensity);
+                        preparedStatement.setDouble(6, calorieBurnt);
+                        preparedStatement.executeUpdate();
+                    }
+                    else{
+                        String[] temp = exerciseInfo[i][j].split(" - ");
+                        for(int k = 0; k < temp.length; k++){
+                            type = temp[k].split(", ")[0];
+                            duration = temp[k].split(", ")[1];
+                            intensity = temp[k].split(", ")[2];
+                            calorieBurnt = Double.parseDouble(temp[k].split(", ")[3]);
+                            preparedStatement.setString(1, exerciseInfo[i][0]);
+                            preparedStatement.setInt(2, getId());
+                            preparedStatement.setString(3, type);
+                            preparedStatement.setString(4, duration);
+                            preparedStatement.setString(5, intensity);
+                            preparedStatement.setDouble(6, calorieBurnt);
+                            preparedStatement.executeUpdate();
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+
 }
 
+//try {
+//        Class.forName("com.mysql.cj.jdbc.Driver");
+//        connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+//        statement = connect.createStatement();
+//        resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
+//
+//        //以下为创建profile
+//        preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.UserProfile values (default, ?, ?, ?, ?, ?, ?)");
+//        //preparedStatement.setInt(1, ++id);
+//        preparedStatement.setString(1, UserName);
+//        preparedStatement.setString(2, sex);
+//        preparedStatement.setString(3, year + "-" + month + "-" + day);
+//        preparedStatement.setDouble(4, height);
+//        preparedStatement.setDouble(5, weight);
+//        preparedStatement.setString(6, measurement);//metric vs imperial
+//        preparedStatement.executeUpdate();
+//
+//        preparedStatement = connect.prepareStatement("SELECT UserID, UserName, Sex, Date_of_birth, Height, Weight, Measurement from Diet_Exercise_Journal_UserProfile.UserProfile");
+//        resultSet = preparedStatement.executeQuery();
+//        }
+//        catch (Exception e){
+//        e.printStackTrace();
+//        }
+//        finally {
+//        close();
+//        }
 //ignore the comment below
 //返还整理好的按量排序的前5或10个nutrients 并将剩下的全部加起来作为第6/11项加在末尾 返回值为[类型][量] 第二阶长度为1
 //根据输入的日期(再加一个attribute)启止读出所有的nutrients

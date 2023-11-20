@@ -35,13 +35,13 @@ public class TestingClass {
 //        quantity.add("12");
 
 //        s = runtimeDatabase.getMealInfo();
-        for (String[] strings : s1) {
+        for (String[] strings : s) {
             for (String string : strings) {
                 System.out.print(string + " ");
             }
             System.out.println();
         }
-
+        runtimeDatabase.writeExerciseBack();
         //System.out.println(runtimeDatabase.getOtherNutrientValues("tomato, 11 - beef, 23"));
 
 
@@ -55,8 +55,8 @@ public class TestingClass {
         //runtimeDatabase.readDatabase();
         //runtimeDatabase.displayProfile();
 
-        DataOperator operator = new ExerciseDataOperator();
-        System.out.println(operator.calculateCalorieBurnt("very high"));
+//        DataOperator operator = new ExerciseDataOperator();
+//        System.out.println(operator.calculateCalorieBurnt("very high"));
 
     }
 }
