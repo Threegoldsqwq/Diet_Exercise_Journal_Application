@@ -354,6 +354,12 @@ public class RuntimeDatabase {
 
     public void setExerciseInfo(String[][] exerciseInfo) {
         this.exerciseInfo = exerciseInfo;
+        for (String[] strings : this.exerciseInfo) {
+            for (String string : strings) {
+                System.out.print(string + " ");
+            }
+            System.out.println();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------
@@ -478,7 +484,7 @@ public class RuntimeDatabase {
             resultSet = statement.executeQuery("select count(distinct Date) from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
             resultSet.next();
             if(resultSet.getInt(1) == 0){
-                return new String[1][5];
+                return new String[1][2];
             }
             String[][] exerciseInfo = new String[resultSet.getInt(1)][2];
             resultSet = statement.executeQuery("select Date from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
@@ -624,7 +630,7 @@ public class RuntimeDatabase {
         if(!isChange){
 
             String[][] newMealInfo = new String[mealInfo.length+1][mealInfo[0].length];
-            if(mealInfo.length == 1){
+            if(mealInfo.length == 1 && mealInfo[0][0] == null){
                 newMealInfo = new String[mealInfo.length][mealInfo[0].length];
             }
             for(int i = 0; i < mealInfo.length; i++){
@@ -663,6 +669,7 @@ public class RuntimeDatabase {
                 exerciseInfo[i][j] = getExerciseInfo()[i][j];
             }
         }
+
         boolean isModify = false;
         for(int i = 0; i < exerciseInfo.length; i++){
             if(exerciseInfo[i][0] == null){
@@ -673,11 +680,17 @@ public class RuntimeDatabase {
                 exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(intensity);
             }
         }
+//        for (String[] strings : exerciseInfo) {
+//            for (String string : strings) {
+//                System.out.print(string + " ");
+//            }
+//            System.out.println();
+//        }
         setExerciseInfo(exerciseInfo);
 
         if(!isModify){
-            String[][] newExerciseInfo = new String[exerciseInfo.length + 1][exerciseInfo[0].length];
-            if(exerciseInfo.length == 1){
+            String[][] newExerciseInfo = new String[getExerciseInfo().length + 1][getExerciseInfo()[0].length];
+            if(getExerciseInfo().length == 1 && getExerciseInfo()[0][0] == null){
                 newExerciseInfo = new String[exerciseInfo.length][exerciseInfo[0].length];
             }
             for(int i = 0; i < exerciseInfo.length; i++){

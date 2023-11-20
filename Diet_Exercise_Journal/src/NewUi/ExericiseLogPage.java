@@ -29,7 +29,7 @@ public class ExericiseLogPage {
 
         // UI components
         exerciseTypeField = new JTextField(10);
-        intensity = new JComboBox<>(new String[]{"High", "Normal", "Low"});
+        intensity = new JComboBox<>(new String[]{"very low", "low", "medium", "high", "very high"});
         lenthField = new JTextField(15);
         date = new JTextField(10);
 

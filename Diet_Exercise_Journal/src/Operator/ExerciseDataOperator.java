@@ -34,7 +34,7 @@ public class ExerciseDataOperator implements DataOperator{
 
         //calculate BMR
         double bmr = Calculator.calculateBMR();
-        System.out.println(bmr);
+        //System.out.println(bmr);
 
         return activityLevel * bmr / 1000;
     }

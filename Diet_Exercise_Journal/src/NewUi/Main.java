@@ -6,6 +6,7 @@ import Facade.NutritionServiceFacade;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 
@@ -196,6 +197,7 @@ public class Main {
 
     private static void showExerciseLogPage() {
         mainFrame.getContentPane().removeAll();
+        NutritionServiceFacade facade = new NutritionServiceFacade();
         exercisePage = new ExericiseLogPage(e -> {
             String intensity = exercisePage.getIntensity();
             String length = exercisePage.getLength();
@@ -203,6 +205,11 @@ public class Main {
             String exerciseType = exercisePage.getExerciseType();
 
             //link function here
+            try {
+                facade.logExercise(date, exerciseType, length, intensity);
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
 
         }, e -> showMainPage());
 
