@@ -1,10 +1,13 @@
 package Facade;
-
+import Generator.*;
+import NewUi.ExericiseLogPage;
+import Operator.*;
 import DatabaseOperation.RuntimeDatabase;
 import OutcomeGenerator.*;
 import Visualizer.*;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -33,6 +36,7 @@ public class NutritionServiceFacade {
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         runtimeDatabase.setId(id);
         runtimeDatabase.setMealInfo(runtimeDatabase.readAllMealInfo(id));
+        runtimeDatabase.setExerciseInfo(runtimeDatabase.readAllExerciseInfo(id));
     }
 
     public void logDiet(String date, String mealType, String ingredients, String quantity){
@@ -48,6 +52,10 @@ public class NutritionServiceFacade {
         runtimeDatabase.logMeal(date, mealType, ingredientsList, quantityList);
     }
 
+    public void logExercise(String date, String exerciseType, String duration, String intensity) throws ParseException{
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        runtimeDatabase.logExercise(date, exerciseType, duration, intensity);
+    }
 
     public String[] showDates(){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
