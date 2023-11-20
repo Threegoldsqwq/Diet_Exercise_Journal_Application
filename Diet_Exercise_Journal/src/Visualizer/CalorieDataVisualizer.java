@@ -63,11 +63,12 @@ public class CalorieDataVisualizer {
         Cintake=RuntimeDatabase.CaloryIntakeDataReader();
 
         //deal with date range
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        //changed
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-DD");
 
         // Parse the start and end dates
-        LocalDate startDateObj = LocalDate.parse(startDate+"/2023", dateFormatter);
-        LocalDate endDateObj = LocalDate.parse(endDate+"/2023", dateFormatter);
+        LocalDate startDateObj = LocalDate.parse(startDate, dateFormatter);
+        LocalDate endDateObj = LocalDate.parse(endDate, dateFormatter);
 
         // Calculate the difference in days
         int Length= (int) ChronoUnit.DAYS.between(startDateObj, endDateObj);

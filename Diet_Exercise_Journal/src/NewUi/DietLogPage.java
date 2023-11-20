@@ -40,13 +40,13 @@ public class DietLogPage {
         backButton.addActionListener(backButtonListener);
 
         // Layout
-        panel.add(new JLabel("Date:"));
+        panel.add(new JLabel("Date:(yyyy-mm-dd)"));
         panel.add(dateField);
         panel.add(new JLabel("Meal Type:"));
         panel.add(mealTypeComboBox);
         panel.add(new JLabel("Ingredient:"));
         panel.add(ingredientField);
-        panel.add(new JLabel("Quantity:"));
+        panel.add(new JLabel("Quantity:(in Gram/ML,Egg in amount)"));
         panel.add(quantityField);
         panel.add(logButton);
         panel.add(backButton);

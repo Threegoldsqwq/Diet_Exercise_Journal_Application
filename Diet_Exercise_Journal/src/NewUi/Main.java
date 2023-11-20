@@ -35,7 +35,6 @@ public class Main {
         mainFrame.setLocation(xPos, yPos);
         mainFrame.setVisible(true);
 
-        //change here
         //add a listener for frame closed
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -299,9 +298,9 @@ public class Main {
         JTextField startDateField = new JTextField();
         JTextField endDateField = new JTextField();
 
-        panel.add(new JLabel("Start Date (MM/DD):"));
+        panel.add(new JLabel("Start Date (YYYY-MM-DD):"));
         panel.add(startDateField);
-        panel.add(new JLabel("End Date (MM/DD):"));
+        panel.add(new JLabel("End Date (YYYY-MM-DD):"));
         panel.add(endDateField);
 
         int result = JOptionPane.showOptionDialog(

@@ -11,8 +11,8 @@ import java.awt.event.ComponentEvent;
  * The logged information can be retrieved using the provided getter methods.
  */
 public class ExericiseLogPage {
-    private JTextField exerciseTypeField, lenthField, date;
-    private JComboBox<String> intensity;
+    private JTextField lenthField, date;
+    private JComboBox<String> exerciseTypeField, intensity;
     private JPanel panel;
     /**
      * Constructs an ExerciseLogPage with ActionListener for the "Log Exercise" button
@@ -28,8 +28,9 @@ public class ExericiseLogPage {
         panel.setBackground(new Color(187, 201, 211, 255));
 
         // UI components
-        exerciseTypeField = new JTextField(10);
-        intensity = new JComboBox<>(new String[]{"very low", "low", "medium", "high", "very high"});
+        // can be change later for upgrade
+        exerciseTypeField = new JComboBox<>(new String[]{"Running", "Swimming", "Cycling","Jumping Rope","Walking","Weightlifting","Yoga"});
+        intensity = new JComboBox<>(new String[]{"low", "medium", "high"});
         lenthField = new JTextField(15);
         date = new JTextField(10);
 
@@ -40,18 +41,18 @@ public class ExericiseLogPage {
         backButton.addActionListener(backButtonListener);
 
         // Layout
-        panel.add(new JLabel("Date:"));
+        panel.add(new JLabel("Date:(yyyy-mm-dd)"));
         panel.add(date);
         panel.add(new JLabel("Exercise Type:"));
         panel.add(exerciseTypeField);
         panel.add(new JLabel("intensity"));
         panel.add(intensity);
-        panel.add(new JLabel("Length:"));
+        panel.add(new JLabel("Length:(In minute)"));
         panel.add(lenthField);
         panel.add(logButton);
         panel.add(backButton);
 
-        //active componetListener
+        //active componentListener
         addComponentListener();
 
     }
@@ -93,7 +94,7 @@ public class ExericiseLogPage {
      * @return The entered exercise type.
      */
     public String getExerciseType() {
-        return exerciseTypeField.getText();
+        return (String) exerciseTypeField.getSelectedItem();
     }
 
     /**
