@@ -25,7 +25,9 @@ public class TestingClass {
         runtimeDatabase.setExerciseInfo(e);
         runtimeDatabase.setMealInfo(s);
         String[][] s1 = runtimeDatabase.getExerciseInfo();
-        String[][] s2 = RuntimeDatabase.CaloryBurnedDataReader();
+        String[][] s2 = runtimeDatabase.getCalorieInfo();
+        String[][] s3 = RuntimeDatabase.CaloryIntakeDataReader();
+        String[][] s4 = runtimeDatabase.getOtherNutrientInfo();
 //        ArrayList<String> ingredients = new ArrayList<>();
 //        ingredients.add("cookie");
 //        ingredients.add("rice");
@@ -36,7 +38,8 @@ public class TestingClass {
 //        quantity.add("12");
 
 //        s = runtimeDatabase.getMealInfo();
-        for (String[] strings : s2) {
+
+        for (String[] strings : s4) {
             for (String string : strings) {
                 System.out.print(string + " ");
             }

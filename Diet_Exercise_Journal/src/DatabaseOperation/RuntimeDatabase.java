@@ -487,7 +487,7 @@ public class RuntimeDatabase {
                 return new String[1][2];
             }
             String[][] exerciseInfo = new String[resultSet.getInt(1)][2];
-            resultSet = statement.executeQuery("select Date from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
+            resultSet = statement.executeQuery("select distinct Date from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
 
             ArrayList<Date> dates = new ArrayList<>();
             Date currentDate;
@@ -578,17 +578,17 @@ public class RuntimeDatabase {
             }
         }
         boolean isChange = false;//see if the log is a change to exist data
-        int type = 0;
-        if(mealType.equalsIgnoreCase("breakfast")){
+        int type = 1;
+        if(mealType.equalsIgnoreCase("Breakfast")){
             type = 1;
         }
-        else if(mealType.equalsIgnoreCase("lunch")){
+        else if(mealType.equalsIgnoreCase("Lunch")){
             type = 2;
         }
-        else if(mealType.equalsIgnoreCase("dinner")){
+        else if(mealType.equalsIgnoreCase("Dinner")){
             type = 3;
         }
-        else if (mealType.equalsIgnoreCase("snack")){
+        else if (mealType.equalsIgnoreCase("Snack")){
             type = 4;
         }
         //traverse to see if the data exist
@@ -599,8 +599,13 @@ public class RuntimeDatabase {
             if(mealInfo[i][0].equals(date)){
                 isChange = true;
                 if(type == 4){
-                    //if it is a snack, add the ingredients behind
-                    mealInfo[i][type] = mealInfo[i][type] + " -";
+                    if(mealInfo[i][type] == null){
+                        mealInfo[i][type] = null;
+                    }
+                    else{
+                        //if it is a snack, add the ingredients behind
+                        mealInfo[i][type] = mealInfo[i][type] + " -";
+                    }
                 }
                 else{
                     //if the meal is not a snack, means it is a rewrite
@@ -716,6 +721,8 @@ public class RuntimeDatabase {
             this.userName = UserName;
             this.sex = sex;
             this.DOB = year + "-" + month + "-" + day;
+            //you can change height and weight after you change your measurement
+            //you can not change them at the same time
             if(this.measurement.equalsIgnoreCase("Imperial") && measurement.equalsIgnoreCase("Metric")){
                 this.weight = this.weight / 2.204;
                 this.height = this.height / 0.032;
@@ -727,22 +734,19 @@ public class RuntimeDatabase {
             else{
                 this.height = height;
                 this.weight = weight;
-                this.measurement = measurement;
             }
             this.measurement = measurement;
-            preparedStatement = connect.prepareStatement("insert into UserProfile(userid, username, sex, date_of_birth, height, weight, measurement)\n" +
-                    "    values (?, ?, ?, ?, ?, ?, ?) on duplicate key update \n" +
-                    "    username = values(username), sex = values(sex), date_of_birth = values(date_of_birth),\n" +
-                    "    height = values(height), weight = values(weight), measurement = values(measurement);");
-            preparedStatement.setInt(1, getId());
-            preparedStatement.setString(2, UserName);
-            preparedStatement.setString(3, sex);
-            preparedStatement.setString(4, this.getDOB());
-            preparedStatement.setDouble(5, height);
-            preparedStatement.setDouble(6, weight);
-            preparedStatement.setString(7, measurement);
-            preparedStatement.executeUpdate();
+            preparedStatement = connect.prepareStatement("update UserProfile set UserName = ?, Sex = ?, Date_of_Birth = ?, Height = ?, " +
+                    "Weight = ?, Measurement = ? where UserID = ?;");
 
+            preparedStatement.setString(1, UserName);
+            preparedStatement.setString(2, sex);
+            preparedStatement.setString(3, this.DOB);
+            preparedStatement.setDouble(4, this.height);
+            preparedStatement.setDouble(5, this.weight);
+            preparedStatement.setString(6, measurement);
+            preparedStatement.setInt(7, getId());
+            preparedStatement.executeUpdate();
             //System.out.println(weight);
         }
         catch (Exception e){
@@ -800,12 +804,14 @@ public class RuntimeDatabase {
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
             statement = connect.createStatement();
             if(meal == null || meal.equalsIgnoreCase("")){
-                return "";
+                return null;
             }
             String[] temp = meal.split(" - ");
             String[] ingredients = new String[temp.length];
             String[] quantity = new String[temp.length];
+
             for(int i = 0; i < temp.length; i++){
+
                 ingredients[i] = temp[i].split(", ")[0];
                 quantity[i] = temp[i].split(", ")[1];
             }
@@ -933,45 +939,48 @@ public class RuntimeDatabase {
         //just for testing, will be modified
         //就维持这样让他输出每天的总量 不要改
         //日期改成mm/dd/yyyy或者mm/dd
-        //String[][] data = new String[getInstance().getExerciseInfo().length][2];
-        String[][] data;
+        String[][] data = new String[getInstance().getExerciseInfo().length][2];
+        String date;
 
-        //for(int i = 0; i < getInstance().getExerciseInfo().length; i++){
-          //  data[i][0] = formatDate(getInstance().getExerciseInfo()[i][0]);
-        //    for(int j = 1; j < getInstance().getExerciseInfo()[i].length; j++){
-        //        if(getInstance().getExerciseInfo()[i][j] == null || getInstance().getExerciseInfo()[i][j].equalsIgnoreCase("")){
-        //            data[i][j] = "0.0";
-      //          }
-      //          else{
-       //             String[] temp = getInstance().getExerciseInfo()[i][j].split(" - ");
-      //              double calorieBurnt = 0.0;
-       //             for(int k = 0; k < temp.length; k++){
-       //                 String[] temp2 = temp[k].split(", ");
-       //                 calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
-       //             }
-       //             data[i][j] = String.valueOf(calorieBurnt);
-       //         }
-       //     }
-      //  }
+        for(int i = 0; i < getInstance().getExerciseInfo().length; i++){
+            data[i][0] = formatDate(getInstance().getExerciseInfo()[i][0]);
+            for(int j = 1; j < getInstance().getExerciseInfo()[i].length; j++){
+                if(getInstance().getExerciseInfo()[i][j] == null || getInstance().getExerciseInfo()[i][j].equalsIgnoreCase("")){
+                    data[i][j] = "0.0";
+                }
+                else{
+                    String[] temp = getInstance().getExerciseInfo()[i][j].split(" - ");
+                    double calorieBurnt = 0.0;
+                    for(int k = 0; k < temp.length; k++){
+                        String[] temp2 = temp[k].split(", ");
+                        calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
+                    }
+                    data[i][j] = String.valueOf(calorieBurnt);
+                }
+            }
+        }
 
-        data= new String[][]{{"2023-01-01", "1230"}, {"2023-01-02", "1240"},{"2023-01-03", "1230"}, {"2023-01-04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
+        //data= new String[][]{{"2023/01/01", "1230"}, {"01/02", "1240"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
     }
 
     public static String formatDate(String date){
+        if(date == null){
+            return "0000-00-00";
+        }
         String[] ymd = date.split("-");
         String formatedDate = "";
         if(Double.parseDouble(ymd[1]) < 10 && Double.parseDouble(ymd[2]) < 10){
-            formatedDate = ymd[0] + "/0" + ymd[1] + "/0" + ymd[2];
+            formatedDate = ymd[0] + "-0" + ymd[1] + "-0" + ymd[2];
         }
         else if(Double.parseDouble(ymd[1]) < 10){
-            formatedDate = ymd[0] + "/0" + ymd[1] + "/" + ymd[2];
+            formatedDate = ymd[0] + "-0" + ymd[1] + "-" + ymd[2];
         }
         else if(Double.parseDouble(ymd[2]) < 10){
-            formatedDate = ymd[0] + "/" + ymd[1] + "/0" + ymd[2];
+            formatedDate = ymd[0] + "-" + ymd[1] + "-0" + ymd[2];
         }
         else{
-            formatedDate = ymd[0] + "/" + ymd[1] + "/" + ymd[2];
+            formatedDate = ymd[0] + "-" + ymd[1] + "-" + ymd[2];
         }
         return formatedDate;
     }
@@ -981,8 +990,25 @@ public class RuntimeDatabase {
      */
     public static String[][] CaloryIntakeDataReader(){
         //just for testing, will be modified
-        String[][] data;
-        data= new String[][]{{"2023-01-01", "1230"}, {"2023-01-02", "1240"},{"2023-01-03", "1230"}, {"2023-01-04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
+
+        String[][] data = new String[getInstance().getCalorieInfo().length][2];
+        String date;
+
+        for(int i = 0; i < getInstance().getCalorieInfo().length; i++){
+            data[i][0] = formatDate(getInstance().getCalorieInfo()[i][0]);
+            double calorieBurnt = 0.0;
+            for(int j = 1; j < getInstance().getCalorieInfo()[i].length; j++){
+                if(getInstance().getCalorieInfo()[i][j] == null || getInstance().getCalorieInfo()[i][j].equalsIgnoreCase("")){
+                    calorieBurnt = calorieBurnt + 0.0;
+                }
+                else{
+                    calorieBurnt = calorieBurnt + Double.parseDouble(getInstance().getCalorieInfo()[i][j]);
+
+                }
+            }
+            data[i][1] = String.valueOf(calorieBurnt);
+        }
+        //data= new String[][]{{"01/01", "1030"}, {"01/02", "1040"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
         return data;
     }
 
@@ -996,10 +1022,16 @@ public class RuntimeDatabase {
         //calculate average here
         //这里根据起止日期来操作
         //change here
-
+        String[][] data;
+        if(number == 5){
+            data = new String[6][2];
+        }
+        else{
+            data = new String[11][2];
+        }
         //return the top 5 or 10 nutrients, add the rest to be the 6th or 11th data
         //code for test only
-        String[][] data;
+
         data= new String[][]{{"Carb", "1230"}, {"Fat", "1240"},{"Salt", "1230"},{"Sugar", "1250"},{"Calcium", "800"}, {"Others", "1240"}};  // those code for test only
         return data;
     }
@@ -1095,6 +1127,14 @@ public class RuntimeDatabase {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
             statement = connect.createStatement();
+
+            preparedStatement = connect.prepareStatement("drop table Exercise;");
+            preparedStatement.executeUpdate();
+
+            preparedStatement = connect.prepareStatement("CREATE TABLE Exercise (" +
+                    "ExID INT NOT NULL AUTO_INCREMENT, Date date NOT NULL, UserID INT NOT NULL, Type VARCHAR(255), Duration VARCHAR(255), Intensity VARCHAR(255), CalorieBurnt double," +
+                    " Constraint exercise_PK Primary key (ExID));");
+            preparedStatement.executeUpdate();
 
             String type = "";
             String duration = "";

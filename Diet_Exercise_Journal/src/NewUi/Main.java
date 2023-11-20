@@ -45,7 +45,7 @@ public class Main {
         });
 
         //showLandingPage();
-        SwingUtilities.invokeLater(Main::showMainPage);
+        SwingUtilities.invokeLater(Main::showLandingPage);
     }
 
     private static void showLandingPage() {
@@ -164,7 +164,7 @@ public class Main {
 
         ActionListener editProfileListener = e -> {
             // Handle create profile button action
-            showCreateProfilePage();
+            showEditProfilePage();
         };
 
         ActionListener DietVisualizerListener = e -> {
@@ -283,6 +283,8 @@ public class Main {
         mainFrame.getContentPane().removeAll();
         //change here
         //把string 接到这俩参数上， 具体啥样自己打开看
+
+
         DetailedMealPage detailedMealPage=new DetailedMealPage(new String[]{"1"}, new String[]{"2"},e -> showDetailedDietPage());
 
         mainFrame.add(detailedMealPage.getPanel());
