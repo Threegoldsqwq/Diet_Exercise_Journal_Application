@@ -27,18 +27,17 @@ public class DietDataOperator implements DataOperator{
         for(int i = 0; i < meal.length; i++){
             calories[i][0] = meal[i][0];//the date keeps the same as meals
             for(int j = 1; j < meal[i].length; j++){
-                if(meal[i][j] == null){
+                if(meal[i][j] == null || meal[i][j].equalsIgnoreCase("")){
                     calories[i][j] = "0.00";//if no meals found, no calorie intake
+
                 }
                 else{
                     //we first split out the information of all ingredients and quantities, the format of result element are: ingredient, quantity
                     String[] ingredientsAndQuantity = meal[i][j].split(" - ");//get ingredient and quantity
-
-                    String[] temp = new String[2];
                     double totalCalorie = 0.0; //total calorie per meal
                     for(int k = 0; k < ingredientsAndQuantity.length; k++){
                         //we then split out ingredient and quantity and process them one by one
-                        temp = ingredientsAndQuantity[k].split(", ");
+                        String[] temp = ingredientsAndQuantity[k].split(", ");
                         double foodCal = runtimeDatabase.extractCalorieInfo(temp[0]);//extract the calorie info of the ingredient in cal/g or ml
                         totalCalorie = totalCalorie + (foodCal * Double.parseDouble(temp[1]));
                     }
