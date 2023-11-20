@@ -12,20 +12,16 @@ import org.jfree.ui.RefineryUtilities;
  * This class generate JFree chart for diet
  */
 public class DietDataVisualizer extends DataVisualizer{
-    static DefaultPieDataset dataset = new DefaultPieDataset();
-    static String[][] Data;
-
     /**
      * This method create pie chart
      * @param NumberOfNutrients is the number of nutrients
      */
     public static void getChart(int NumberOfNutrients,String startDate,String endDate) {
-        geData(NumberOfNutrients,startDate,endDate);
         // create a dataset...
         DefaultPieDataset dataset = new DefaultPieDataset();
 
         for (int i=0;i<NumberOfNutrients+1;i++){
-            dataset.setValue(Data[i][0], Double.parseDouble(Data[i][1]));
+            dataset.setValue(geData(NumberOfNutrients,startDate,endDate)[i][0], Double.parseDouble(geData(NumberOfNutrients,startDate,endDate)[i][1]));
         }
 
 
@@ -49,8 +45,8 @@ public class DietDataVisualizer extends DataVisualizer{
      * This class gets the data set for creating the chart
      * @param NumberOfNutrients NumberOfNutrients is the number of nutrients
      */
-    public static void geData(int NumberOfNutrients,String startDate,String endDate){
-        Data=RuntimeDatabase.NutrientsDataReader(NumberOfNutrients,startDate,endDate); //change here
+    public static String[][] geData(int NumberOfNutrients,String startDate,String endDate){
+        return RuntimeDatabase.NutrientsDataReader(NumberOfNutrients,startDate,endDate); //change here
     }
 }
 

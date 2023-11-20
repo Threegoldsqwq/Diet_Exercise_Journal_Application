@@ -103,4 +103,9 @@ public class NutritionServiceFacade {
         CFG dietChart = new CFG("Diet Comparison Chart", userIntake, cfgRecommendations);
         dietChart.displayChart();
     }
+
+    public void editProfile(String name, String gender, int parseInt, int parseInt1, int parseInt2, double parseDouble, double parseDouble1, String measurement) {
+        //change here
+        System.out.println("editProfile called");
+    }
 }

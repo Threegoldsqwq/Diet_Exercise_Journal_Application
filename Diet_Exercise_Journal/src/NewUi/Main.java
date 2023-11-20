@@ -6,6 +6,8 @@ import Facade.NutritionServiceFacade;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -17,6 +19,8 @@ public class Main {
     private static ChooseProfilePage chooseProfilePage;
     private static DietLogPage dietLogPage;
     private static ExericiseLogPage exercisePage;
+    //RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+    private static NutritionServiceFacade facade = new NutritionServiceFacade();
 
     public static void main(String[] args) {
 
@@ -29,6 +33,16 @@ public class Main {
         int yPos = (screenSize.height - mainFrame.getHeight()) / 2;
         mainFrame.setLocation(xPos, yPos);
         mainFrame.setVisible(true);
+
+        //change here
+        //add a listener for frame closed
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Call your function or perform actions when the window is closing
+                System.out.println("Window is closing. Activate your function here!");
+            }
+        });
 
         //showLandingPage();
         SwingUtilities.invokeLater(Main::showMainPage);
@@ -59,7 +73,6 @@ public class Main {
     private static void showCreateProfilePage() {
         mainFrame.getContentPane().removeAll();
         //RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
-        NutritionServiceFacade facade = new NutritionServiceFacade();
         //not working with local variable
         createProfilePage = new CreateProfilePage(
                 e -> {
@@ -74,7 +87,6 @@ public class Main {
 
                     //挪到facade change here
                     facade.createProfile(name, gender, Integer.parseInt(ymd[0]), Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]), Double.parseDouble(height), Double.parseDouble(weight), measurement);
-
 
                     // Add your logic to save or process the profile information
 
@@ -160,14 +172,15 @@ public class Main {
 
         ActionListener DietVisualizerListener = e -> {
             // Handle edit profile button action
-            showDateRangeSelectionDialog(mainFrame);
-            NutritionServiceFacade.displayDietChart("1","1");
+            String[] helper= new String[2];
+            helper=showDateRangeSelectionDialog(mainFrame);
+            NutritionServiceFacade.displayDietChart(helper[0],helper[1]);
 
         };
 
         ActionListener ExerciseVisualizerListener = e -> {
             // Handle edit profile button action
-            String[] helper= new String[2];
+            String[] helper;
             helper=showDateRangeSelectionDialog(mainFrame);
             NutritionServiceFacade.displayCalorieChart(helper[0],helper[1]);
 
@@ -313,6 +326,36 @@ public class Main {
         result1[0] = startDate;
         result1[1] = endDate;
         return result1;
+    }
+
+    private static void showEditProfilePage(){
+        mainFrame.getContentPane().removeAll();
+        //not working with local variable
+        createProfilePage = new CreateProfilePage(
+                e -> {
+                    // Handle the Save button action in CreateProfileUI
+                    String name = createProfilePage.getName();
+                    String dob = createProfilePage.getDOB();
+                    String gender = createProfilePage.getGender();
+                    String weight = createProfilePage.getWeight();
+                    String height = createProfilePage.getHeight();
+                    String measurement = createProfilePage.getMeasurement();
+                    String[] ymd = dob.split("-");
+
+                    //挪到facade change here
+                    facade.editProfile(name, gender, Integer.parseInt(ymd[0]), Integer.parseInt(ymd[1]), Integer.parseInt(ymd[2]), Double.parseDouble(height), Double.parseDouble(weight), measurement);
+
+
+                    // Add your logic to save or process the profile information
+
+                    // After saving the profile, transition to the next layer\
+                    JOptionPane.showMessageDialog(null, "Profile create successfully");
+                },
+                e -> showLandingPage());
+
+        mainFrame.add(createProfilePage.getPanel());
+        mainFrame.revalidate();
+        mainFrame.repaint();
     }
 
 }
