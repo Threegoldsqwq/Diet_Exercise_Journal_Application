@@ -1,5 +1,6 @@
 package NewUi;
 
+import DatabaseOperation.CanadianFoodGuide;
 import DatabaseOperation.RuntimeDatabase;
 import Facade.NutritionServiceFacade;
 
@@ -193,8 +194,8 @@ public class Main {
         ActionListener CFGListener = e -> {
             // Handle edit profile button action
             //change here
-            NutritionServiceFacade.getCFGchart(new double[]{30.0, 25.0, 20.0, 15.0, 10.0},
-        new double[]{30.0, 30.0, 20.0, 15.0, 5.0});
+            NutritionServiceFacade.getCFGchart(facade.getTotalFoodGroupIntake(),
+                    CanadianFoodGuide.getCFGRecommends(facade.getTotalFoodGroupIntake()));
         };
 
 

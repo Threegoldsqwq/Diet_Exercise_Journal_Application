@@ -18,7 +18,7 @@ public class CFG extends JFrame {
         JFreeChart chart = ChartFactory.createBarChart(
                 "Diet Comparison",
                 "Food Groups",
-                "Percentage",
+                "Quantity",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -34,14 +34,15 @@ public class CFG extends JFrame {
     private CategoryDataset createDataset(double[] userIntake, double[] cfgRecommendations) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
+        String[] columnName = {"Vegetables", "Protein", "Whole Grain"};
         String series = "User's Intake";
         for (int i = 0; i < userIntake.length; i++) {
-            dataset.addValue(userIntake[i], series, "Food Group " + (i + 1));
+            dataset.addValue(userIntake[i], series, columnName[i]);
         }
 
         series = "CFG Recommendations";
         for (int i = 0; i < cfgRecommendations.length; i++) {
-            dataset.addValue(cfgRecommendations[i], series, "Food Group " + (i + 1));
+            dataset.addValue(cfgRecommendations[i], series, columnName[i]);
         }
 
         return dataset;

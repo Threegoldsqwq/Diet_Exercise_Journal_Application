@@ -140,7 +140,14 @@ public class NutritionServiceFacade {
 
     public double[] getTotalFoodGroupIntake(){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
-        return runtimeDatabase.getFoodGroup();
+        double[] newFoodGroup = new double[3];
+
+        //vege, protein, grain
+        newFoodGroup[0] = runtimeDatabase.getFoodGroup()[3];
+        newFoodGroup[1] = runtimeDatabase.getFoodGroup()[0] + runtimeDatabase.getFoodGroup()[1] + runtimeDatabase.getFoodGroup()[2];
+        newFoodGroup[2] = runtimeDatabase.getFoodGroup()[4];
+        //System.out.println("Vege: " + newFoodGroup[0] + " Protein: " + newFoodGroup[1] + " Whole Grain: " + newFoodGroup[2]);
+        return newFoodGroup;
     }
     public static void displayDietChart(String startDate, String endDate){
         //call diet chart module. modify number of nutrition here
@@ -170,8 +177,8 @@ public class NutritionServiceFacade {
 
     public static void getCFGchart(double[] userIntake,double[] cfgRecommendations ){
         //change here
-        userIntake = new double[]{30.0, 25.0, 20.0, 15.0, 10.0};
-        cfgRecommendations = new double[]{30.0, 30.0, 20.0, 15.0, 5.0};
+        //userIntake = new double[]{30.0, 25.0, 20.0, 15.0, 10.0};
+        //cfgRecommendations = new double[]{30.0, 30.0, 20.0, 15.0, 5.0};
 
         CFG dietChart = new CFG("Diet Comparison Chart", userIntake, cfgRecommendations);
         dietChart.displayChart();
