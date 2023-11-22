@@ -7,10 +7,6 @@ import java.text.ParseException;
  */
 public abstract class DataCalculator {
 
-    public static double calculateBMR() throws ParseException {
-        return 0;
-    }
-
     public abstract double getActivityLevel(String intensity);
     public abstract double getCalorieBurntPerMinute(String type);
 }

@@ -181,15 +181,23 @@ public class Main {
             // Handle edit profile button action
             String[] helper;
             helper=showDateRangeSelectionDialog(mainFrame);
-            NutritionServiceFacade.displayCalorieChart(helper[0],helper[1]);
+            try {
+                NutritionServiceFacade.displayCalorieChart(helper[0],helper[1]);
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
 
         };
         ActionListener WeightLossForecastListener = e -> {
             // Handle edit profile button action
             //change here
 
-            JOptionPane.showMessageDialog(null, "<html><font size='5'>Estimate Weight Change is: <br>" +
-                    "<font size='7'>" + NutritionServiceFacade.getWeightForecast("12/20/2023") + " KG</font></font></html>");
+            try {
+                JOptionPane.showMessageDialog(null, "<html><font size='5'>Estimate Weight Change is: <br>" +
+                        "<font size='7'>" + NutritionServiceFacade.getWeightForecast("12/20/2023") + " KG</font></font></html>");
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
         };
         ActionListener CFGListener = e -> {
             // Handle edit profile button action

@@ -1018,13 +1018,15 @@ public class RuntimeDatabase {
      * This method reads the calorie burnt based on the date
      * @return an array in [date][data], [date][data]...
      */
-    public static String[][] CaloryBurnedDataReader(){
+    public static String[][] CaloryBurnedDataReader() throws ParseException {
         //just for testing, will be modified
         //就维持这样让他输出每天的总量 不要改
         //日期改成mm/dd/yyyy或者mm/dd
         String[][] data = new String[getInstance().getExerciseInfo().length][2];
         String date;
 
+        double bmr = Calculator.calculateBMR();
+        System.out.println("bmr: " + bmr);
         for(int i = 0; i < getInstance().getExerciseInfo().length; i++){
             data[i][0] = formatDate(getInstance().getExerciseInfo()[i][0]);
             for(int j = 1; j < getInstance().getExerciseInfo()[i].length; j++){
@@ -1038,7 +1040,7 @@ public class RuntimeDatabase {
                         String[] temp2 = temp[k].split(", ");
                         calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
                     }
-                    data[i][j] = String.valueOf(calorieBurnt);
+                    data[i][j] = String.valueOf((Math.floor((calorieBurnt + bmr) * 100) / 100.0));
                 }
             }
         }
@@ -1080,17 +1082,17 @@ public class RuntimeDatabase {
 
         for(int i = 0; i < getInstance().getCalorieInfo().length; i++){
             data[i][0] = formatDate(getInstance().getCalorieInfo()[i][0]);
-            double calorieBurnt = 0.0;
+            double calorieIntake = 0.0;
             for(int j = 1; j < getInstance().getCalorieInfo()[i].length; j++){
                 if(getInstance().getCalorieInfo()[i][j] == null || getInstance().getCalorieInfo()[i][j].equalsIgnoreCase("")){
-                    calorieBurnt = calorieBurnt + 0.0;
+                    calorieIntake = calorieIntake + 0.0;
                 }
                 else{
-                    calorieBurnt = calorieBurnt + Double.parseDouble(getInstance().getCalorieInfo()[i][j]);
+                    calorieIntake = calorieIntake + Double.parseDouble(getInstance().getCalorieInfo()[i][j]);
 
                 }
             }
-            data[i][1] = String.valueOf(calorieBurnt);
+            data[i][1] = String.valueOf(Math.round(calorieIntake * 100) / 100.0);
         }
         //data= new String[][]{{"01/01", "1030"}, {"01/02", "1040"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
         return data;

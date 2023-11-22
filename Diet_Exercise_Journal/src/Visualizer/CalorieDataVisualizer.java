@@ -12,6 +12,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 import org.jfree.ui.RefineryUtilities;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -26,7 +27,7 @@ public class CalorieDataVisualizer {
     /**
      * This method generate bar chart
      */
-    public static void getChart(String startDate, String endDate) {
+    public static void getChart(String startDate, String endDate) throws ParseException {
         getData(startDate,endDate);
         JFreeChart chart = ChartFactory.createBarChart(
                 "Exercise Data", //title
@@ -56,7 +57,7 @@ public class CalorieDataVisualizer {
     /**
      * This method get the data set for creating the chart
      */
-    public static void getData(String startDate, String endDate){
+    public static void getData(String startDate, String endDate) throws ParseException {
         String[][] CBurned;
         String[][] Cintake;
         CBurned=RuntimeDatabase.CaloryBurnedDataReader();

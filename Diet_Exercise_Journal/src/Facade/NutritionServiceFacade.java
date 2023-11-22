@@ -74,6 +74,9 @@ public class NutritionServiceFacade {
         return result;
     }
 
+    public static String[][] getTotalCalorieIntake(){
+        return RuntimeDatabase.CaloryIntakeDataReader();
+    }
     /**
      * need a date
      * @param type
@@ -154,12 +157,12 @@ public class NutritionServiceFacade {
         DietDataVisualizer.getChart(5,startDate,endDate);//change here
     }
 
-    public static void displayCalorieChart(String startDate, String endDate){
+    public static void displayCalorieChart(String startDate, String endDate) throws ParseException {
         //call calorie intake and burned chart module
         CalorieDataVisualizer.getChart(startDate,endDate);//change here
     }
 
-    public static String getWeightForecast(String date) {
+    public static String getWeightForecast(String date) throws ParseException {
         double weightForecast = Calculator.weightForecast(date);
 
         // Format the result with two decimal places

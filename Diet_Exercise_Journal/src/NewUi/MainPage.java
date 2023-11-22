@@ -1,5 +1,7 @@
 package NewUi;
 
+import Facade.NutritionServiceFacade;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,6 +22,8 @@ public class MainPage {
     private JPanel topPanel;
     private JLabel timeLabel;
     private int D=10; //date we want to show
+
+    NutritionServiceFacade facade = new NutritionServiceFacade();
 
     /**
      * Constructs a MainPage with ActionListeners for various buttons.
@@ -54,11 +58,13 @@ public class MainPage {
         panel.add(LeftPanel, BorderLayout.WEST);
 
 
+
         //create leftpanel labels
         JLabel label = new JLabel("Recent Calorie Intake");
             label.setHorizontalAlignment(JLabel.CENTER);
             LeftPanel.add(label);
-        String[] result = getPastNDays(D);
+            //display recent dates
+        String[] result = getPastNDays(10);
         for (String day : result) {
             label = new JLabel(day);
             //在这里加数据
@@ -100,14 +106,19 @@ public class MainPage {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd");
 
             // Create an array to store the result
-            String[] result = new String[n];
+            String[] result = new String[10];
 
             // Loop through the past N days and store formatted dates in the array
-            for (int i = 0; i < n; i++) {
-                result[i] = currentDate.format(dateFormatter);
-
+            //max 10 rows
+            for (int i = NutritionServiceFacade.getTotalCalorieIntake().length - 1; i >= 0; i--) {
+                //result[i] = currentDate.format(dateFormatter);
+                //if the data do not have 10 rows
+                if(i == 10){
+                    break;
+                }
+                result[(NutritionServiceFacade.getTotalCalorieIntake().length - 1) - i] = NutritionServiceFacade.getTotalCalorieIntake()[i][0] + ": " + NutritionServiceFacade.getTotalCalorieIntake()[i][1] + " kCal";
                 // Move to the previous day
-                currentDate = currentDate.minusDays(1);
+                //currentDate = currentDate.minusDays(1);
             }
             return result;
     }

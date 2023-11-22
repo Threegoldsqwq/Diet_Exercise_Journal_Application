@@ -32,9 +32,9 @@ public class TestingClass {
 
         double[] s6 = runtimeDatabase.getFoodGroup();
 
-        for (double value : s6) {
-            System.out.println(value);
-        }
+//        for (double value : s6) {
+//            System.out.println(value);
+//        }
 //        ArrayList<String> ingredients = new ArrayList<>();
 //        ingredients.add("cookie");
 //        ingredients.add("rice");
@@ -52,12 +52,12 @@ public class TestingClass {
 //            }
 //            System.out.println();
 //        }
-//        for (String[] strings : s5) {
-//            for (String string : strings) {
-//                System.out.print(string + " ");
-//            }
-//            System.out.println();
-//        }
+        for (String[] strings : s5) {
+            for (String string : strings) {
+                System.out.print(string + " ");
+            }
+            System.out.println();
+        }
         //runtimeDatabase.writeExerciseBack();
         //System.out.println(runtimeDatabase.getOtherNutrientValues("tomato, 11 - beef, 23"));
 

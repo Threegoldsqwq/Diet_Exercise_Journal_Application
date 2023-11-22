@@ -40,14 +40,14 @@ public class Calculator extends DataCalculator {
         //calculate BMR based on gender
         if (gender == 'M' || gender == 'm') {
             // BMR calculation for men
-            if (RuntimeDatabase.getInstance().getMeasurement() == "Imperial") {
+            if (RuntimeDatabase.getInstance().getMeasurement().equalsIgnoreCase("Imperial")) {
                 bmr = 66 + 6.23 * weight + 12.7 * height - 6.8 * age;
             } else {
                 bmr = 10 * weight + 6.25 * height - 5 * age + 5;
             }
         } else if (gender == 'F' || gender == 'f') {
             // BMR calculation for women
-            if (RuntimeDatabase.getInstance().getMeasurement() == "Imperial") {
+            if (RuntimeDatabase.getInstance().getMeasurement().equalsIgnoreCase("Imperial")) {
                 bmr = 655 + 4.35 * weight + 4.7 * height - 4.7 * age;
             }
             else{
@@ -58,6 +58,7 @@ public class Calculator extends DataCalculator {
             throw new IllegalArgumentException("Invalid gender. Use 'M' for male or 'F' for female.");
         }
 
+        //System.out.println("func bmr: " + bmr);
         return bmr;
     }
 
@@ -103,7 +104,7 @@ public class Calculator extends DataCalculator {
     }
 
 
-    public static double weightForecast(String userInputDate) {
+    public static double weightForecast(String userInputDate) throws ParseException {
         double CalorieDeficit;
         int lengthDays;
 
@@ -122,7 +123,7 @@ public class Calculator extends DataCalculator {
         return CalorieDeficit * lengthDays / 7700;
     }
 
-    private static double getAvgCBurned() {
+    private static double getAvgCBurned() throws ParseException {
         //change here link to database
         String[][] helper= RuntimeDatabase.CaloryBurnedDataReader();
         double result = 0;
