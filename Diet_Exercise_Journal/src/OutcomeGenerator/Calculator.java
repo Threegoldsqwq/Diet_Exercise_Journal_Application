@@ -111,6 +111,8 @@ public class Calculator extends DataCalculator {
         double avgCalorieIntake = getAvgCIntake();
         double avgCalorieBurned = getAvgCBurned();
 
+        System.out.println(avgCalorieIntake);
+        System.out.println(avgCalorieBurned);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         // Parse the user input date
         LocalDate selectedDate = LocalDate.parse(userInputDate, dateFormatter);
@@ -120,6 +122,7 @@ public class Calculator extends DataCalculator {
         lengthDays = (int) ChronoUnit.DAYS.between(currentDate, selectedDate);
 
         CalorieDeficit = avgCalorieIntake - avgCalorieBurned;
+        System.out.println(CalorieDeficit);
         return CalorieDeficit * lengthDays / 7700;
     }
 
@@ -127,20 +130,21 @@ public class Calculator extends DataCalculator {
         //change here link to database
         String[][] helper= RuntimeDatabase.CaloryBurnedDataReader();
         double result = 0;
-        for(int i=0;i<helper.length-1;i++){
+        for(int i=0;i < helper.length;i++){
             result= result+Double.parseDouble(helper[i][1]);
         }
+
         //RuntimeDatabase.getInstance().get
-        return result;
+        return result / helper.length;
     }
 
     private static double getAvgCIntake() {
         //change here link to database
-        String[][] helper= RuntimeDatabase.CaloryIntakeDataReader();
+        String[][] helper = RuntimeDatabase.CaloryIntakeDataReader();
         double result = 0;
-        for(int i=0;i<helper.length-1;i++){
+        for(int i=0;i < helper.length;i++){
             result= result+Double.parseDouble(helper[i][1]);
         }
-        return result;
+        return result / helper.length;
     }
 }
