@@ -1,6 +1,6 @@
 package NewUi;
 
-import OutcomeGenerator.CanadianFoodGuide;
+import OutcomeGenerator.CFG;
 import Facade.NutritionServiceFacade;
 
 import javax.swing.*;
@@ -16,6 +16,8 @@ import java.text.ParseException;
  * It utilizes the NutritionServiceFacade to interact with the underlying services.
  * The application allows users to create profiles, log diet and exercise data, visualize data,
  * and perform various other functions related to nutrition and exercise tracking.
+ *
+ * If you want to START the application, YOU CAN RUN THIS CLASS :), but make sure you have connected to the database.
  *
  * @author DD
  * @version 1.0
@@ -282,7 +284,7 @@ public class Main {
         ActionListener cfgListener = e -> {
             // Handle CFG chart button action
             NutritionServiceFacade.getCFGchart(facade.getTotalFoodGroupIntake(),
-                    CanadianFoodGuide.getCFGRecommends(facade.getTotalFoodGroupIntake()));
+                    CFG.getCFGRecommends(facade.getTotalFoodGroupIntake()));
         };
 
         // Array of all button listeners

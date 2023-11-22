@@ -3,7 +3,7 @@ package OutcomeGenerator;
 import java.text.ParseException;
 
 /**
- * TBD
+ * Abstract class from encapsulation
  */
 public abstract class DataCalculator {
 

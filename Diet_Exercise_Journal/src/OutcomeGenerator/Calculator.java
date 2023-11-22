@@ -12,11 +12,16 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class is for calculating data
+ * This class calculating data
  */
 public class Calculator extends DataCalculator {
 
 
+    /**
+     * This class calculates the BMR of the user
+     * @return the BMR value
+     * @throws ParseException if date input is wrong
+     */
     public static double calculateBMR() throws ParseException {
         // change here
         double bmr;
@@ -39,6 +44,7 @@ public class Calculator extends DataCalculator {
         //calculate BMR based on gender
         if (gender == 'M' || gender == 'm') {
             // BMR calculation for men
+            //calculate based on the measurement
             if (RuntimeDatabase.getInstance().getMeasurement().equalsIgnoreCase("Imperial")) {
                 bmr = 66 + 6.23 * weight + 12.7 * height - 6.8 * age;
             } else {
@@ -61,6 +67,12 @@ public class Calculator extends DataCalculator {
         return bmr;
     }
 
+    /**
+     * This method gets the calorie burnt per minute based on exercise type
+     * The source coming from website (Citation: Whitney E, Rolfes SR Eds. Understanding Nutrition. 11th ed. Belmont, CA Thomson Higher Education; 2008, p.7.)
+     * @param type is the exercise type
+     * @return the calorie burnt per minute
+     */
     public double getCalorieBurntPerMinute(String type){
         if(type.equalsIgnoreCase("Running")){
             return 0.074;
@@ -83,6 +95,12 @@ public class Calculator extends DataCalculator {
         return 0.0;
     }
 
+    /**
+     * This method get the activity level base on intensity
+     * The default value is 1 which is high intensity
+     * @param intensity is the intensity
+     * @return the activity level
+     */
     public double getActivityLevel(String intensity){
         if(intensity.equalsIgnoreCase("very low")){
             return 0.1;
@@ -99,10 +117,17 @@ public class Calculator extends DataCalculator {
         else if(intensity.equalsIgnoreCase("very high")){
             return 1.3;
         }
-        return 0.0;
+        return 1.0;
     }
 
 
+    /**
+     * This method calculate the weight lose in the future
+     * IMPORTANT: The formula is: (Average Daily Calorie Intake - Average Daily Calorie Burnt) * the amount of days till the future date(based on input) / 7700
+     * @param userInputDate is the future date
+     * @return the weight lost amount (or it is increase if you don't exercise XD)
+     * @throws ParseException if date input is wrong
+     */
     public static double weightForecast(String userInputDate) throws ParseException {
         double CalorieDeficit;
         int lengthDays;
@@ -125,6 +150,11 @@ public class Calculator extends DataCalculator {
         return CalorieDeficit * lengthDays / 7700;
     }
 
+    /**
+     * This method get the average calorie burnt
+     * @return the average calorie burnt
+     * @throws ParseException if date input is wrong
+     */
     private static double getAvgCBurned() throws ParseException {
         //change here link to database
         String[][] helper= RuntimeDatabase.CaloryBurnedDataReader();
@@ -137,6 +167,10 @@ public class Calculator extends DataCalculator {
         return result / helper.length;
     }
 
+    /**
+     * This method get the average calorie intake
+     * @return the average calorie intake
+     */
     private static double getAvgCIntake() {
         //change here link to database
         String[][] helper = RuntimeDatabase.CaloryIntakeDataReader();

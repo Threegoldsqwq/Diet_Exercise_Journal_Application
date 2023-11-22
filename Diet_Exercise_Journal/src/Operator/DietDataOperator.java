@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 /**
- * This class is for input
+ * This class handle the data from diet and meal
  */
 public class DietDataOperator implements DataOperator{
 
@@ -39,8 +39,7 @@ public class DietDataOperator implements DataOperator{
 
                     for(int k = 0; k < ingredientsAndQuantity.length; k++){
                         //we then split out ingredient and quantity and process them one by one
-//                        System.out.print(ingredientsAndQuantity[k] + " ");
-//                        System.out.println();
+
                         String[] temp = ingredientsAndQuantity[k].split(", ");
 
                         double foodCal = runtimeDatabase.extractCalorieInfo(temp[0]);//extract the calorie info of the ingredient in cal/g or ml

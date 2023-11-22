@@ -10,12 +10,13 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 /**
- * This class for design main GUI
- * Not implemented GUI yet
+ * THIS CLASS IS JUST FOR TESTING, DO NOT RUN THIS CLASS UNLESS YOU CONNECTED TO THE DATABASE!!!
  */
 //测试用
 public class TestingClass {
     public static void main(String[] args) throws Exception {
+
+        //Testing the output
 
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         //runtimeDatabase.displayDietData("breakfast", "2023-11-13", 100001);

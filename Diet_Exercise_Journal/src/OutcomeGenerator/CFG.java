@@ -31,6 +31,19 @@ public class CFG extends JFrame {
         setContentPane(chartPanel);
     }
 
+    public static double[] getCFGRecommends(double[] meal){
+        NutritionServiceFacade facade = new NutritionServiceFacade();
+        double total = 0;
+        double[] recommend = new double[3];
+        for(int i = 0; i < facade.getTotalFoodGroupIntake().length; i++){
+            total = total + facade.getTotalFoodGroupIntake()[i];
+        }
+        recommend[0] = total / 2;
+        recommend[1] = total / 4;
+        recommend[2] = total / 4;
+        return recommend;
+    }
+
     private CategoryDataset createDataset(double[] userIntake, double[] cfgRecommendations) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 

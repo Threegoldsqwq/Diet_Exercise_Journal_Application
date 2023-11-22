@@ -18,6 +18,11 @@ public class NutritionServiceFacade {
 
     public NutritionServiceFacade(){}
 
+    /**
+     * This method display the profile
+     * @return an array of profile
+     * @throws Exception sql exception
+     */
     public String[] displayProfile() throws Exception {
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         ArrayList<String> profile = runtimeDatabase.extractProfile();
@@ -28,11 +33,18 @@ public class NutritionServiceFacade {
         return result;
     }
 
+    /**
+     * This method invoke the RuntimeDatabase class's method to create profile
+     */
     public void createProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         runtimeDatabase.createProfile(UserName, sex, year, month, day, height, weight, measurement);
     }
 
+    /**
+     * This method is for profile selection
+     * @param id is the userID to access the database
+     */
     public void selectProfile(int id){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         runtimeDatabase.setId(id);
@@ -40,6 +52,13 @@ public class NutritionServiceFacade {
         runtimeDatabase.setExerciseInfo(runtimeDatabase.readAllExerciseInfo(id));
     }
 
+    /**
+     * This method log the diet same as RuntimeDatabase
+     * @param date is the date
+     * @param mealType is the meal type
+     * @param ingredients is the ingredients
+     * @param quantity is the quantity
+     */
     public void logDiet(String date, String mealType, String ingredients, String quantity){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         ArrayList<String> ingredientsList = new ArrayList<>();
@@ -53,17 +72,28 @@ public class NutritionServiceFacade {
         runtimeDatabase.logMeal(date, mealType, ingredientsList, quantityList);
     }
 
+    /**
+     * This method is for log exercise same as RuntimeDatabase
+     * update the 2D array exerciseInfo[][]
+     */
     public void logExercise(String date, String exerciseType, String duration, String intensity) throws ParseException{
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         runtimeDatabase.logExercise(date, exerciseType, duration, intensity);
     }
 
+    /**
+     * This method invoke the writeBack function to write everything back to the database
+     */
     public void writeBack(){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         runtimeDatabase.writeAllMealBack();
         runtimeDatabase.writeExerciseBack();
     }
 
+    /**
+     * This method show all the dates for date selection
+     * @return an array of existing dates
+     */
     public String[] showDates(){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         String[][] meals = runtimeDatabase.getMealInfo();
@@ -74,24 +104,29 @@ public class NutritionServiceFacade {
         return result;
     }
 
+    /**
+     * This method get total calorie intake
+     * @return a 2D array same as RuntimeDatabase
+     */
     public static String[][] getTotalCalorieIntake(){
         return RuntimeDatabase.CaloryIntakeDataReader();
     }
+
     /**
-     * need a date
-     * @param type
-     * @param selectedDate
-     * @return
+     * This method get the ingredients and quantity for each meal for detailed meal page
+     * @param type is the meal type
+     * @param selectedDate is the selected date
+     * @return an array in {ingredients, quantities in g/ml}
      */
     public String[] getIngredientsAndQuantity(int type, String selectedDate){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         String[][] temp = new String[runtimeDatabase.getMealInfo().length][runtimeDatabase.getMealInfo()[0].length];
+        //deep copy the array
         for(int i = 0; i < temp.length; i++){
             for(int j = 0; j < temp[i].length; j++){
                 temp[i][j] = runtimeDatabase.getMealInfo()[i][j];
             }
         }
-
 
         String[] ingredientsQuantity = new String[1];
         for(int i = 0; i < temp.length; i++){
@@ -112,10 +147,10 @@ public class NutritionServiceFacade {
     }
 
     /**
-     * need a date
-     * @param type
-     * @param selectedDate
-     * @return
+     * This method get the other nutrients for each meal for detailed meal page
+     * @param type is the meal type
+     * @param selectedDate is the selected date
+     * @return an array in {other nutrients, values in g}
      */
     public String[] getOtherNutrients(int type, String selectedDate){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
@@ -141,6 +176,12 @@ public class NutritionServiceFacade {
         return otherNutrients;
     }
 
+    /**
+     * This method get the quantity of foods that user eat for each food group on CFG
+     * Since CFG only has 3 big groups, we made vegetable as vegetable,
+     * Protein as the sum of Oil/Fat/Protein, and Whole Grain as Baked product in our database
+     * @return an array of food amount in category {Vegetable, Protein, Whole Grain}
+     */
     public double[] getTotalFoodGroupIntake(){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         double[] newFoodGroup = new double[3];
@@ -152,16 +193,26 @@ public class NutritionServiceFacade {
         //System.out.println("Vege: " + newFoodGroup[0] + " Protein: " + newFoodGroup[1] + " Whole Grain: " + newFoodGroup[2]);
         return newFoodGroup;
     }
+
+    /**
+     * This method display diet chart
+     */
     public static void displayDietChart(String startDate, String endDate){
         //call diet chart module. modify number of nutrition here
         DietDataVisualizer.getChart(5,startDate,endDate);//change here
     }
 
+    /**
+     * This method display the calorie intake chart
+     */
     public static void displayCalorieChart(String startDate, String endDate) throws ParseException {
         //call calorie intake and burned chart module
         CalorieDataVisualizer.getChart(startDate,endDate);//change here
     }
 
+    /**
+     * This method display the weight forecast
+     */
     public static String getWeightForecast(String date) throws ParseException {
         double weightForecast = Calculator.weightForecast(date);
 
@@ -177,7 +228,9 @@ public class NutritionServiceFacade {
         return formattedNumber;
     }
 
-
+    /**
+     * This method display the chart of user intake and CFG recommendation
+     */
     public static void getCFGchart(double[] userIntake,double[] cfgRecommendations ){
         //change here
         //userIntake = new double[]{30.0, 25.0, 20.0, 15.0, 10.0};
@@ -187,6 +240,9 @@ public class NutritionServiceFacade {
         dietChart.displayChart();
     }
 
+    /**
+     * This method invoke the modifyProfile in RuntimeDatabase for edit profile
+     */
     public void editProfile(String name, String gender, int parseInt, int parseInt1, int parseInt2, double parseDouble, double parseDouble1, String measurement) {
         //change here
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();

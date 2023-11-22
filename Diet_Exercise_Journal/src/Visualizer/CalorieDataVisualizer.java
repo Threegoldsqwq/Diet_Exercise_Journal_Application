@@ -60,6 +60,7 @@ public class CalorieDataVisualizer {
     public static void getData(String startDate, String endDate) throws ParseException {
         String[][] CBurned;
         String[][] Cintake;
+        //get the data
         CBurned=RuntimeDatabase.CaloryBurnedDataReader();
         Cintake=RuntimeDatabase.CaloryIntakeDataReader();
 
@@ -74,6 +75,17 @@ public class CalorieDataVisualizer {
         // Calculate the difference in days
         int Length= (int) ChronoUnit.DAYS.between(startDateObj, endDateObj);
 
+        //compare the length, choose the bigger one
+        int length = 0;
+        if(Cintake.length > CBurned.length){
+            length = Cintake.length;
+        }
+        else if(Cintake.length < CBurned.length){
+            length = CBurned.length;
+        }
+        else{
+            length = CBurned.length;
+        }
 
         //read data into the data sheet for chart
         //could be optimized
@@ -81,13 +93,31 @@ public class CalorieDataVisualizer {
         String[] columnKeys = new String[Length];
         int k=0;
         int i;
-        for (i=0;i<CBurned.length;i++){
+        for (i=0;i<length;i++){
             if (Objects.equals(String.valueOf(Cintake[i][0]), startDate)){
                 while (!Objects.equals(String.valueOf(Cintake[i][0]), endDate)) {
-                    data[0][k]= Double.parseDouble(Cintake[i][1]);
-                    data[1][k]= Double.parseDouble(CBurned[i][1]);
+
+                    //Handle the situation the length of two set of data is not equal
+                    if(i > CBurned.length - 1 && i < length){
+                        data[1][k] = 0;
+                        data[0][k]= Double.parseDouble(Cintake[i][1]);
+                    }
+                    else if(i > Cintake.length - 1 && i < length){
+                        data[0][k] = 0;
+                        data[1][k]= Double.parseDouble(CBurned[i][1]);
+                    }
+                    else if(Cintake[i][1] == null){
+                        data[0][k] = 0;
+                    }
+                    else if(CBurned[i][1] == null){
+                        data[1][k] = 0;
+                    }
+                    else{
+                        data[0][k]= Double.parseDouble(Cintake[i][1]);
+                        data[1][k]= Double.parseDouble(CBurned[i][1]);
+                    }
+
                     columnKeys[k]= String.valueOf(Cintake[i][0]);
-                    System.out.println(Double.parseDouble(Cintake[i][1]));
                     k++;
                     i++;
                 }

@@ -1,6 +1,5 @@
 package DatabaseOperation;
 
-
 import Operator.DataOperator;
 import Operator.DietDataOperator;
 import Operator.ExerciseDataOperator;
@@ -13,13 +12,24 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.Date;
 
+/**
+ * This class is the principle class that:
+ * 1: gets data from the database
+ * 2: hold the information the need to be changed
+ * 3: hold the information that are added
+ * 4: write necessary data back to the database when application closes
+ * This class is a singleton class which only have one instance in the whole life cycle
+ */
 public class RuntimeDatabase {
+
+    //Below are the attribution from database operation
     private Connection connect = null;
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
 
+    /*Below is the implementation of singleton class*/
     private static RuntimeDatabase runtimeDatabase = new RuntimeDatabase();
     private RuntimeDatabase(){
 
@@ -30,6 +40,8 @@ public class RuntimeDatabase {
         }
         return runtimeDatabase;
     }
+
+    //Below are attributes of the user profile (hold the information from the database)
     private int id;
     private String userName;
     private String sex;
@@ -39,17 +51,19 @@ public class RuntimeDatabase {
     private String measurement;
 
 
-    String[][] mealInfo = readAllMealInfo(getId());
-    String[][] calorieInfo;
-    String[][] otherNutrientInfo;
+    /*Below are arrays that holds value about the meals, exercise, calorie intake and burnt*/
+    String[][] mealInfo = readAllMealInfo(getId());//holds all meal info in {{date, breakfast, lunch, dinner}, {...} }
+    String[][] calorieInfo;//holds all calorie intake of meals {{date, breakfast, lunch, dinner}, {...} }
 
-    String[][] exerciseInfo;
-    //private String date;
-//    private ArrayList<String> ingredients;
-//    private ArrayList<String> quantities;
+    //holds all others nutrient values for each meal {{date, breakfast, lunch, dinner}, {...} }
+    //rank all top 10 nutrients and rest will be other
+    String[][] otherNutrientInfo;
+    String[][] exerciseInfo;//holds exercise info in {{date, type, duration, intensity, calorie burnt}, {...} }
+
 
     /**
      * This class display all profiles in the table (database)
+     * THIS CLASS IS ONLY FOR TESTING AND WILL NOT BE USED
      * @throws Exception if sql error
      */
     public void readDatabase() throws Exception{
@@ -83,7 +97,14 @@ public class RuntimeDatabase {
     }
 
 
-
+    /**
+     * This class display all diet data of a meal
+     * THIS CLASS IS ONLY FOR TESTING AND WILL NOT BE USED
+     * @param mealType is the meal type
+     * @param date is the date
+     * @param userID is the userID
+     * @throws Exception sql exception
+     */
     public void displayDietData(String mealType, String date, int userID) throws Exception{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -119,10 +140,17 @@ public class RuntimeDatabase {
         }
     }
 
+    /**
+     * This class display all profiles that exist in the database
+     * @return an array of profiles
+     * @throws Exception sql exception
+     */
     public ArrayList<String> extractProfile() throws Exception{
         ArrayList<String> profiles = new ArrayList<>();
         try{
+            //note: below are sql connection codes
             Class.forName("com.mysql.cj.jdbc.Driver");
+            //You can connect to databased on your pc by entering the user and password
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
             statement = connect.createStatement();
             resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
@@ -166,9 +194,12 @@ public class RuntimeDatabase {
 
 //-----------------------------------------------------------------------------------------------------------
     //below are setters and getters for chosen profile
+
+    //when id is set, all other information are set
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
         //System.out.println(this.id);
@@ -314,14 +345,20 @@ public class RuntimeDatabase {
 
 //-----------------------------------------------------------------------------------------------------
 
-    //setter and getters for meal, exercise, nutrient info
+    //below are setter and getters for meal, exercise, nutrient info
     public void setMealInfo(String[][] mealInfo) {
         this.mealInfo = mealInfo;
         DataOperator operator = new DietDataOperator();
-        //calorie array update along with the meal
+        //calorie intake array update along with the meal
         this.calorieInfo = new String[this.mealInfo.length][this.mealInfo[0].length];
+
+        //other nutrient values update along with the meal
         this.otherNutrientInfo = new String[mealInfo.length][mealInfo[0].length];
+
+        //calculate calorie intake, store in a 2d array
         this.calorieInfo = operator.calculateCalorieInfo(mealInfo);
+
+        //set other nutrient values
         for(int i = 0; i < mealInfo.length; i++){
             this.otherNutrientInfo[i][0] = mealInfo[i][0];
             for(int j = 1; j < mealInfo[i].length; j++){
@@ -355,6 +392,7 @@ public class RuntimeDatabase {
 
     public void setExerciseInfo(String[][] exerciseInfo) {
         this.exerciseInfo = exerciseInfo;
+
         for (String[] strings : this.exerciseInfo) {
             for (String string : strings) {
                 System.out.print(string + " ");
@@ -365,12 +403,12 @@ public class RuntimeDatabase {
 
     //-----------------------------------------------------------------------------------------------------
     /**
-     * This method read all diet data (breakfast, lunch, dinner, snacks) of the user
+     * This method read all diet data (date, breakfast, lunch, dinner, snacks) of the user
      * in terms of date and meal
      * store all the data in a 2D array
      * @param userID is the user with the data
      * @return a string with format [date][breakfast][lunch][dinner][snack]
-     * the inner string format is [ingredient, quantity - 2nd ingredient, quantity...]
+     * the inner string format in each meal block is [ingredient, quantity - 2nd ingredient, quantity...]
      */
     public String[][] readAllMealInfo(int userID){
         try {
@@ -381,28 +419,35 @@ public class RuntimeDatabase {
             //first get the number of dates in the user profile to form the array
             resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
             resultSet.next();
+            //if no data in the database
             if(resultSet.getInt(1) == 0){
                 return new String[1][5];
             }
             String[][] mealInfo = new String[resultSet.getInt(1)][5];
             resultSet = statement.executeQuery("select Date from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
 
+            //get the total number of date and store in the array
             ArrayList<Date> dates = new ArrayList<>();
             while(resultSet.next()){
                 dates.add(resultSet.getDate(1));
             }
             Date currentDate;
             String[] meals = {"Breakfast", "Lunch", "Dinner"};
-            int i = 0;
-            while(i < mealInfo.length){
 
+            int i = 0;
+
+            //Start form the string
+            while(i < mealInfo.length){
+                //form the string by date numbers, the first element is always the date
                 currentDate = dates.get(i);
                 int j = 1, type = 0;
                 mealInfo[i][0] = currentDate.toString();
                 while(j < 4){
-
+                    //get information from the database
                     resultSet = statement.executeQuery("select Ingredients, Quantity from Diet_Exercise_Journal_UserProfile." + meals[type] + " where UserID = " + userID + " and Date = '" + currentDate + "'");
                     resultSet.next();
+
+                    //the ingredients are stored in the first column, quantity stored in the second (of the result of the select statement)
                     String[] ingredientTemp = resultSet.getString(1).split(", ");
                     String[] quantityTemp = resultSet.getString(2).split(", ");
                     for(int a = 0; a < ingredientTemp.length; a++){
@@ -426,6 +471,8 @@ public class RuntimeDatabase {
                 i++;
             }
 
+            //form the string for the snack, because you can have many snacks that taken in the same day
+            //The logistic is the same as other meals
             for(int x = 0; x < mealInfo.length; x++){
                 Date snackDate = dates.get(x);
                 String snackTemp = "";
@@ -473,6 +520,14 @@ public class RuntimeDatabase {
         return  null;
     }
 
+
+    /**
+     * This class reads all exercise info (date, type, duration, intensity, calorie burnt) of the user
+     * store all the data in a 2D array
+     * @param userID is the user with the data
+     * @return a string with format [date][type, duration, intensity, calorie burnt]
+     * the inner string format is {{date, type, duration, intensity, calorie burnt - 2nd exercise type, 2nd duration......}}
+     */
     public String[][] readAllExerciseInfo(int userID){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -484,22 +539,27 @@ public class RuntimeDatabase {
             //first get the number of dates in the user profile to form the array
             resultSet = statement.executeQuery("select count(distinct Date) from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
             resultSet.next();
+            //if there is no data in the database
             if(resultSet.getInt(1) == 0){
                 return new String[1][2];
             }
+
             String[][] exerciseInfo = new String[resultSet.getInt(1)][2];
             resultSet = statement.executeQuery("select distinct Date from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID);
 
+            //get the dates
             ArrayList<Date> dates = new ArrayList<>();
             Date currentDate;
             while(resultSet.next()){
                 dates.add(resultSet.getDate(1));
             }
 
+            //form the string by date
             for(int i = 0; i < exerciseInfo.length; i++){
                 currentDate = dates.get(i);
                 exerciseInfo[i][0] = dates.get(i).toString();
 
+                //select data from the database
                 resultSet = statement.executeQuery("select Type, Duration, Intensity from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID + " and Date = '" + currentDate + "'");
                 while(resultSet.next()){
                     if(exerciseInfo[i][1] == null){
@@ -541,15 +601,15 @@ public class RuntimeDatabase {
             statement = connect.createStatement();
             resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
 
-            //以下为创建profile
+            //prepare the statement
             preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.UserProfile values (default, ?, ?, ?, ?, ?, ?)");
-            //preparedStatement.setInt(1, ++id);
             preparedStatement.setString(1, UserName);
             preparedStatement.setString(2, sex);
             preparedStatement.setString(3, year + "-" + month + "-" + day);
             preparedStatement.setDouble(4, height);
             preparedStatement.setDouble(5, weight);
             preparedStatement.setString(6, measurement);//metric vs imperial
+            //execute the query
             preparedStatement.executeUpdate();
 
             preparedStatement = connect.prepareStatement("SELECT UserID, UserName, Sex, Date_of_birth, Height, Weight, Measurement from Diet_Exercise_Journal_UserProfile.UserProfile");
@@ -564,11 +624,12 @@ public class RuntimeDatabase {
     }
 
     /**
-     *
-     * @param date
-     * @param mealType
-     * @param ingredients
-     * @param quantity
+     * This method log the meal
+     * store the information in the mealInfo[][] array
+     * @param date is the date of the meal
+     * @param mealType whether it is breakfast, lunch, dinner or snack
+     * @param ingredients is the ingredient
+     * @param quantity is the quantity in g/ml, or how many eggs
      */
     public void logMeal(String date, String mealType, ArrayList<String> ingredients, ArrayList<String> quantity){
 
@@ -580,6 +641,7 @@ public class RuntimeDatabase {
         }
         boolean isChange = false;//see if the log is a change to exist data
         int type = 1;
+        //based on the type, see what meal type it is. Store the information in corresponding column (index)
         if(mealType.equalsIgnoreCase("Breakfast")){
             type = 1;
         }
@@ -593,13 +655,16 @@ public class RuntimeDatabase {
             type = 4;
         }
         //traverse to see if the data exist
+        //form the string in ingredient, quantity - 2nd ingredient, 2nd quantity, ...
         for(int i = 0; i < mealInfo.length; i++){
             if(mealInfo[i][0] == null){
                 break;
             }
+            //if the date is found, means it is a change to existing data
             if(mealInfo[i][0].equals(date)){
                 isChange = true;
                 if(type == 4){
+                    //if it is a snack, add the new information behind the existing info
                     if(mealInfo[i][type] == null){
                         mealInfo[i][type] = null;
                     }
@@ -609,7 +674,7 @@ public class RuntimeDatabase {
                     }
                 }
                 else{
-                    //if the meal is not a snack, means it is a rewrite
+                    //if the meal is not a snack, means it is a rewrite, reset the info
                     mealInfo[i][type] = null;
                 }
                 for(int j = 0; j < ingredients.size(); j++){
@@ -666,6 +731,15 @@ public class RuntimeDatabase {
         }
     }
 
+    /**
+     * This method log the exercise
+     * store the information in the exerciseInfo[][] array
+     * @param date is the date of the meal
+     * @param exerciseType whether it is breakfast, lunch, dinner or snack
+     * @param duration is the ingredient
+     * @param intensity is the quantity in g/ml, or how many eggs
+     * @throws ParseException if date input failed
+     */
     public void logExercise(String date, String exerciseType, String duration, String intensity) throws ParseException {
 
         DataOperator operator = new ExerciseDataOperator();
@@ -677,23 +751,21 @@ public class RuntimeDatabase {
         }
 
         boolean isModify = false;
+        //check if it is a modify of existing data
         for(int i = 0; i < exerciseInfo.length; i++){
             if(exerciseInfo[i][0] == null){
                 break;
             }
+            //if it is, add the info behind
             if(exerciseInfo[i][0].equals(date)){
                 isModify = true;
                 exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(exerciseType, duration, intensity);
             }
         }
-//        for (String[] strings : exerciseInfo) {
-//            for (String string : strings) {
-//                System.out.print(string + " ");
-//            }
-//            System.out.println();
-//        }
-        setExerciseInfo(exerciseInfo);
 
+        setExerciseInfo(exerciseInfo);//update the array
+
+        //if it is not a change, add a new row
         if(!isModify){
             String[][] newExerciseInfo = new String[getExerciseInfo().length + 1][getExerciseInfo()[0].length];
             if(getExerciseInfo().length == 1 && getExerciseInfo()[0][0] == null){
@@ -708,11 +780,24 @@ public class RuntimeDatabase {
             newExerciseInfo[newExerciseInfo.length-1][0] = date;
             newExerciseInfo[newExerciseInfo.length-1][1] = exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(exerciseType, duration, intensity);
 
-            setExerciseInfo(newExerciseInfo);
+            setExerciseInfo(newExerciseInfo);//update the array
         }
 
     }
 
+    /**
+     * This class update the profile information
+     * @pre IMPORTANT PRE CONDITION: You can not change your height/weight and the measurement at the same time
+     * you can ONLY change height/weight or change measurement in one single change action.
+     * @param UserName is the new username
+     * @param sex is the new sex
+     * @param year is the year of birth
+     * @param month is the month of birth
+     * @param day is the day of birth
+     * @param height is the new height
+     * @param weight is the new weight
+     * @param measurement is the new measurement
+     */
     public void modifyProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
         try{
 
@@ -722,7 +807,7 @@ public class RuntimeDatabase {
             this.userName = UserName;
             this.sex = sex;
             this.DOB = year + "-" + month + "-" + day;
-            //you can change height and weight after you change your measurement
+
             //you can not change them at the same time
             if(this.measurement.equalsIgnoreCase("Imperial") && measurement.equalsIgnoreCase("Metric")){
                 this.weight = this.weight / 2.204;
@@ -737,6 +822,8 @@ public class RuntimeDatabase {
                 this.weight = weight;
             }
             this.measurement = measurement;
+
+            //write back to database right away
             preparedStatement = connect.prepareStatement("update UserProfile set UserName = ?, Sex = ?, Date_of_Birth = ?, Height = ?, " +
                     "Weight = ?, Measurement = ? where UserID = ?;");
 
@@ -761,7 +848,7 @@ public class RuntimeDatabase {
 //--------------------------------------------------------------------------------------------------------------
 
     /**
-     * This class read the calorie information of an ingredient in cal/g
+     * This class read the calorie information of an ingredient in cal/g or egg in amount
      * @param food is the food search for calorie
      * @return the calorie of the food
      */
@@ -778,10 +865,10 @@ public class RuntimeDatabase {
                 resultSet = statement.executeQuery("select NutrientValue from Diet_Exercise_Journal_UserProfile.NUTRIENT_AMOUNT where FoodID = " + foodID + " and NutrientID = 208");
                 resultSet.next();
 
-                if(foodID == 83){
+                if(foodID == 83){//if it is an egg
                     foodCalorie = resultSet.getDouble(1) / 4;
                 }
-                else if(foodID == 2062){
+                else if(foodID == 2062){//if it is a coleslaw
                     foodCalorie = resultSet.getDouble(1) * 2 / 100;
                 }
                 else{
@@ -799,6 +886,12 @@ public class RuntimeDatabase {
         return 0.00;
     }
 
+    /**
+     * This class get other nutrient values (no Calorie) of a meal
+     * It ranks top 10 of the nutrients and the rest added together and labelled as other
+     * @param meal is the meal from the mealInfo array
+     * @return a string in a format of {N1, amount - N2, amount - ...}
+     */
     public String getOtherNutrientValues(String meal){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -818,10 +911,12 @@ public class RuntimeDatabase {
             }
             String query = "SELECT nutrientID, SUM(nutrientValue) from (";
 
+            /*Issue a table that is a union of many tables, it also sum the quantity and do unit exchange*/
             for(int i = 0; i < ingredients.length; i++){
                 resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + ingredients[i].toLowerCase() + "'");
                 while(resultSet.next()){
 
+                    //handle eggs and coleslaw
                     if(i == ingredients.length - 1){
                         if(resultSet.getInt(1) == 83){
                             query = query + "select NutrientID, NutrientValue / 4 * " + quantity[i] + " AS nutrientValue from NUTRIENT_AMOUNT where FoodID = " + resultSet.getInt(1) + " and NutrientID != 208 ";
@@ -850,10 +945,13 @@ public class RuntimeDatabase {
 
             query = query + ") as combined_tables GROUP BY nutrientID order by SUM(nutrientValue) desc;";
 
+            //after select the table, access it
             ArrayList<Double> nutrientAmount = new ArrayList<>();
             ArrayList<Integer> nutrientID = new ArrayList<>();
             preparedStatement = connect.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
+
+            //store all ids and values in two arrays
             while(resultSet.next()){
                 nutrientAmount.add(resultSet.getDouble(2));
                 nutrientID.add(resultSet.getInt(1));
@@ -861,6 +959,7 @@ public class RuntimeDatabase {
             for(int i = 0; i < nutrientID.size(); i++){
                 resultSet = statement.executeQuery("select NutrientName, NutrientUnit from Diet_Exercise_Journal_UserProfile.NUTRIENT_NAME where NutrientID = " + nutrientID.get(i));
                 resultSet.next();
+                //do unit exchange
                 if(resultSet.getString(2).equals("mg")){
                     nutrientAmount.set(i, nutrientAmount.get(i) / 1000);
                 }
@@ -869,11 +968,7 @@ public class RuntimeDatabase {
                 }
             }
 
-//            for(int i = 0; i < nutrientID.size() ; i++){
-//                System.out.println(nutrientAmount.get(i));
-//                System.out.println(nutrientID.get(i));
-//            }
-
+            //sort the array, the id array is also sorted
             double temp1 = 0;
             int temp2 = 0;
             for(int i = 0; i < nutrientID.size() ; i++){
@@ -889,12 +984,14 @@ public class RuntimeDatabase {
                     }
                 }
             }
+            //after sorting, leave top 10 and add the rest
             double other = 0;
             for(int i = 10; i < nutrientAmount.size() ; i++){
                 other = other + nutrientAmount.get(i);
             }
             nutrientAmount.set(10, other);
 
+            //extract the nutrient name from the database
             ArrayList<Double> newNutrientAmount = new ArrayList<>();
             ArrayList<String> newNutrientID = new ArrayList<>();
             for(int i = 0; i < 11; i++){
@@ -906,11 +1003,8 @@ public class RuntimeDatabase {
                 }
             }
             newNutrientID.add("Other");
-//            for(int i = 0; i < newNutrientAmount.size() ; i++){
-//                System.out.println(newNutrientID.get(i));
-//                System.out.println(newNutrientAmount.get(i));
-//            }
 
+            //form the string
             String result = "";
             for(int i = 0; i < newNutrientAmount.size() ; i++){
                 if(i == newNutrientAmount.size() - 1){
@@ -920,6 +1014,7 @@ public class RuntimeDatabase {
                     result = result + newNutrientID.get(i) + " - " + newNutrientAmount.get(i) + "; ";
                 }
             }
+            //return the string
             return result;
 
         } catch (Exception e) {
@@ -931,13 +1026,18 @@ public class RuntimeDatabase {
         return "";
     }
 
+    /**
+     * This class get the quantity of foods that the user eat in each food group
+     * Note: we only have 5 groups in the database
+     * @return an array that store average quantities of food groups ("Dairy and Egg Products", "Spices and Herbs", "Fats and Oils", "Vegetables and Vegetable Products", "Baked Products")
+     * that user eat each day
+     */
     public double[] getFoodGroup(){
         try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
         statement = connect.createStatement();
-        //resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
-            //resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + food.toLowerCase() + "'");
+
         String[][] temp = new String[this.mealInfo.length][this.mealInfo[0].length];
         for(int i = 0; i < temp.length; i++) {
             for(int j = 0; j < temp[i].length; j++){
@@ -951,6 +1051,7 @@ public class RuntimeDatabase {
         ArrayList<String> allIngredients = new ArrayList<>();
         ArrayList<Double> allQuantity = new ArrayList<>();
 
+        //get all ingredients and quantities of the whole diet record
         for(int i = 0; i < temp.length; i++){
             for(int j = 1; j < temp[0].length; j++){
                 String[] ingredientsQuantity = temp[i][j].split(" - ");
@@ -963,7 +1064,6 @@ public class RuntimeDatabase {
                     allQuantity.add(Double.parseDouble(quantity[k]));
                 }
             }
-            //resultSet = statement.executeQuery("select  from Diet_Exercise_Journal_UserProfile.UserProfile");
         }
 
 
@@ -989,19 +1089,11 @@ public class RuntimeDatabase {
                 }
             }
 
-//            String[] result = new String[totalQuantity.length];
+            //get an average value of the food that the user eat each day
             for(int i = 0; i < totalQuantity.length; i++){
                 totalQuantity[i] = totalQuantity[i] / this.mealInfo.length;
             }
 
-//            for(int l = 0; l < ingredients.length; l++){
-//                resultSet = statement.executeQuery("select FoodGroupID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + ingredients[l].toLowerCase() + "'");
-//                resultSet.next();
-//                int foodGroupId = resultSet.getInt(1);
-//                resultSet = statement.executeQuery("select FoodGroupName from Diet_Exercise_Journal_UserProfile.FOOD_GROUP where FooGroupID = " + foodGroupId);
-//                resultSet.next();
-//
-//            }
             return totalQuantity;
         }
         catch (Exception e){
@@ -1016,12 +1108,11 @@ public class RuntimeDatabase {
 
     /**
      * This method reads the calorie burnt based on the date
+     * The formula is calorie burnt by exercise on a day + the BMR per day
      * @return an array in [date][data], [date][data]...
      */
     public static String[][] CaloryBurnedDataReader() throws ParseException {
-        //just for testing, will be modified
-        //就维持这样让他输出每天的总量 不要改
-        //日期改成mm/dd/yyyy或者mm/dd
+
         String[][] data = new String[getInstance().getExerciseInfo().length][2];
         String date;
 
@@ -1045,11 +1136,14 @@ public class RuntimeDatabase {
             }
         }
 
-
-        //data= new String[][]{{"2023/01/01", "1230"}, {"01/02", "1240"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};  // those code for test only
         return data;
     }
 
+    /**
+     * This method format the date in YYYY-MM-DD
+     * @param date is the date to be formatted
+     * @return the formatted date
+     */
     public static String formatDate(String date){
         if(date == null){
             return "0000-00-00";
@@ -1070,9 +1164,10 @@ public class RuntimeDatabase {
         }
         return formatedDate;
     }
+
     /**
      * This method reads the calorie intake based on the date
-     * @return an array in [date][data], [date][data]...
+     * @return an array in [date][data], [date][data], ...
      */
     public static String[][] CaloryIntakeDataReader(){
 
@@ -1093,19 +1188,20 @@ public class RuntimeDatabase {
             }
             data[i][1] = String.valueOf(Math.round(calorieIntake * 100) / 100.0);
         }
-        //data= new String[][]{{"01/01", "1030"}, {"01/02", "1040"},{"01/03", "1230"}, {"01/04", "1240"},{"01/05", "1230"}, {"1/7", "1240"},{"1/8", "1230"}, {"1/9", "1240"}};
+
         return data;
     }
 
     /**
      * This class reads all nutrients in a time period
-     * @param number is the
-     * @return an array
+     * DEVELOPING
+     * @param number is the number of data to appear (5 or 10)
+     * @return an array in [nutrient][value], [nutrient][value], ...
      */
     public static String[][] NutrientsDataReader(int number, String startDate, String endDate){
         //just for testing, will be modified
         //calculate average here
-        //这里根据起止日期来操作
+
         //change here
         String[][] data;
         if(number == 5){
@@ -1123,6 +1219,9 @@ public class RuntimeDatabase {
 
 //-------------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * This method write all meal information back to the database on application close
+     */
     public void writeAllMealBack(){
         try{
 
@@ -1156,6 +1255,7 @@ public class RuntimeDatabase {
                     }
                     String ingredients = "";
                     String quantity = "";
+                    //sort data and format a string, same as before, in ingredient, ingredient, ...
                     if(mealInfo[i][j] == null || mealInfo[i][j].equalsIgnoreCase("")){
                         ingredients = "";
                         quantity = "";
@@ -1177,6 +1277,8 @@ public class RuntimeDatabase {
                     }
                     //System.out.println(ingredients + "->: " + quantity);
 
+                    //If the row exist, update it
+                    //If it not, create a new row
                     if(type.equalsIgnoreCase("Snack")){
                         preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.Snack (Date, userID, ingredients, quantity)" +
                                 " values (?, ?, ?, ?) on duplicate key update ingredients = values(ingredients), quantity = values(quantity);");
@@ -1207,6 +1309,9 @@ public class RuntimeDatabase {
         }
     }
 
+    /**
+     * This method write all exercise information back to the database on application close
+     */
     public void writeExerciseBack(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1230,6 +1335,7 @@ public class RuntimeDatabase {
                 for(int j = 1; j < exerciseInfo[i].length; j++){
                     preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.Exercise values (default, ?, ?, ?, ?, ?, ?)");
 
+                    //if the data is empty
                     if(exerciseInfo[i][j] == null || exerciseInfo[i][j].equalsIgnoreCase("")){
                         type = "";
                         duration = "";
@@ -1244,6 +1350,7 @@ public class RuntimeDatabase {
                         preparedStatement.executeUpdate();
                     }
                     else{
+                        //split the string and store information separately
                         String[] temp = exerciseInfo[i][j].split(" - ");
                         for(int k = 0; k < temp.length; k++){
                             type = temp[k].split(", ")[0];
@@ -1271,31 +1378,4 @@ public class RuntimeDatabase {
     }
 
 }
-
-//try {
-//        Class.forName("com.mysql.cj.jdbc.Driver");
-//        connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-//        statement = connect.createStatement();
-//        resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
-//
-//        //以下为创建profile
-//        preparedStatement = connect.prepareStatement("insert into Diet_Exercise_Journal_UserProfile.UserProfile values (default, ?, ?, ?, ?, ?, ?)");
-//        //preparedStatement.setInt(1, ++id);
-//        preparedStatement.setString(1, UserName);
-//        preparedStatement.setString(2, sex);
-//        preparedStatement.setString(3, year + "-" + month + "-" + day);
-//        preparedStatement.setDouble(4, height);
-//        preparedStatement.setDouble(5, weight);
-//        preparedStatement.setString(6, measurement);//metric vs imperial
-//        preparedStatement.executeUpdate();
-//
-//        preparedStatement = connect.prepareStatement("SELECT UserID, UserName, Sex, Date_of_birth, Height, Weight, Measurement from Diet_Exercise_Journal_UserProfile.UserProfile");
-//        resultSet = preparedStatement.executeQuery();
-//        }
-//        catch (Exception e){
-//        e.printStackTrace();
-//        }
-//        finally {
-//        close();
-//        }
-//ignore the comment below
+//------------------------------------------------------------------------------------------------------------------------

@@ -47,7 +47,7 @@ public class CreateProfilePage {
         //layout
         panel.add(new JLabel("Name:"));
         panel.add(nameField);
-        panel.add(new JLabel("Date of Birth(xxxx/xx/xx):"));
+        panel.add(new JLabel("Date of Birth(xxxx-xx-xx):"));
         panel.add(dobField);
         panel.add(new JLabel("Gender(M/F):"));
         panel.add(genderField);

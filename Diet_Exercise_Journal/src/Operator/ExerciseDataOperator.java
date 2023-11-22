@@ -13,27 +13,29 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TBD
+ * This class handles data from the exercise
  */
 public class ExerciseDataOperator implements DataOperator{
+
+    /**
+     * This method calculate the calorie burnt from the exercise
+     * IMPORTANT: THE FORMULA is: weight (in pound) * ActivityLevel(base on intensity) * CalorieBurnt/min(based on exercise type) * duration in minute
+     * @param type is the exercise type, NOTE: we have 6 exercises in our database
+     * @param duration is the time in minute
+     * @param intensity is the intensity in low, medium, high
+     * @return the calorie burnt after that exercise
+     * @throws ParseException if date input is wrong
+     */
     public double calculateCalorieBurnt(String type, String duration, String intensity) throws ParseException {
 
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         DataCalculator calculator = new Calculator();
-        //RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
 
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         double activityLevel = calculator.getActivityLevel(intensity);//get activity level
-//        //below calculating the age
-//        LocalDate currentdate = LocalDate.now();
-//        Date today = format.parse(currentdate.getYear() + "-" + currentdate.getMonth().getValue() + "-" + currentdate.getDayOfMonth());
-//        //String[] ymd = runtimeDatabase.getDOB().split("-");
-//        Date dob = format.parse(runtimeDatabase.getDOB());
-//        long diffInMillies = Math.abs(today.getTime() - dob.getTime());
-//        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) /365;
-//        int age = (int) diff;
+
         //calculate BMR
         double bmr = Calculator.calculateBMR();
+        //unit change
         if(runtimeDatabase.getMeasurement().equalsIgnoreCase("Metric")){
             return runtimeDatabase.getWeight() * 2.204 * calculator.getActivityLevel(intensity) * calculator.getCalorieBurntPerMinute(type) * Double.parseDouble(duration);
         }
@@ -42,8 +44,6 @@ public class ExerciseDataOperator implements DataOperator{
         }
         //System.out.println(bmr);
     }
-
-
 
 
     @Override
