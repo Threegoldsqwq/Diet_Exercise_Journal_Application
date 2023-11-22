@@ -51,9 +51,9 @@ public class CreateProfilePage {
         panel.add(dobField);
         panel.add(new JLabel("Gender(M/F):"));
         panel.add(genderField);
-        panel.add(new JLabel("Weight(cm/feet):"));
+        panel.add(new JLabel("Weight(kg/lb):"));
         panel.add(weightField);
-        panel.add(new JLabel("Height(kg/lb):"));
+        panel.add(new JLabel("Height(cm/feet):"));
         panel.add(heightField);
         panel.add(new JLabel("Measurement:"));
         panel.add(measurementComboBox);
