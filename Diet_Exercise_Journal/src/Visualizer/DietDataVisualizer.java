@@ -24,7 +24,6 @@ public class DietDataVisualizer extends DataVisualizer{
             dataset.setValue(geData(NumberOfNutrients,startDate,endDate)[i][0], Double.parseDouble(geData(NumberOfNutrients,startDate,endDate)[i][1]));
         }
 
-
         // create a chart...
         JFreeChart chart = ChartFactory.createPieChart(
                 "Sample Pie Chart -Yves", // chart title

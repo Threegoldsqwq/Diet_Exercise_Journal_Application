@@ -10,7 +10,25 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 
+/**
+ * The CFG class represents a chart generator for comparing a user's food group intake
+ * with recommended values provided by the NutritionServiceFacade.
+ *
+ * The chart displays the quantities of three food groups (Vegetables, Protein, Whole Grain)
+ * both for the user's actual intake and the recommended values.
+ *
+ *
+ * @version 1.0
+ */
 public class CFG extends JFrame {
+
+    /**
+     * Constructs a CFG object with the specified title and data for user's intake and CFG recommendations.
+     *
+     * @param title              the title of the chart
+     * @param userIntake         an array representing the user's food group intake
+     * @param cfgRecommendations an array representing the CFG recommendations for food group intake
+     */
     public CFG(String title, double[] userIntake, double[] cfgRecommendations) {
         super(title);
         NutritionServiceFacade facade = new NutritionServiceFacade();
@@ -31,6 +49,12 @@ public class CFG extends JFrame {
         setContentPane(chartPanel);
     }
 
+    /**
+     * Calculates CFG recommendations based on the total food group intake.
+     *
+     * @param meal an array representing the user's food group intake
+     * @return an array containing CFG recommendations
+     */
     public static double[] getCFGRecommends(double[] meal){
         NutritionServiceFacade facade = new NutritionServiceFacade();
         double total = 0;
@@ -44,6 +68,13 @@ public class CFG extends JFrame {
         return recommend;
     }
 
+    /**
+     * Creates a dataset for the chart based on user's intake and CFG recommendations.
+     *
+     * @param userIntake         an array representing the user's food group intake
+     * @param cfgRecommendations an array representing the CFG recommendations for food group intake
+     * @return a CategoryDataset for chart creation
+     */
     private CategoryDataset createDataset(double[] userIntake, double[] cfgRecommendations) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -61,6 +92,9 @@ public class CFG extends JFrame {
         return dataset;
     }
 
+    /**
+     * Displays the chart using SwingUtilities.invokeLater for proper threading.
+     */
     public void displayChart() {
         SwingUtilities.invokeLater(() -> {
             setSize(800, 600);

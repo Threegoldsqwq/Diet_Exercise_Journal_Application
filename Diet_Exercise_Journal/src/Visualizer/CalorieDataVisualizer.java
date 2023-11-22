@@ -19,13 +19,21 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 /**
- * This class generate JFree chart for exercise
+ * The CalorieDataVisualizer class generates a JFreeChart for visualizing exercise data, specifically calorie intake and burned calories.
+ * It provides methods to create a bar chart based on the specified date range and displays the chart using JFreeChart's components.
+ * The data for the chart is obtained from the RuntimeDatabase.
+ *
+ * @version 1.0
  */
 public class CalorieDataVisualizer {
     static CategoryDataset dataset;
 
     /**
-     * This method generate bar chart
+     * Generates a bar chart for exercise data within the specified date range and displays it using JFreeChart.
+     *
+     * @param startDate the start date of the date range
+     * @param endDate   the end date of the date range
+     * @throws ParseException if there is an error parsing the date strings
      */
     public static void getChart(String startDate, String endDate) throws ParseException {
         getData(startDate,endDate);
@@ -55,7 +63,11 @@ public class CalorieDataVisualizer {
     }
 
     /**
-     * This method get the data set for creating the chart
+     * Retrieves exercise data from the RuntimeDatabase for the specified date range and prepares the dataset for chart creation.
+     *
+     * @param startDate the start date of the date range
+     * @param endDate   the end date of the date range
+     * @throws ParseException if there is an error parsing the date strings
      */
     public static void getData(String startDate, String endDate) throws ParseException {
         String[][] CBurned;
