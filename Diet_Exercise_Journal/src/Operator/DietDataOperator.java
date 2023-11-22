@@ -3,6 +3,7 @@ import OutcomeGenerator.Calculator;
 import OutcomeGenerator.DataCalculator;
 import DatabaseOperation.RuntimeDatabase;
 
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -53,7 +54,7 @@ public class DietDataOperator implements DataOperator{
     }
 
     @Override
-    public double calculateCalorieBurnt(String intensity) {
+    public double calculateCalorieBurnt(String type, String intensity, String duration) throws ParseException {
         return 0;
     }
 

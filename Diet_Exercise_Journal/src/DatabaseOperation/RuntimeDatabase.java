@@ -503,10 +503,10 @@ public class RuntimeDatabase {
                 resultSet = statement.executeQuery("select Type, Duration, Intensity from Diet_Exercise_Journal_UserProfile.Exercise where UserID = " + userID + " and Date = '" + currentDate + "'");
                 while(resultSet.next()){
                     if(exerciseInfo[i][1] == null){
-                        exerciseInfo[i][1] = resultSet.getString(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3) + ", " + operator.calculateCalorieBurnt(resultSet.getString(3));
+                        exerciseInfo[i][1] = resultSet.getString(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3) + ", " + operator.calculateCalorieBurnt(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3));
                     }
                     else{
-                        exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + resultSet.getString(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3) + ", " + operator.calculateCalorieBurnt(resultSet.getString(3));
+                        exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + resultSet.getString(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3) + ", " + operator.calculateCalorieBurnt(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3));
                     }
                 }
             }
@@ -683,7 +683,7 @@ public class RuntimeDatabase {
             }
             if(exerciseInfo[i][0].equals(date)){
                 isModify = true;
-                exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(intensity);
+                exerciseInfo[i][1] = exerciseInfo[i][1] + " - " + exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(exerciseType, duration, intensity);
             }
         }
 //        for (String[] strings : exerciseInfo) {
@@ -706,7 +706,7 @@ public class RuntimeDatabase {
             }
 
             newExerciseInfo[newExerciseInfo.length-1][0] = date;
-            newExerciseInfo[newExerciseInfo.length-1][1] = exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(intensity);
+            newExerciseInfo[newExerciseInfo.length-1][1] = exerciseType + ", " + duration + ", " + intensity + ", " + operator.calculateCalorieBurnt(exerciseType, duration, intensity);
 
             setExerciseInfo(newExerciseInfo);
         }
@@ -1298,5 +1298,3 @@ public class RuntimeDatabase {
 //        close();
 //        }
 //ignore the comment below
-//返还整理好的按量排序的前5或10个nutrients 并将剩下的全部加起来作为第6/11项加在末尾 返回值为[类型][量] 第二阶长度为1
-//根据输入的日期(再加一个attribute)启止读出所有的nutrients

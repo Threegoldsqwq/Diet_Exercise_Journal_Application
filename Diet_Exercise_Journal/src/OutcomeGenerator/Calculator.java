@@ -61,21 +61,43 @@ public class Calculator extends DataCalculator {
         return bmr;
     }
 
+    public double getCalorieBurntPerMinute(String type){
+        if(type.equalsIgnoreCase("Running")){
+            return 0.074;
+        }
+        else if(type.equalsIgnoreCase("Swimming")){
+            return 0.058;
+        }
+        else if(type.equalsIgnoreCase("Cycling")){
+            return 0.076;
+        }
+        else if(type.equalsIgnoreCase("Walking")){
+            return 0.048;
+        }
+        else if(type.equalsIgnoreCase("Weightlifting")){
+            return 0.048;
+        }
+        else if(type.equalsIgnoreCase("Yoga")){
+            return 0.062;
+        }
+        return 0.0;
+    }
+
     public double getActivityLevel(String intensity){
         if(intensity.equalsIgnoreCase("very low")){
-            return 1.2;
+            return 0.1;
         }
         else if(intensity.equalsIgnoreCase("low")){
-            return 1.375;
+            return 0.3;
         }
         else if(intensity.equalsIgnoreCase("medium")){
-            return 1.55;
+            return 0.6;
         }
         else if(intensity.equalsIgnoreCase("high")){
-            return 1.725;
+            return 1;
         }
         else if(intensity.equalsIgnoreCase("very high")){
-            return 1.9;
+            return 1.3;
         }
         return 0.0;
     }

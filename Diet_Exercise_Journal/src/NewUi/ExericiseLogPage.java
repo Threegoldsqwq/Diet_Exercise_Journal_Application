@@ -29,7 +29,7 @@ public class ExericiseLogPage {
 
         // UI components
         // can be change later for upgrade
-        exerciseTypeField = new JComboBox<>(new String[]{"Running", "Swimming", "Cycling","Jumping Rope","Walking","Weightlifting","Yoga"});
+        exerciseTypeField = new JComboBox<>(new String[]{"Running", "Swimming", "Cycling", "Walking","Weightlifting","Yoga"});
         intensity = new JComboBox<>(new String[]{"low", "medium", "high"});
         lenthField = new JTextField(15);
         date = new JTextField(10);

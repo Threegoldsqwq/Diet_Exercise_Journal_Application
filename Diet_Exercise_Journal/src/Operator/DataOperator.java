@@ -7,5 +7,5 @@ import java.text.ParseException;
  */
 public interface DataOperator {
     public String[][] calculateCalorieInfo(String[][] meal);
-    public double calculateCalorieBurnt(String intensity) throws ParseException;
+    public double calculateCalorieBurnt(String type, String intensity, String duration) throws ParseException;
 }

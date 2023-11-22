@@ -16,8 +16,9 @@ import java.util.concurrent.TimeUnit;
  * TBD
  */
 public class ExerciseDataOperator implements DataOperator{
-    public double calculateCalorieBurnt(String intensity) throws ParseException {
+    public double calculateCalorieBurnt(String type, String duration, String intensity) throws ParseException {
 
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         DataCalculator calculator = new Calculator();
         //RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
 
@@ -31,12 +32,15 @@ public class ExerciseDataOperator implements DataOperator{
 //        long diffInMillies = Math.abs(today.getTime() - dob.getTime());
 //        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) /365;
 //        int age = (int) diff;
-
         //calculate BMR
         double bmr = Calculator.calculateBMR();
+        if(runtimeDatabase.getMeasurement().equalsIgnoreCase("Metric")){
+            return runtimeDatabase.getWeight() * 2.204 * calculator.getActivityLevel(intensity) * calculator.getCalorieBurntPerMinute(type) * Double.parseDouble(duration);
+        }
+        else {
+            return runtimeDatabase.getWeight() * calculator.getActivityLevel(intensity) * calculator.getCalorieBurntPerMinute(type) * Double.parseDouble(duration);
+        }
         //System.out.println(bmr);
-
-        return activityLevel * bmr / 1000;
     }
 
 
