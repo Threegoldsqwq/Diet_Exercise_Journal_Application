@@ -953,7 +953,7 @@ public class RuntimeDatabase {
 
             //store all ids and values in two arrays
             while(resultSet.next()){
-                nutrientAmount.add(resultSet.getDouble(2));
+                nutrientAmount.add((double) Math.round(resultSet.getDouble(2) * 100) / 100.0);
                 nutrientID.add(resultSet.getInt(1));
             }
             for(int i = 0; i < nutrientID.size(); i++){
@@ -989,7 +989,7 @@ public class RuntimeDatabase {
             for(int i = 10; i < nutrientAmount.size() ; i++){
                 other = other + nutrientAmount.get(i);
             }
-            nutrientAmount.set(10, other);
+            nutrientAmount.set(10, Math.round(other * 100) / 100.0);
 
             //extract the nutrient name from the database
             ArrayList<Double> newNutrientAmount = new ArrayList<>();

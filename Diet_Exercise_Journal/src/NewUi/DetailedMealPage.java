@@ -78,8 +78,8 @@ public class DetailedMealPage {
      * Adjusts the panel dimensions based on the top panel's width.
      */
     private void adjustPanel(){
-        leftPanel.setPreferredSize(new Dimension(topPanel.getWidth()/2, 1)); // Adjust the width as needed
-        rightPanel.setPreferredSize(new Dimension(topPanel.getWidth()/2, 1));
+        leftPanel.setPreferredSize(new Dimension(topPanel.getWidth()/3, 1)); // Adjust the width as needed
+        rightPanel.setPreferredSize(new Dimension(topPanel.getWidth()*2/3, 1));
     }
     /**
      * Adjusts the font size, color, and other properties of UI elements based on the panel's size.
