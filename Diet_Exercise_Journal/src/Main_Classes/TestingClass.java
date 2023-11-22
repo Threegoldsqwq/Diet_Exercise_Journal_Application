@@ -46,12 +46,12 @@ public class TestingClass {
 
 //        s = runtimeDatabase.getMealInfo();
 
-//        for (String[] strings : s1) {
-//            for (String string : strings) {
-//                System.out.print(string + " ");
-//            }
-//            System.out.println();
-//        }
+        for (String[] strings : s3) {
+            for (String string : strings) {
+                System.out.print(string + " ");
+            }
+            System.out.println();
+        }
         for (String[] strings : s5) {
             for (String string : strings) {
                 System.out.print(string + " ");
