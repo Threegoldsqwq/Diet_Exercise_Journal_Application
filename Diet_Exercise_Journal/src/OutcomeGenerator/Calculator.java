@@ -6,7 +6,6 @@ import DatabaseOperation.RuntimeDatabase;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -113,7 +112,7 @@ public class Calculator extends DataCalculator {
 
         System.out.println(avgCalorieIntake);
         System.out.println(avgCalorieBurned);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // Parse the user input date
         LocalDate selectedDate = LocalDate.parse(userInputDate, dateFormatter);
 

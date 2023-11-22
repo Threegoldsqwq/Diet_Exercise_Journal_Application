@@ -1,26 +1,8 @@
-package DatabaseOperation;
+package OutcomeGenerator;
 
 import Facade.NutritionServiceFacade;
 
 public class CanadianFoodGuide {
-    public static void main(String[] args) {
-        // User information
-        String userGender = "Male"; // Replace with actual user gender
-        double userWeightInKg = 70.0; // Replace with actual user weight in kg
-        double userWeightInLb = 154.0; // Replace with actual user weight in pounds
-        NutritionServiceFacade facade = new NutritionServiceFacade();
-        // Get recommended quantities
-        double[] recommendedQuantities = getCFGRecommends(facade.getTotalFoodGroupIntake());
-
-        // Print user information
-        System.out.println("User Information:");
-        System.out.println("Gender: " + userGender);
-        System.out.println("Weight: " + userWeightInKg + " kg");
-
-        // Print CFG information
-        printCFGInformation(recommendedQuantities);
-    }
-
     public static double[] getCFGRecommends(double[] meal){
         NutritionServiceFacade facade = new NutritionServiceFacade();
         double total = 0;

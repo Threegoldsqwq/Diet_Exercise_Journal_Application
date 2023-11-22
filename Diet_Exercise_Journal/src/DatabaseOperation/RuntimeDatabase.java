@@ -1075,7 +1075,6 @@ public class RuntimeDatabase {
      * @return an array in [date][data], [date][data]...
      */
     public static String[][] CaloryIntakeDataReader(){
-        //just for testing, will be modified
 
         String[][] data = new String[getInstance().getCalorieInfo().length][2];
         String date;
