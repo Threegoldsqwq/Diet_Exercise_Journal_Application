@@ -23,7 +23,7 @@ import java.text.ParseException;
  * @version 1.0
  * @since 11/20
  */
-public class Main {
+public class MainUI {
 
     public static JFrame mainFrame;
     private static CreateProfilePage createProfilePage;
@@ -61,7 +61,7 @@ public class Main {
         });
 
         //showLandingPage();
-        SwingUtilities.invokeLater(Main::showLandingPage);
+        SwingUtilities.invokeLater(MainUI::showLandingPage);
     }
 
     /**
