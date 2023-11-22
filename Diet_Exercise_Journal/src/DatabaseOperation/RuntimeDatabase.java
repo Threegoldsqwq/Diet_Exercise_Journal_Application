@@ -1122,19 +1122,99 @@ public class RuntimeDatabase {
     public static String[][] NutrientsDataReader(int number, String startDate, String endDate){
         //just for testing, will be modified
         //calculate average here
-
-        //change here
-        String[][] data;
-        if(number == 5){
-            data = new String[6][2];
+        double carb = 0;
+        double fat = 0;
+        double protein = 0;
+        double glucose = 0;
+        double vitaminC = 0;
+        double other = 0;
+        String[][] data = new String[6][2];
+        String[][] temp = new String[getInstance().getOtherNutrientInfo().length][getInstance().getOtherNutrientInfo()[0].length];
+        for(int i = 0; i < getInstance().getOtherNutrientInfo().length; i++){
+            for(int j = 0; j < getInstance().getOtherNutrientInfo()[0].length; j++){
+                temp[i][j] = getInstance().getOtherNutrientInfo()[i][j];
+            }
         }
-        else{
-            data = new String[11][2];
-        }
-        //return the top 5 or 10 nutrients, add the rest to be the 6th or 11th data
-        //code for test only
+        int avg;
+        int start = 0;
+        int end = 0;
 
-        data= new String[][]{{"Carb", "1230"}, {"Fat", "1240"},{"Salt", "1230"},{"Sugar", "1250"},{"Calcium", "800"}, {"Others", "1240"}};  // those code for test only
+        //get the index of start date and end date
+        for(int i = 0; i < temp.length; i++){
+            if(temp[i][0].equalsIgnoreCase(startDate)){
+                start = i;
+            }
+            else if(temp[i][0].equalsIgnoreCase(endDate)){
+                end = i;
+            }
+        }
+        int length = end + 1 - start;
+        String[][] dateRange = new String[end + 1 - start][getInstance().getOtherNutrientInfo()[0].length];
+
+        //copy string
+        for(int i = start; i < end + 1; i++){
+            for (int j = 0; j < temp[i].length; j++){
+                dateRange[i][j] = temp[i][j];
+            }
+        }
+
+        //get a new array for store data from start date to end date
+        for(int i = 0; i < dateRange.length; i++){
+            for (int j = 1; j < dateRange[i].length; j++){
+                String[] allAmountAndValue = dateRange[i][j].split("; ");
+                for(int k = 0; k < allAmountAndValue.length; k++){
+                    String[] singleAmountAndValue = allAmountAndValue[k].split(" - ");
+                    if(singleAmountAndValue[0].equalsIgnoreCase("CARBOHYDRATE, TOTAL (BY DIFFERENCE)")){
+                        carb += Double.parseDouble(singleAmountAndValue[1]);
+                    }
+                    else if(singleAmountAndValue[0].equalsIgnoreCase("FAT (TOTAL LIPIDS)")){
+                        fat += Double.parseDouble(singleAmountAndValue[1]);
+                    }
+                    else if(singleAmountAndValue[0].equalsIgnoreCase("PROTEIN")){
+                        protein += Double.parseDouble(singleAmountAndValue[1]);
+                    }
+                    else if(singleAmountAndValue[0].equalsIgnoreCase("GLUCOSE")){
+                        glucose += Double.parseDouble(singleAmountAndValue[1]);
+                    }
+                    else if(singleAmountAndValue[0].equalsIgnoreCase("VITAMIN C")){
+                        vitaminC += Double.parseDouble(singleAmountAndValue[1]);
+                    }
+                    else{
+                        other += Double.parseDouble(singleAmountAndValue[1]);
+                    }
+                }
+            }
+        }
+
+        //start calculate value
+        for(int i = 0; i < data.length; i++){
+
+            if(i == 0){
+                data[i][0] = "Carbohydrate";
+                data[i][1] = String.valueOf(Math.round(carb / length * 100) / 100.0);
+            }
+            else if(i == 1){
+                data[i][0] = "Fat";
+                data[i][1] = String.valueOf(Math.round(fat / length * 100) / 100.0);
+            }
+            else if(i == 2){
+                data[i][0] = "Protein";
+                data[i][1] = String.valueOf(Math.round(protein / length * 100) / 100.0);
+            }
+            else if(i == 3){
+                data[i][0] = "Glucose";
+                data[i][1] = String.valueOf(Math.round(glucose / length * 100) / 100.0);
+            }
+            else if(i == 4){
+                data[i][0] = "Vitamin C";
+                data[i][1] = String.valueOf(Math.round(vitaminC / length * 100) / 100.0);
+            }
+            else {
+                data[i][0] = "Other";
+                data[i][1] = String.valueOf(Math.round(other / length * 100) / 100.0);
+            }
+        }
+
         return data;
     }
 
