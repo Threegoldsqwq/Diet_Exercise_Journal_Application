@@ -17,11 +17,13 @@ public class ShortReportGenerator implements ReportGenerator{
 
     @Override
     public String[] getIngredientsAndQuantity(int type, String selectedDate) {
-        return new String[0];
+        System.out.println("Used wrong method getIngredientsAndQuantity is in DetailedReportGenerator");
+        return null;
     }
 
     @Override
     public String[] getOtherNutrients(int type, String selectedDate) {
-        return new String[0];
+        System.out.println("Used wrong method getOtherNutrients is in DetailedReportGenerator");
+        return null;
     }
 }

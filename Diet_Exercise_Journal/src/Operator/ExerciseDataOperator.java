@@ -48,6 +48,7 @@ public class ExerciseDataOperator implements DataOperator{
 
     @Override
     public String[][] calculateCalorieInfo(String[][] meal) {
-        return new String[0][];
+        System.out.println("Used wrong method calculateCalorieInfo() is in DietDataOperator");
+        return null;
     }
 }

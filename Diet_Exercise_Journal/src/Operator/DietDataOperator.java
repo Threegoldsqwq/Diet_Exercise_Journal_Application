@@ -54,7 +54,8 @@ public class DietDataOperator implements DataOperator{
 
     @Override
     public double calculateCalorieBurnt(String type, String intensity, String duration) throws ParseException {
-        return 0;
+        System.out.println("Used wrong method calculateCalorieBurnt() is in ExerciseDataOperator");
+        return 0.0;
     }
 
 }
