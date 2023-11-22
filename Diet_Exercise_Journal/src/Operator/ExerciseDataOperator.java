@@ -33,8 +33,6 @@ public class ExerciseDataOperator implements DataOperator{
 
         double activityLevel = calculator.getActivityLevel(intensity);//get activity level
 
-        //calculate BMR
-        double bmr = Calculator.calculateBMR();
         //unit change
         if(runtimeDatabase.getMeasurement().equalsIgnoreCase("Metric")){
             return runtimeDatabase.getWeight() * 2.204 * calculator.getActivityLevel(intensity) * calculator.getCalorieBurntPerMinute(type) * Double.parseDouble(duration);
