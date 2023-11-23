@@ -1148,13 +1148,22 @@ public class RuntimeDatabase {
                 end = i;
             }
         }
+        if(start > end){
+            System.out.println("invalid input, start > end");
+            return null;
+        }
         int length = end + 1 - start;
         String[][] dateRange = new String[end + 1 - start][getInstance().getOtherNutrientInfo()[0].length];
 
         //copy string
         for(int i = start; i < end + 1; i++){
             for (int j = 0; j < temp[i].length; j++){
-                dateRange[i][j] = temp[i][j];
+                if(temp[i][j] == null){
+                    dateRange[i][j] = "0.0";
+                }
+                else{
+                    dateRange[i][j] = temp[i][j];
+                }
             }
         }
 
