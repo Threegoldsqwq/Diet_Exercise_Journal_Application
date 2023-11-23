@@ -5,13 +5,6 @@ import OutcomeGenerator.Calculator;
 import OutcomeGenerator.DataCalculator;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 /**
  * This class handles data from the exercise
  */
@@ -40,7 +33,6 @@ public class ExerciseDataOperator implements DataOperator{
         else {
             return runtimeDatabase.getWeight() * calculator.getActivityLevel(intensity) * calculator.getCalorieBurntPerMinute(type) * Double.parseDouble(duration);
         }
-        //System.out.println(bmr);
     }
 
 

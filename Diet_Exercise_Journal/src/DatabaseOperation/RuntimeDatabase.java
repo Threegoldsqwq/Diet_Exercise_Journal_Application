@@ -4,9 +4,7 @@ import Operator.DataOperator;
 import Operator.DietDataOperator;
 import Operator.ExerciseDataOperator;
 import OutcomeGenerator.Calculator;
-import OutcomeGenerator.DataCalculator;
 
-import java.security.AlgorithmConstraints;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.*;
@@ -955,37 +953,37 @@ public class RuntimeDatabase {
      */
     public double[] getFoodGroup(){
         try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-        statement = connect.createStatement();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
 
-        String[][] temp = new String[this.mealInfo.length][this.mealInfo[0].length];
-        for(int i = 0; i < temp.length; i++) {
-            for(int j = 0; j < temp[i].length; j++){
-                temp[i][j] = this.mealInfo[i][j];
-            }
-        }
-        String[] foodGroups = {"Dairy and Egg Products", "Spices and Herbs", "Fats and Oils", "Vegetables and Vegetable Products", "Baked Products"};
-
-        double[] totalQuantity = new double[5];
-
-        ArrayList<String> allIngredients = new ArrayList<>();
-        ArrayList<Double> allQuantity = new ArrayList<>();
-
-        //get all ingredients and quantities of the whole diet record
-        for(int i = 0; i < temp.length; i++){
-            for(int j = 1; j < temp[0].length; j++){
-                String[] ingredientsQuantity = temp[i][j].split(" - ");
-                String[] ingredients = new String[ingredientsQuantity.length];
-                String[] quantity = new String[ingredientsQuantity.length];
-                for(int k = 0; k < ingredientsQuantity.length; k++){
-                    ingredients[k] = ingredientsQuantity[k].split(", ")[0];
-                    quantity[k] = ingredientsQuantity[k].split(", ")[1];
-                    allIngredients.add(ingredients[k]);
-                    allQuantity.add(Double.parseDouble(quantity[k]));
+            String[][] temp = new String[this.mealInfo.length][this.mealInfo[0].length];
+            for(int i = 0; i < temp.length; i++) {
+                for(int j = 0; j < temp[i].length; j++){
+                    temp[i][j] = this.mealInfo[i][j];
                 }
             }
-        }
+            String[] foodGroups = {"Dairy and Egg Products", "Spices and Herbs", "Fats and Oils", "Vegetables and Vegetable Products", "Baked Products"};
+
+            double[] totalQuantity = new double[5];
+
+            ArrayList<String> allIngredients = new ArrayList<>();
+            ArrayList<Double> allQuantity = new ArrayList<>();
+
+            //get all ingredients and quantities of the whole diet record
+            for(int i = 0; i < temp.length; i++){
+                for(int j = 1; j < temp[0].length; j++){
+                    String[] ingredientsQuantity = temp[i][j].split(" - ");
+                    String[] ingredients = new String[ingredientsQuantity.length];
+                    String[] quantity = new String[ingredientsQuantity.length];
+                    for(int k = 0; k < ingredientsQuantity.length; k++){
+                        ingredients[k] = ingredientsQuantity[k].split(", ")[0];
+                        quantity[k] = ingredientsQuantity[k].split(", ")[1];
+                        allIngredients.add(ingredients[k]);
+                        allQuantity.add(Double.parseDouble(quantity[k]));
+                    }
+                }
+            }
 
 
             for(int i = 0; i < allIngredients.size(); i++){
@@ -1018,10 +1016,10 @@ public class RuntimeDatabase {
             return totalQuantity;
         }
         catch (Exception e){
-        e.printStackTrace();
+            e.printStackTrace();
         }
         finally {
-        close();
+            close();
         }
         return null;
     }
@@ -1035,7 +1033,6 @@ public class RuntimeDatabase {
     public static String[][] CaloryBurnedDataReader() throws ParseException {
 
         String[][] data = new String[getInstance().getExerciseInfo().length][2];
-        String date;
 
         double bmr = Calculator.calculateBMR();
         System.out.println("bmr: " + bmr);
@@ -1093,7 +1090,6 @@ public class RuntimeDatabase {
     public static String[][] CaloryIntakeDataReader(){
 
         String[][] data = new String[getInstance().getCalorieInfo().length][2];
-        String date;
 
         for(int i = 0; i < getInstance().getCalorieInfo().length; i++){
             data[i][0] = formatDate(getInstance().getCalorieInfo()[i][0]);

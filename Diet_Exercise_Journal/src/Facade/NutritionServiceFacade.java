@@ -1,12 +1,9 @@
 package Facade;
 import Generator.*;
-import NewUi.ExericiseLogPage;
-import Operator.*;
 import DatabaseOperation.RuntimeDatabase;
 import OutcomeGenerator.*;
 import Visualizer.*;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -192,9 +189,6 @@ public class NutritionServiceFacade {
      */
     public static void getCFGchart(double[] userIntake,double[] cfgRecommendations ){
         //change here
-        //userIntake = new double[]{30.0, 25.0, 20.0, 15.0, 10.0};
-        //cfgRecommendations = new double[]{30.0, 30.0, 20.0, 15.0, 5.0};
-
         CFG dietChart = new CFG("Diet Comparison Chart", userIntake, cfgRecommendations);
         dietChart.displayChart();
     }
