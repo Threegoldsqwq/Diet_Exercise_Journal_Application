@@ -365,26 +365,32 @@ public class RuntimeDatabase {
                     //get information from the database
                     resultSet = statement.executeQuery("select Ingredients, Quantity from Diet_Exercise_Journal_UserProfile." + meals[type] + " where UserID = " + userID + " and Date = '" + currentDate + "'");
                     resultSet.next();
+                    if(resultSet.getString(1).equals("")){
+                        mealInfo[i][j] = null;
+                    }
+                    else{
+                        String[] ingredientTemp = resultSet.getString(1).split(", ");
+                        String[] quantityTemp = resultSet.getString(2).split(", ");
+                        for(int a = 0; a < ingredientTemp.length; a++){
+                            if(mealInfo[i][j] == null && ingredientTemp.length != 1){
+                                mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a] + " -";
+                            }
 
-                    //the ingredients are stored in the first column, quantity stored in the second (of the result of the select statement)
-                    String[] ingredientTemp = resultSet.getString(1).split(", ");
-                    String[] quantityTemp = resultSet.getString(2).split(", ");
-                    for(int a = 0; a < ingredientTemp.length; a++){
-                        if(mealInfo[i][j] == null && ingredientTemp.length != 1){
-                            mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a] + " -";
-                        }
-                        else if(mealInfo[i][j] == null){
-                            mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a];
-                        }
-                        else{
-                            if(a != ingredientTemp.length - 1){
-                                mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a] + " -";
+                            else if(mealInfo[i][j] == null){
+                                mealInfo[i][j] = ingredientTemp[a] + ", " + quantityTemp[a];
                             }
                             else{
-                                mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a];
+                                if(a != ingredientTemp.length - 1){
+                                    mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a] + " -";
+                                }
+                                else{
+                                    mealInfo[i][j] = mealInfo[i][j] + " " + ingredientTemp[a] + ", " + quantityTemp[a];
+                                }
                             }
                         }
                     }
+                    //the ingredients are stored in the first column, quantity stored in the second (of the result of the select statement)
+
                     j++; type++;
                 }
                 i++;
@@ -398,29 +404,40 @@ public class RuntimeDatabase {
                 resultSet = statement.executeQuery("select Ingredients, Quantity from Diet_Exercise_Journal_UserProfile.Snack where UserID = " + userID + " and Date = '" + snackDate + "'");
 
                 while(resultSet.next()){
-                    String[] ingredientTemp2 = resultSet.getString(1).split(", ");
-                    String[] quantityTemp2 = resultSet.getString(2).split(", ");
-                    if(!snackTemp.equals("")){
-                        snackTemp = snackTemp + " -";
+                    if(resultSet.getString(1).equals("")){
+                        mealInfo[x][4] = null;
                     }
-                    for(int b = 0; b < ingredientTemp2.length; b++){
-                        if(snackTemp.equals("") && ingredientTemp2.length != 1){
-                            snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b] + " -";
+                    else{
+                        String[] ingredientTemp2 = resultSet.getString(1).split(", ");
+                        String[] quantityTemp2 = resultSet.getString(2).split(", ");
+                        if(!snackTemp.equals("")){
+                            snackTemp = snackTemp + " -";
                         }
-                        else if(snackTemp.equals("")){
-                            snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b];
-                        }
-                        else{
-                            if(b != ingredientTemp2.length - 1){
-                                snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b] + " -";
+                        for(int b = 0; b < ingredientTemp2.length; b++){
+                            if(snackTemp.equals("") && ingredientTemp2.length != 1){
+                                snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b] + " -";
+                            }
+                            else if(snackTemp.equals("")){
+                                snackTemp = ingredientTemp2[b] + ", " + quantityTemp2[b];
                             }
                             else{
-                                snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b];
+                                if(b != ingredientTemp2.length - 1){
+                                    snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b] + " -";
+                                }
+                                else{
+                                    snackTemp = snackTemp + " " + ingredientTemp2[b] + ", " + quantityTemp2[b];
+                                }
                             }
                         }
                     }
+
                 }
-                mealInfo[x][4] = snackTemp;
+                if(snackTemp.equals("")){
+                    mealInfo[x][4] = null;
+                }
+                else{
+                    mealInfo[x][4] = snackTemp;
+                }
             }
 
 //            for(int k = 0; k < mealInfo.length; k++){
@@ -824,7 +841,6 @@ public class RuntimeDatabase {
             String[] quantity = new String[temp.length];
 
             for(int i = 0; i < temp.length; i++){
-
                 ingredients[i] = temp[i].split(", ")[0];
                 quantity[i] = temp[i].split(", ")[1];
             }
@@ -978,8 +994,10 @@ public class RuntimeDatabase {
                         String[] ingredients = new String[ingredientsQuantity.length];
                         String[] quantity = new String[ingredientsQuantity.length];
                         for(int k = 0; k < ingredientsQuantity.length; k++){
+
                             ingredients[k] = ingredientsQuantity[k].split(", ")[0];
                             quantity[k] = ingredientsQuantity[k].split(", ")[1];
+
                             allIngredients.add(ingredients[k]);
                             allQuantity.add(Double.parseDouble(quantity[k]));
                         }
@@ -1157,7 +1175,7 @@ public class RuntimeDatabase {
         for(int i = start; i < end + 1; i++){
             for (int j = 0; j < temp[i].length; j++){
                 if(temp[i][j] == null){
-                    dateRange[i][j] = "0.0";
+                    dateRange[i][j] = null;
                 }
                 else{
                     dateRange[i][j] = temp[i][j];
@@ -1168,26 +1186,30 @@ public class RuntimeDatabase {
         //get a new array for store data from start date to end date
         for(int i = 0; i < dateRange.length; i++){
             for (int j = 1; j < dateRange[i].length; j++){
-                String[] allAmountAndValue = dateRange[i][j].split("; ");
-                for(int k = 0; k < allAmountAndValue.length; k++){
-                    String[] singleAmountAndValue = allAmountAndValue[k].split(" - ");
-                    if(singleAmountAndValue[0].equalsIgnoreCase("CARBOHYDRATE, TOTAL (BY DIFFERENCE)")){
-                        carb += Double.parseDouble(singleAmountAndValue[1]);
-                    }
-                    else if(singleAmountAndValue[0].equalsIgnoreCase("FAT (TOTAL LIPIDS)")){
-                        fat += Double.parseDouble(singleAmountAndValue[1]);
-                    }
-                    else if(singleAmountAndValue[0].equalsIgnoreCase("PROTEIN")){
-                        protein += Double.parseDouble(singleAmountAndValue[1]);
-                    }
-                    else if(singleAmountAndValue[0].equalsIgnoreCase("GLUCOSE")){
-                        glucose += Double.parseDouble(singleAmountAndValue[1]);
-                    }
-                    else if(singleAmountAndValue[0].equalsIgnoreCase("VITAMIN C")){
-                        vitaminC += Double.parseDouble(singleAmountAndValue[1]);
-                    }
-                    else{
-                        other += Double.parseDouble(singleAmountAndValue[1]);
+                if(dateRange[i][j] != null){
+                    String[] allAmountAndValue = dateRange[i][j].split("; ");
+
+                    for(int k = 0; k < allAmountAndValue.length; k++){
+                        String[] singleAmountAndValue = allAmountAndValue[k].split(" - ");
+
+                        if(singleAmountAndValue[0].equalsIgnoreCase("CARBOHYDRATE, TOTAL (BY DIFFERENCE)")){
+                            carb += Double.parseDouble(singleAmountAndValue[1]);
+                        }
+                        else if(singleAmountAndValue[0].equalsIgnoreCase("FAT (TOTAL LIPIDS)")){
+                            fat += Double.parseDouble(singleAmountAndValue[1]);
+                        }
+                        else if(singleAmountAndValue[0].equalsIgnoreCase("PROTEIN")){
+                            protein += Double.parseDouble(singleAmountAndValue[1]);
+                        }
+                        else if(singleAmountAndValue[0].equalsIgnoreCase("GLUCOSE")){
+                            glucose += Double.parseDouble(singleAmountAndValue[1]);
+                        }
+                        else if(singleAmountAndValue[0].equalsIgnoreCase("VITAMIN C")){
+                            vitaminC += Double.parseDouble(singleAmountAndValue[1]);
+                        }
+                        else{
+                            other += Double.parseDouble(singleAmountAndValue[1]);
+                        }
                     }
                 }
             }
