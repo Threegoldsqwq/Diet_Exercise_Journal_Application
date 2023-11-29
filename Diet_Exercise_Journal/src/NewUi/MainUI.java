@@ -176,7 +176,7 @@ public class MainUI {
                     // Extract the user ID from the selected user string
                     String[] temp = selectedUser.split("id: ");
                     int selectedUserId = Integer.parseInt(temp[1].substring(0, temp[1].length() - 1));
-
+                    System.out.println("id=" + selectedUserId);
                     // Use the facade to select the chosen profile
                     facade.selectProfile(selectedUserId);
 
