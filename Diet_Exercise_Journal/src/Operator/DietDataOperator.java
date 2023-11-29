@@ -28,7 +28,7 @@ public class DietDataOperator implements DataOperator{
         for(int i = 0; i < meal.length; i++){
             calories[i][0] = meal[i][0];//the date keeps the same as meals
             for(int j = 1; j < meal[i].length; j++){
-                if(meal[i][j] == null || meal[i][j].equalsIgnoreCase(" ")){
+                if(meal[i][j] == null || meal[i][j].equalsIgnoreCase(", ")){
                     calories[i][j] = "0.00";//if no meals found, no calorie intake
 
                 }

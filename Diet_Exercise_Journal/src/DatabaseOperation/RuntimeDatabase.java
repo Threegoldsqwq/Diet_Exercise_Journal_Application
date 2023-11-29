@@ -275,7 +275,7 @@ public class RuntimeDatabase {
         this.otherNutrientInfo = new String[mealInfo.length][mealInfo[0].length];
 
         //calculate calorie intake, store in a 2d array
-        this.calorieInfo = operator.calculateCalorieInfo(mealInfo);
+        this.calorieInfo = operator.calculateCalorieInfo(this.mealInfo);
 
         //set other nutrient values
         for(int i = 0; i < mealInfo.length; i++){
