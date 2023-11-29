@@ -973,14 +973,16 @@ public class RuntimeDatabase {
             //get all ingredients and quantities of the whole diet record
             for(int i = 0; i < temp.length; i++){
                 for(int j = 1; j < temp[0].length; j++){
-                    String[] ingredientsQuantity = temp[i][j].split(" - ");
-                    String[] ingredients = new String[ingredientsQuantity.length];
-                    String[] quantity = new String[ingredientsQuantity.length];
-                    for(int k = 0; k < ingredientsQuantity.length; k++){
-                        ingredients[k] = ingredientsQuantity[k].split(", ")[0];
-                        quantity[k] = ingredientsQuantity[k].split(", ")[1];
-                        allIngredients.add(ingredients[k]);
-                        allQuantity.add(Double.parseDouble(quantity[k]));
+                    if(temp[i][j] != null){
+                        String[] ingredientsQuantity = temp[i][j].split(" - ");
+                        String[] ingredients = new String[ingredientsQuantity.length];
+                        String[] quantity = new String[ingredientsQuantity.length];
+                        for(int k = 0; k < ingredientsQuantity.length; k++){
+                            ingredients[k] = ingredientsQuantity[k].split(", ")[0];
+                            quantity[k] = ingredientsQuantity[k].split(", ")[1];
+                            allIngredients.add(ingredients[k]);
+                            allQuantity.add(Double.parseDouble(quantity[k]));
+                        }
                     }
                 }
             }
