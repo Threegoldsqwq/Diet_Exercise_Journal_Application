@@ -1,6 +1,7 @@
 package Generator;
 
 import DatabaseOperation.RuntimeDatabase;
+import Visualizer.CalorieDataVisualizer;
 
 /**
  * Class for generate short report
@@ -12,7 +13,7 @@ public class ShortReportGenerator implements ReportGenerator{
      * @return a 2D array same as RuntimeDatabase
      */
     public String[][] getTotalCalorieIntake(){
-        return RuntimeDatabase.CaloryIntakeDataReader();
+        return CalorieDataVisualizer.CaloryIntakeDataReader();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package Visualizer;
 
 import DatabaseOperation.RuntimeDatabase;
+import OutcomeGenerator.Calculator;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
@@ -73,8 +74,8 @@ public class CalorieDataVisualizer {
         String[][] CBurned;
         String[][] Cintake;
         //get the data
-        CBurned=RuntimeDatabase.CaloryBurnedDataReader();
-        Cintake=RuntimeDatabase.CaloryIntakeDataReader();
+        CBurned= CaloryBurnedDataReader();
+        Cintake= CaloryIntakeDataReader();
 
         //deal with date range
         //changed
@@ -140,5 +141,97 @@ public class CalorieDataVisualizer {
         String[] rowKeys = {"Intake", "Burned"};
         dataset = DatasetUtilities.createCategoryDataset(rowKeys, columnKeys, data);
     }
+    /**
+     * This method format the date in YYYY-MM-DD
+     * @param date is the date to be formatted
+     * @return the formatted date
+     */
+    private static String formatDate(String date){
+        if(date == null){
+            return "0000-00-00";
+        }
+        String[] ymd = date.split("-");
+        String formatedDate = "";
+        if(Double.parseDouble(ymd[1]) < 10 && Double.parseDouble(ymd[2]) < 10){
+            formatedDate = ymd[0] + "-0" + ymd[1] + "-0" + ymd[2];
+        }
+        else if(Double.parseDouble(ymd[1]) < 10){
+            formatedDate = ymd[0] + "-0" + ymd[1] + "-" + ymd[2];
+        }
+        else if(Double.parseDouble(ymd[2]) < 10){
+            formatedDate = ymd[0] + "-" + ymd[1] + "-0" + ymd[2];
+        }
+        else{
+            formatedDate = ymd[0] + "-" + ymd[1] + "-" + ymd[2];
+        }
+        return formatedDate;
+    }
+    /**
+     * This method reads the calorie burnt based on the date
+     * The formula is calorie burnt by exercise on a day + the BMR per day
+     * @return an array in [date][data], [date][data]...
+     */
+    public static String[][] CaloryBurnedDataReader() throws ParseException {
 
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        String[][] data = new String[runtimeDatabase.getExerciseInfo().length][2];
+
+        formatCBurnedData(data);
+
+        return data;
+    }
+
+    /**
+     * This method reads the calorie intake based on the date
+     * @return an array in [date][data], [date][data], ...
+     */
+    public static String[][] CaloryIntakeDataReader(){
+
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        String[][] data = new String[runtimeDatabase.getCalorieInfo().length][2];
+
+        formatCIntakeData(data);
+
+        return data;
+    }
+
+    private static void formatCIntakeData(String[][] data){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        for(int i = 0; i < runtimeDatabase.getCalorieInfo().length; i++){
+            data[i][0] = formatDate(runtimeDatabase.getCalorieInfo()[i][0]);
+            double calorieIntake = 0.0;
+            for(int j = 1; j < runtimeDatabase.getCalorieInfo()[i].length; j++){
+                if(runtimeDatabase.getCalorieInfo()[i][j] == null || runtimeDatabase.getCalorieInfo()[i][j].equalsIgnoreCase("")){
+                    calorieIntake = calorieIntake + 0.0;
+                }
+                else{
+                    calorieIntake = calorieIntake + Double.parseDouble(runtimeDatabase.getCalorieInfo()[i][j]);
+
+                }
+            }
+            data[i][1] = String.valueOf(Math.round(calorieIntake * 100) / 100.0);
+        }
+    }
+
+    private static void formatCBurnedData(String[][] data) throws ParseException {
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        double bmr = Calculator.calculateBMR();
+        for(int i = 0; i < runtimeDatabase.getExerciseInfo().length; i++){
+            data[i][0] = formatDate(runtimeDatabase.getExerciseInfo()[i][0]);
+            for(int j = 1; j < runtimeDatabase.getExerciseInfo()[i].length; j++){
+                if(runtimeDatabase.getExerciseInfo()[i][j] == null || runtimeDatabase.getExerciseInfo()[i][j].equalsIgnoreCase("")){
+                    data[i][j] = "0.0";
+                }
+                else{
+                    String[] temp = runtimeDatabase.getExerciseInfo()[i][j].split(" - ");
+                    double calorieBurnt = 0.0;
+                    for(int k = 0; k < temp.length; k++){
+                        String[] temp2 = temp[k].split(", ");
+                        calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
+                    }
+                    data[i][j] = String.valueOf((Math.floor((calorieBurnt + bmr) * 100) / 100.0));
+                }
+            }
+        }
+    }
 }

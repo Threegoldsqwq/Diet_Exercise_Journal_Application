@@ -27,9 +27,9 @@ public class TestingClass {
         runtimeDatabase.setMealInfo(s);
         String[][] s1 = runtimeDatabase.getExerciseInfo();
         String[][] s2 = runtimeDatabase.getCalorieInfo();
-        String[][] s3 = RuntimeDatabase.CaloryIntakeDataReader();
-        String[][] s4 = runtimeDatabase.getOtherNutrientInfo();
-        String[][] s5 = RuntimeDatabase.CaloryBurnedDataReader();
+        //String[][] s3 = RuntimeDatabase.CaloryIntakeDataReader();
+        //String[][] s4 = runtimeDatabase.getOtherNutrientInfo();
+        //String[][] s5 = RuntimeDatabase.CaloryBurnedDataReader();
 
         double[] s6 = runtimeDatabase.getFoodGroup();
 
@@ -47,18 +47,18 @@ public class TestingClass {
 
 //        s = runtimeDatabase.getMealInfo();
 
-        for (String[] strings : s3) {
-            for (String string : strings) {
-                System.out.print(string + " ");
-            }
-            System.out.println();
-        }
-        for (String[] strings : s5) {
-            for (String string : strings) {
-                System.out.print(string + " ");
-            }
-            System.out.println();
-        }
+//        for (String[] strings : s3) {
+//            for (String string : strings) {
+//                System.out.print(string + " ");
+//            }
+//            System.out.println();
+//        }
+//        for (String[] strings : s5) {
+//            for (String string : strings) {
+//                System.out.print(string + " ");
+//            }
+//            System.out.println();
+//        }
         //runtimeDatabase.writeExerciseBack();
         //System.out.println(runtimeDatabase.getOtherNutrientValues("tomato, 11 - beef, 23"));
 

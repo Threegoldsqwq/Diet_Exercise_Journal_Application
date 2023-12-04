@@ -59,6 +59,16 @@ public class RuntimeDatabase {
     String[][] exerciseInfo;//holds exercise info in {{date, type, duration, intensity, calorie burnt}, {...} }
 
 
+    private void connectToDatabase(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This class display all profiles that exist in the database
      * @return an array of profiles
@@ -68,10 +78,7 @@ public class RuntimeDatabase {
         ArrayList<String> profiles = new ArrayList<>();
         try{
             //note: below are sql connection codes
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            //You can connect to databased on your pc by entering the user and password
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
 
             int i = 1;
@@ -136,9 +143,7 @@ public class RuntimeDatabase {
 
     public void setUserName(int userID) {
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select UserName from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
             resultSet.next();
             this.userName = resultSet.getString(1);
@@ -158,9 +163,7 @@ public class RuntimeDatabase {
 
     public void setSex(int userID) {
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select Sex from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
             resultSet.next();
             this.sex = resultSet.getString(1);
@@ -180,9 +183,7 @@ public class RuntimeDatabase {
 
     public void setDOB(int userID) {
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select Date_of_Birth from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
             resultSet.next();
             this.DOB = resultSet.getString(1);
@@ -202,9 +203,7 @@ public class RuntimeDatabase {
 
     public void setHeight(int userID) {
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select Height from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
             resultSet.next();
             this.height = resultSet.getDouble(1);
@@ -224,9 +223,7 @@ public class RuntimeDatabase {
 
     public void setWeight(int userID) {
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select Weight from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
             resultSet.next();
             this.weight = resultSet.getDouble(1);
@@ -246,9 +243,7 @@ public class RuntimeDatabase {
 
     public void setMeasurement(int userID) {
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select Measurement from Diet_Exercise_Journal_UserProfile.UserProfile where UserID = " + userID);
             resultSet.next();
             this.measurement = resultSet.getString(1);
@@ -331,9 +326,7 @@ public class RuntimeDatabase {
      */
     public String[][] readAllMealInfo(int userID){
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
 
             //first get the number of dates in the user profile to form the array
             resultSet = statement.executeQuery("select count(Date) from Diet_Exercise_Journal_UserProfile.Meal where UserID = " + userID);
@@ -466,9 +459,7 @@ public class RuntimeDatabase {
      */
     public String[][] readAllExerciseInfo(int userID){
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
 
             DataOperator operator = new ExerciseDataOperator();
 
@@ -532,9 +523,7 @@ public class RuntimeDatabase {
      */
     public void createProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select * from Diet_Exercise_Journal_UserProfile.UserProfile");
 
             //prepare the statement
@@ -737,9 +726,7 @@ public class RuntimeDatabase {
     public void modifyProfile(String UserName, String sex, int year, int month, int day, double height, double weight, String measurement){
         try{
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             this.userName = UserName;
             this.sex = sex;
             this.DOB = year + "-" + month + "-" + day;
@@ -790,9 +777,7 @@ public class RuntimeDatabase {
      */
     public double extractCalorieInfo(String food){
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + food.toLowerCase() + "'");
             //resultSet.next();
             double foodCalorie = 0.0;
@@ -830,9 +815,7 @@ public class RuntimeDatabase {
      */
     public String getOtherNutrientValues(String meal){
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
             if(meal == null || meal.equalsIgnoreCase("")){
                 return null;
             }
@@ -969,9 +952,7 @@ public class RuntimeDatabase {
      */
     public double[] getFoodGroup(){
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
 
             String[][] temp = new String[this.mealInfo.length][this.mealInfo[0].length];
             for(int i = 0; i < temp.length; i++) {
@@ -1045,208 +1026,6 @@ public class RuntimeDatabase {
     }
 //---------------------------------------------------------------------------------------------------------------
 
-    /**
-     * This method reads the calorie burnt based on the date
-     * The formula is calorie burnt by exercise on a day + the BMR per day
-     * @return an array in [date][data], [date][data]...
-     */
-    public static String[][] CaloryBurnedDataReader() throws ParseException {
-
-        String[][] data = new String[getInstance().getExerciseInfo().length][2];
-
-        double bmr = Calculator.calculateBMR();
-        System.out.println("bmr: " + bmr);
-        for(int i = 0; i < getInstance().getExerciseInfo().length; i++){
-            data[i][0] = formatDate(getInstance().getExerciseInfo()[i][0]);
-            for(int j = 1; j < getInstance().getExerciseInfo()[i].length; j++){
-                if(getInstance().getExerciseInfo()[i][j] == null || getInstance().getExerciseInfo()[i][j].equalsIgnoreCase("")){
-                    data[i][j] = "0.0";
-                }
-                else{
-                    String[] temp = getInstance().getExerciseInfo()[i][j].split(" - ");
-                    double calorieBurnt = 0.0;
-                    for(int k = 0; k < temp.length; k++){
-                        String[] temp2 = temp[k].split(", ");
-                        calorieBurnt = calorieBurnt + Double.parseDouble(temp2[3]);
-                    }
-                    data[i][j] = String.valueOf((Math.floor((calorieBurnt + bmr) * 100) / 100.0));
-                }
-            }
-        }
-
-        return data;
-    }
-
-    /**
-     * This method format the date in YYYY-MM-DD
-     * @param date is the date to be formatted
-     * @return the formatted date
-     */
-    public static String formatDate(String date){
-        if(date == null){
-            return "0000-00-00";
-        }
-        String[] ymd = date.split("-");
-        String formatedDate = "";
-        if(Double.parseDouble(ymd[1]) < 10 && Double.parseDouble(ymd[2]) < 10){
-            formatedDate = ymd[0] + "-0" + ymd[1] + "-0" + ymd[2];
-        }
-        else if(Double.parseDouble(ymd[1]) < 10){
-            formatedDate = ymd[0] + "-0" + ymd[1] + "-" + ymd[2];
-        }
-        else if(Double.parseDouble(ymd[2]) < 10){
-            formatedDate = ymd[0] + "-" + ymd[1] + "-0" + ymd[2];
-        }
-        else{
-            formatedDate = ymd[0] + "-" + ymd[1] + "-" + ymd[2];
-        }
-        return formatedDate;
-    }
-
-    /**
-     * This method reads the calorie intake based on the date
-     * @return an array in [date][data], [date][data], ...
-     */
-    public static String[][] CaloryIntakeDataReader(){
-
-        String[][] data = new String[getInstance().getCalorieInfo().length][2];
-
-        for(int i = 0; i < getInstance().getCalorieInfo().length; i++){
-            data[i][0] = formatDate(getInstance().getCalorieInfo()[i][0]);
-            double calorieIntake = 0.0;
-            for(int j = 1; j < getInstance().getCalorieInfo()[i].length; j++){
-                if(getInstance().getCalorieInfo()[i][j] == null || getInstance().getCalorieInfo()[i][j].equalsIgnoreCase("")){
-                    calorieIntake = calorieIntake + 0.0;
-                }
-                else{
-                    calorieIntake = calorieIntake + Double.parseDouble(getInstance().getCalorieInfo()[i][j]);
-
-                }
-            }
-            data[i][1] = String.valueOf(Math.round(calorieIntake * 100) / 100.0);
-        }
-
-        return data;
-    }
-
-    /**
-     * This class reads all nutrients in a time period
-     * DEVELOPING
-     * @param number is the number of data to appear (5 or 10)
-     * @return an array in [nutrient][value], [nutrient][value], ...
-     */
-    public static String[][] NutrientsDataReader(int number, String startDate, String endDate){
-        //just for testing, will be modified
-        //calculate average here
-        double carb = 0;
-        double fat = 0;
-        double protein = 0;
-        double glucose = 0;
-        double vitaminC = 0;
-        double other = 0;
-        String[][] data = new String[6][2];
-        String[][] temp = new String[getInstance().getOtherNutrientInfo().length][getInstance().getOtherNutrientInfo()[0].length];
-        for(int i = 0; i < getInstance().getOtherNutrientInfo().length; i++){
-            for(int j = 0; j < getInstance().getOtherNutrientInfo()[0].length; j++){
-                temp[i][j] = getInstance().getOtherNutrientInfo()[i][j];
-            }
-        }
-        int avg;
-        int start = 0;
-        int end = 0;
-
-        //get the index of start date and end date
-        for(int i = 0; i < temp.length; i++){
-            if(temp[i][0].equalsIgnoreCase(startDate)){
-                start = i;
-            }
-            else if(temp[i][0].equalsIgnoreCase(endDate)){
-                end = i;
-            }
-        }
-        if(start > end){
-            System.out.println("invalid input, start > end");
-            return null;
-        }
-        int length = end + 1 - start;
-        String[][] dateRange = new String[end + 1 - start][getInstance().getOtherNutrientInfo()[0].length];
-
-        //copy string
-        for(int i = start; i < end + 1; i++){
-            for (int j = 0; j < temp[i].length; j++){
-                if(temp[i][j] == null){
-                    dateRange[i][j] = null;
-                }
-                else{
-                    dateRange[i][j] = temp[i][j];
-                }
-            }
-        }
-
-        //get a new array for store data from start date to end date
-        for(int i = 0; i < dateRange.length; i++){
-            for (int j = 1; j < dateRange[i].length; j++){
-                if(dateRange[i][j] != null){
-                    String[] allAmountAndValue = dateRange[i][j].split("; ");
-
-                    for(int k = 0; k < allAmountAndValue.length; k++){
-                        String[] singleAmountAndValue = allAmountAndValue[k].split(" - ");
-
-                        if(singleAmountAndValue[0].equalsIgnoreCase("CARBOHYDRATE, TOTAL (BY DIFFERENCE)")){
-                            carb += Double.parseDouble(singleAmountAndValue[1]);
-                        }
-                        else if(singleAmountAndValue[0].equalsIgnoreCase("FAT (TOTAL LIPIDS)")){
-                            fat += Double.parseDouble(singleAmountAndValue[1]);
-                        }
-                        else if(singleAmountAndValue[0].equalsIgnoreCase("PROTEIN")){
-                            protein += Double.parseDouble(singleAmountAndValue[1]);
-                        }
-                        else if(singleAmountAndValue[0].equalsIgnoreCase("GLUCOSE")){
-                            glucose += Double.parseDouble(singleAmountAndValue[1]);
-                        }
-                        else if(singleAmountAndValue[0].equalsIgnoreCase("VITAMIN C")){
-                            vitaminC += Double.parseDouble(singleAmountAndValue[1]);
-                        }
-                        else{
-                            other += Double.parseDouble(singleAmountAndValue[1]);
-                        }
-                    }
-                }
-            }
-        }
-
-        //start calculate value
-        for(int i = 0; i < data.length; i++){
-
-            if(i == 0){
-                data[i][0] = "Carbohydrate";
-                data[i][1] = String.valueOf(Math.round(carb / length * 100) / 100.0);
-            }
-            else if(i == 1){
-                data[i][0] = "Fat";
-                data[i][1] = String.valueOf(Math.round(fat / length * 100) / 100.0);
-            }
-            else if(i == 2){
-                data[i][0] = "Protein";
-                data[i][1] = String.valueOf(Math.round(protein / length * 100) / 100.0);
-            }
-            else if(i == 3){
-                data[i][0] = "Glucose";
-                data[i][1] = String.valueOf(Math.round(glucose / length * 100) / 100.0);
-            }
-            else if(i == 4){
-                data[i][0] = "Vitamin C";
-                data[i][1] = String.valueOf(Math.round(vitaminC / length * 100) / 100.0);
-            }
-            else {
-                data[i][0] = "Other";
-                data[i][1] = String.valueOf(Math.round(other / length * 100) / 100.0);
-            }
-        }
-
-        return data;
-    }
-
 //-------------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -1255,9 +1034,7 @@ public class RuntimeDatabase {
     public void writeAllMealBack(){
         try{
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
 
             String type = "";
             for(int i = 0; i < this.mealInfo.length; i++){
@@ -1344,9 +1121,7 @@ public class RuntimeDatabase {
      */
     public void writeExerciseBack(){
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
-            statement = connect.createStatement();
+            connectToDatabase();
 
             preparedStatement = connect.prepareStatement("drop table Exercise;");
             preparedStatement.executeUpdate();

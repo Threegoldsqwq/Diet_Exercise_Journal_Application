@@ -7,6 +7,43 @@ import DatabaseOperation.RuntimeDatabase;
  */
 public class DetailedReportGenerator implements ReportGenerator{
 
+    private void deepCopyInfo(String[][] temp, String type){
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        if(type.equalsIgnoreCase("mealInfo")){
+            for(int i = 0; i < temp.length; i++){
+                for(int j = 0; j < temp[i].length; j++){
+                    temp[i][j] = runtimeDatabase.getMealInfo()[i][j];
+                }
+            }
+        }
+        else if(type.equalsIgnoreCase("otherNutrients")){
+            for(int i = 0; i < temp.length; i++){
+                for(int j = 0; j < temp[i].length; j++){
+                    temp[i][j] = runtimeDatabase.getOtherNutrientInfo()[i][j];
+                }
+            }
+        }
+
+    }
+    private void formResult(String[] s, String type){
+        if(type.equalsIgnoreCase("mealInfo")){
+            for(int i = 0; i < s.length; i++){
+                if(s[i].charAt(0) == 'e'){
+                    s[i] = s[i];
+                }
+                else{
+                    s[i] = s[i] + "g/ml";
+                }
+            }
+        }
+        else if(type.equalsIgnoreCase("otherNutrients")){
+            for(int i = 0; i < s.length; i++){
+
+                s[i] = s[i] + "g";
+            }
+        }
+    }
+
     /**
      * This method get the ingredients and quantity for each meal for detailed meal page
      * @param type is the meal type
@@ -17,11 +54,7 @@ public class DetailedReportGenerator implements ReportGenerator{
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         String[][] temp = new String[runtimeDatabase.getMealInfo().length][runtimeDatabase.getMealInfo()[0].length];
         //deep copy the array
-        for(int i = 0; i < temp.length; i++){
-            for(int j = 0; j < temp[i].length; j++){
-                temp[i][j] = runtimeDatabase.getMealInfo()[i][j];
-            }
-        }
+        deepCopyInfo(temp, "mealInfo");
 
         String[] ingredientsQuantity = new String[1];
         for(int i = 0; i < temp.length; i++){
@@ -29,14 +62,9 @@ public class DetailedReportGenerator implements ReportGenerator{
                 ingredientsQuantity = temp[i][type + 1].split(" - ");
             }
         }
-        for(int i = 0; i < ingredientsQuantity.length; i++){
-            if(ingredientsQuantity[i].charAt(0) == 'e'){
-                ingredientsQuantity[i] = ingredientsQuantity[i];
-            }
-            else{
-                ingredientsQuantity[i] = ingredientsQuantity[i] + "g/ml";
-            }
-        }
+
+        //form result
+        formResult(ingredientsQuantity, "mealInfo");
 
         return ingredientsQuantity;
     }
@@ -50,12 +78,7 @@ public class DetailedReportGenerator implements ReportGenerator{
     public String[] getOtherNutrients(int type, String selectedDate){
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         String[][] temp = new String[runtimeDatabase.getOtherNutrientInfo().length][runtimeDatabase.getOtherNutrientInfo()[0].length];
-        for(int i = 0; i < temp.length; i++){
-            for(int j = 0; j < temp[i].length; j++){
-                temp[i][j] = runtimeDatabase.getOtherNutrientInfo()[i][j];
-            }
-        }
-
+        deepCopyInfo(temp, "otherNutrients");
 
         String[] otherNutrients = new String[1];
         for(int i = 0; i < temp.length; i++){
@@ -63,10 +86,9 @@ public class DetailedReportGenerator implements ReportGenerator{
                 otherNutrients = temp[i][type + 1].split("; ");
             }
         }
-        for(int i = 0; i < otherNutrients.length; i++){
 
-            otherNutrients[i] = otherNutrients[i] + "g";
-        }
+        //form result
+        formResult(otherNutrients, "otherNutrients");
 
         return otherNutrients;
     }

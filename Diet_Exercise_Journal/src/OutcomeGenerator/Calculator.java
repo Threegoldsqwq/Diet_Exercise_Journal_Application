@@ -2,6 +2,7 @@ package OutcomeGenerator;
 
 
 import DatabaseOperation.RuntimeDatabase;
+import Visualizer.CalorieDataVisualizer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,37 @@ import java.util.concurrent.TimeUnit;
 public class Calculator extends DataCalculator {
 
 
+    private static int calculateAge() throws ParseException {
+        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        // Calculate the age
+        LocalDate currentdate = LocalDate.now();
+        Date today = format.parse(currentdate.getYear() + "-" + currentdate.getMonth().getValue() + "-" + currentdate.getDayOfMonth());
+        Date dob = format.parse(runtimeDatabase.getDOB());
+        long diffInMillies = Math.abs(today.getTime() - dob.getTime());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) /365;
+        return (int) diff;
+    }
+    private static double calculateBMRMale(double height, double weight, int age){
+        double bmr;
+        if (RuntimeDatabase.getInstance().getMeasurement().equalsIgnoreCase("Imperial")) {
+            bmr = 66 + 6.23 * weight + 12.7 * height - 6.8 * age;
+        } else {
+            bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+        }
+        return bmr;
+    }
+
+    private static double calculateBMRFemale(double height, double weight, int age){
+        double bmr;
+        if (RuntimeDatabase.getInstance().getMeasurement().equalsIgnoreCase("Imperial")) {
+            bmr = 655 + 4.35 * weight + 4.7 * height - 4.7 * age;
+        }
+        else{
+            bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+        }
+        return bmr;
+    }
     /**
      * This class calculates the BMR of the user
      * @return the BMR value
@@ -25,45 +57,21 @@ public class Calculator extends DataCalculator {
     public static double calculateBMR() throws ParseException {
         // change here
         double bmr;
-        RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
         String gender1 = RuntimeDatabase.getInstance().getSex();
         char gender = gender1.charAt(0);
-        double weight = RuntimeDatabase.getInstance().getWeight();
-        double height = RuntimeDatabase.getInstance().getHeight();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        // Calculate the age
-        LocalDate currentdate = LocalDate.now();
-        Date today = format.parse(currentdate.getYear() + "-" + currentdate.getMonth().getValue() + "-" + currentdate.getDayOfMonth());
-        //String[] ymd = runtimeDatabase.getDOB().split("-");
-        Date dob = format.parse(runtimeDatabase.getDOB());
-        long diffInMillies = Math.abs(today.getTime() - dob.getTime());
-        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) /365;
-        int age = (int) diff;
+        int age = calculateAge();
 
         //calculate BMR based on gender
         if (gender == 'M' || gender == 'm') {
             // BMR calculation for men
-            //calculate based on the measurement
-            if (RuntimeDatabase.getInstance().getMeasurement().equalsIgnoreCase("Imperial")) {
-                bmr = 66 + 6.23 * weight + 12.7 * height - 6.8 * age;
-            } else {
-                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-            }
+            bmr = calculateBMRMale(RuntimeDatabase.getInstance().getHeight(), RuntimeDatabase.getInstance().getWeight(), age);
         } else if (gender == 'F' || gender == 'f') {
             // BMR calculation for women
-            if (RuntimeDatabase.getInstance().getMeasurement().equalsIgnoreCase("Imperial")) {
-                bmr = 655 + 4.35 * weight + 4.7 * height - 4.7 * age;
-            }
-            else{
-                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
-            }
-
+            bmr = calculateBMRFemale(RuntimeDatabase.getInstance().getHeight(), RuntimeDatabase.getInstance().getWeight(), age);
         } else {
             throw new IllegalArgumentException("Invalid gender. Use 'M' for male or 'F' for female.");
         }
-
-        //System.out.println("func bmr: " + bmr);
         return bmr;
     }
 
@@ -157,7 +165,7 @@ public class Calculator extends DataCalculator {
      */
     private static double getAvgCBurned() throws ParseException {
         //change here link to database
-        String[][] helper= RuntimeDatabase.CaloryBurnedDataReader();
+        String[][] helper= CalorieDataVisualizer.CaloryBurnedDataReader();
         double result = 0;
         for(int i=0;i < helper.length;i++){
             result= result+Double.parseDouble(helper[i][1]);
@@ -173,7 +181,7 @@ public class Calculator extends DataCalculator {
      */
     private static double getAvgCIntake() {
         //change here link to database
-        String[][] helper = RuntimeDatabase.CaloryIntakeDataReader();
+        String[][] helper = CalorieDataVisualizer.CaloryIntakeDataReader();
         double result = 0;
         for(int i=0;i < helper.length;i++){
             result= result+Double.parseDouble(helper[i][1]);
