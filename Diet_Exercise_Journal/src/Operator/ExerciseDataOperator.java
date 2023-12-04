@@ -2,7 +2,6 @@ package Operator;
 
 import DatabaseOperation.RuntimeDatabase;
 import OutcomeGenerator.Calculator;
-import OutcomeGenerator.DataCalculator;
 
 import java.text.ParseException;
 /**
@@ -22,7 +21,7 @@ public class ExerciseDataOperator implements DataOperator{
     public double calculateCalorieBurnt(String type, String duration, String intensity) throws ParseException {
 
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
-        DataCalculator calculator = new Calculator();
+        Calculator calculator = new Calculator();
 
         double activityLevel = calculator.getActivityLevel(intensity);//get activity level
 

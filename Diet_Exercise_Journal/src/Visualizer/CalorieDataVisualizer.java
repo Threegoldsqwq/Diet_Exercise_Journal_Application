@@ -26,7 +26,7 @@ import java.util.Objects;
  *
  * @version 1.0
  */
-public class CalorieDataVisualizer {
+public class CalorieDataVisualizer implements DataVisualizer {
     static CategoryDataset dataset;
 
     /**
@@ -78,7 +78,6 @@ public class CalorieDataVisualizer {
         Cintake= CaloryIntakeDataReader();
 
         //deal with date range
-        //changed
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // Parse the start and end dates

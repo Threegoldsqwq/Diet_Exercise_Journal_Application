@@ -1,6 +1,4 @@
 package Operator;
-import OutcomeGenerator.Calculator;
-import OutcomeGenerator.DataCalculator;
 import DatabaseOperation.RuntimeDatabase;
 
 import java.text.ParseException;
@@ -20,9 +18,8 @@ public class DietDataOperator implements DataOperator{
      */
     @Override
     public String[][] calculateCalorieInfo(String[][] meal){
-
-        String[][] calories = new String[meal.length][meal[0].length];//array with same size as meal
         RuntimeDatabase runtimeDatabase = RuntimeDatabase.getInstance();
+        String[][] calories = new String[meal.length][meal[0].length];//array with same size as meal
 
         //we first retrieve within the meal first
         for(int i = 0; i < meal.length; i++){
@@ -30,22 +27,21 @@ public class DietDataOperator implements DataOperator{
             for(int j = 1; j < meal[i].length; j++){
                 if(meal[i][j] == null || meal[i][j].equalsIgnoreCase("")){
                     calories[i][j] = "0.00";//if no meals found, no calorie intake
-
                 }
                 else{
+                    System.out.println(meal[i][j]);
                     //we first split out the information of all ingredients and quantities, the format of result element are: ingredient, quantity
                     String[] ingredientsAndQuantity = meal[i][j].split(" - ");//get ingredient and quantity
                     double totalCalorie = 0.0; //total calorie per meal
-
+                   // System.out.println(ingredientsAndQuantity[1]);
                     for(int k = 0; k < ingredientsAndQuantity.length; k++){
                         //we then split out ingredient and quantity and process them one by one
-
                         String[] temp = ingredientsAndQuantity[k].split(", ");
-
                         double foodCal = runtimeDatabase.extractCalorieInfo(temp[0]);//extract the calorie info of the ingredient in cal/g or ml
                         totalCalorie = totalCalorie + (foodCal * Double.parseDouble(temp[1]));
                     }
                     calories[i][j] = String.valueOf(totalCalorie);//record the data into the array
+                    System.out.println("done");
                 }
             }
         }

@@ -5,8 +5,7 @@ import java.text.ParseException;
 /**
  * Abstract class from encapsulation
  */
-public abstract class DataCalculator {
-
-    public abstract double getActivityLevel(String intensity);
-    public abstract double getCalorieBurntPerMinute(String type);
+interface DataCalculator {
+    double getActivityLevel(String intensity);
+    double getCalorieBurntPerMinute(String type);
 }

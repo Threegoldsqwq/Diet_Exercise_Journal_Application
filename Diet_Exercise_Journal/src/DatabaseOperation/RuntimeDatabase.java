@@ -777,7 +777,9 @@ public class RuntimeDatabase {
      */
     public double extractCalorieInfo(String food){
         try {
-            connectToDatabase();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            statement = connect.createStatement();
             resultSet = statement.executeQuery("select FoodID from Diet_Exercise_Journal_UserProfile.FOOD_NAME where Abbreviation = '" + food.toLowerCase() + "'");
             //resultSet.next();
             double foodCalorie = 0.0;

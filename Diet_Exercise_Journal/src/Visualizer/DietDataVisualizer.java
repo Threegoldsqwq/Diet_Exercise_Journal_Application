@@ -11,7 +11,7 @@ import org.jfree.ui.RefineryUtilities;
 /**
  * This class generate JFree chart for diet
  */
-public class DietDataVisualizer extends DataVisualizer{
+public class DietDataVisualizer implements DataVisualizer {
     /**
      * This method create pie chart
      * @param NumberOfNutrients is the number of nutrients
@@ -26,7 +26,7 @@ public class DietDataVisualizer extends DataVisualizer{
 
         // create a chart...
         JFreeChart chart = ChartFactory.createPieChart(
-                "Sample Pie Chart -Yves", // chart title
+                "Nutrient Pie Chart", // chart title
                 dataset, // data set
                 true, // legend (image example)
                 true, // tooltips

@@ -53,7 +53,6 @@ public class LandingPage {
     private void adjustFont() {
         // Adjust font size based on the height of the panel
         int fontSize = Math.max(panel.getHeight() / 25, panel.getWidth()/25 );// Adjust the divisor as needed
-        System.out.println(panel.getWidth());
         // Apply the adjusted font size to all buttons
         Component[] components = panel.getComponents();
         for (Component component : components) {

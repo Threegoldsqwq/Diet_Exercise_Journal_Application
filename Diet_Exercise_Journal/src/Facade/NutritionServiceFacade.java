@@ -153,7 +153,7 @@ public class NutritionServiceFacade {
     /**
      * This method display diet chart
      */
-    public static void displayDietChart(String startDate, String endDate){
+    public static void displayDietChart(String startDate, String endDate) {
         //call diet chart module. modify number of nutrition here
         DietDataVisualizer.getChart(5,startDate,endDate);//change here
     }

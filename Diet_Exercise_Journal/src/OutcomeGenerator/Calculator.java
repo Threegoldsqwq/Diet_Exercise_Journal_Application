@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This class calculating data
  */
-public class Calculator extends DataCalculator {
+public class Calculator implements DataCalculator {
 
 
     private static int calculateAge() throws ParseException {

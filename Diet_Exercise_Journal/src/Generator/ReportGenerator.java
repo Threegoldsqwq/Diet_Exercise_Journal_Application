@@ -6,8 +6,8 @@ package Generator;
 public interface ReportGenerator {
 
 
-    public String[] getIngredientsAndQuantity(int type, String selectedDate);
-    public String[] getOtherNutrients(int type, String selectedDate);
+    String[] getIngredientsAndQuantity(int type, String selectedDate);
+    String[] getOtherNutrients(int type, String selectedDate);
 
-    public String[][] getTotalCalorieIntake();
+    String[][] getTotalCalorieIntake();
 }
