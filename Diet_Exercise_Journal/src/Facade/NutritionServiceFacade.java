@@ -106,8 +106,7 @@ public class NutritionServiceFacade {
      * @return a 2D array same as RuntimeDatabase
      */
     public static String[][] getTotalCalorieIntake(){
-        ReportGenerator generator = new ShortReportGenerator();
-        return generator.getTotalCalorieIntake();
+        return CalorieDataVisualizer.CaloryIntakeDataReader();
     }
 
     /**
@@ -155,7 +154,8 @@ public class NutritionServiceFacade {
      */
     public static void displayDietChart(String startDate, String endDate) {
         //call diet chart module. modify number of nutrition here
-        DietDataVisualizer.getChart(5,startDate,endDate);//change here
+        DietDataVisualizer helper=new DietDataVisualizer();
+        helper.getChart(5,startDate,endDate);
     }
 
     /**
@@ -163,7 +163,8 @@ public class NutritionServiceFacade {
      */
     public static void displayCalorieChart(String startDate, String endDate) throws ParseException {
         //call calorie intake and burned chart module
-        CalorieDataVisualizer.getChart(startDate,endDate);//change here
+        CalorieDataVisualizer helper=new CalorieDataVisualizer();
+        helper.getChart(startDate,endDate);
     }
 
     /**

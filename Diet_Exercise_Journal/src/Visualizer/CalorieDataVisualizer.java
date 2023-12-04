@@ -36,7 +36,7 @@ public class CalorieDataVisualizer implements DataVisualizer {
      * @param endDate   the end date of the date range
      * @throws ParseException if there is an error parsing the date strings
      */
-    public static void getChart(String startDate, String endDate) throws ParseException {
+    public void getChart(String startDate, String endDate) throws ParseException {
         getData(startDate,endDate);
         JFreeChart chart = ChartFactory.createBarChart(
                 "Exercise Data", //title
@@ -70,7 +70,7 @@ public class CalorieDataVisualizer implements DataVisualizer {
      * @param endDate   the end date of the date range
      * @throws ParseException if there is an error parsing the date strings
      */
-    public static void getData(String startDate, String endDate) throws ParseException {
+    public void getData(String startDate, String endDate) throws ParseException {
         String[][] CBurned;
         String[][] Cintake;
         //get the data

@@ -93,9 +93,4 @@ public class DetailedReportGenerator implements ReportGenerator{
         return otherNutrients;
     }
 
-    @Override
-    public String[][] getTotalCalorieIntake() {
-        System.out.println("Used wrong method getTotalCalorieIntake() is in ShortReportGenerator");
-        return null;
-    }
 }

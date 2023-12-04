@@ -62,7 +62,7 @@ public class RuntimeDatabase {
     private void connectToDatabase(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "zxcv6509");
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/Diet_Exercise_Journal_UserProfile", "root", "123456");
             statement = connect.createStatement();
         } catch (Exception e) {
             e.printStackTrace();

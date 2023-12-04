@@ -16,7 +16,7 @@ public class DietDataVisualizer implements DataVisualizer {
      * This method create pie chart
      * @param NumberOfNutrients is the number of nutrients
      */
-    public static void getChart(int NumberOfNutrients,String startDate,String endDate) {
+    public void getChart(int NumberOfNutrients, String startDate, String endDate) {
         // create a dataset...
         DefaultPieDataset dataset = new DefaultPieDataset();
 
@@ -164,7 +164,7 @@ public class DietDataVisualizer implements DataVisualizer {
      * This class gets the data set for creating the chart
      * @param NumberOfNutrients NumberOfNutrients is the number of nutrients
      */
-    public static String[][] getData(int NumberOfNutrients,String startDate,String endDate){
+    public String[][] getData(int NumberOfNutrients,String startDate,String endDate){
         return NutrientsDataReader(NumberOfNutrients,startDate,endDate); //change here
     }
 }
