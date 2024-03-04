@@ -1,0 +1,72 @@
+create database Diet_Exercise_Journal_UserProfile;
+use Diet_Exercise_Journal_UserProfile;
+
+CREATE TABLE UserProfile (
+        UserID INT NOT NULL auto_increment,
+        UserName VARCHAR(30) NOT NULL,
+        Sex VARCHAR(30) NOT NULL,
+        Date_of_birth DATE NOT NULL,
+        Height DOUBLE NOT NULL,
+        Weight DOUBLE NOT NULL,
+        Measurement varchar(20) NOT NULL,
+        PRIMARY KEY (UserID)
+    );
+
+CREATE TABLE Breakfast (
+        Date date NOT NULL,
+        UserID INT NOT NULL,
+        Ingredients VARCHAR(255),
+        Quantity VARCHAR(255),
+        CalorieIntake DOUBLE,
+        Constraint PK Primary key (Date, UserID)
+    );
+
+CREATE TABLE Lunch (
+        Date date NOT NULL,
+        UserID INT NOT NULL,
+        Ingredients VARCHAR(255),
+        Quantity VARCHAR(255),
+        CalorieIntake DOUBLE,
+        Constraint lunch_PK Primary key (Date, UserID)
+    );
+
+CREATE TABLE Dinner (
+        Date date NOT NULL,
+        UserID INT NOT NULL,
+        Ingredients VARCHAR(255),
+        Quantity VARCHAR(255),
+        CalorieIntake DOUBLE,
+        Constraint dinner_PK Primary key (Date, UserID)
+    );
+
+CREATE TABLE Snack (
+        Date date NOT NULL,
+        UserID INT NOT NULL,
+        Ingredients VARCHAR(255),
+        Quantity VARCHAR(255),
+        CalorieIntake DOUBLE,
+        Constraint snack_PK Primary key (Date, UserID)
+    );
+
+CREATE TABLE Exercise (
+		
+        ExID INT NOT NULL AUTO_INCREMENT,
+        Date date NOT NULL,
+        UserID INT NOT NULL,
+        Type VARCHAR(255),
+        Duration VARCHAR(255),
+        Intensity VARCHAR(255),
+        CalorieBurnt double,
+        Constraint exercise_PK Primary key (ExID)
+    );
+
+CREATE TABLE Meal (
+        Date date NOT NULL,
+        UserID INT NOT NULL,
+        Breakfast date,
+        Lunch date,
+        Dinner date,
+        Snack date,
+        TotalCalorie double,
+        Constraint meal_PK Primary key (Date, UserID)
+    );
